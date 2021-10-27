@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "769317945130",
+    "project_id": "natore-52da9",
+    "storage_bucket": "natore-52da9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769317945130:android:c7a9490558e473025a6853",
+        "android_client_info": {
+          "package_name": "com.example.natore_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "769317945130-re6u2n6bo2gc5j8l6gfhe266vf1h7ppe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4nSQyxx3wZp0dCXBaTtOYJtSuVYdrtGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769317945130-re6u2n6bo2gc5j8l6gfhe266vf1h7ppe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
