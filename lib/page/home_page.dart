@@ -81,10 +81,7 @@ class LoggedInWidget extends StatelessWidget {
                 color: Colors.blue,
                 child: Row(
                   // Replace with a Row for horizontal icon + text
-                  children: <Widget>[
-                    FaIcon(FontAwesomeIcons.mailBulk, color: Colors.red),
-                    Text("  Sohbet")
-                  ],
+                  children: <Widget>[FaIcon(FontAwesomeIcons.mailBulk, color: Colors.red), Text("  Sohbet")],
                 ),
                 //const Text("Login"),
                 //icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
@@ -100,8 +97,7 @@ class LoggedInWidget extends StatelessWidget {
                   textStyle: const TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AddProductPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddProductPage()));
                 },
                 child: const Text('Add product'),
               ),
