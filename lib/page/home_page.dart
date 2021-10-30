@@ -6,6 +6,7 @@ import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
+import 'product_add.dart';
 import '../main.dart';
 
 User? user = null;
@@ -94,6 +95,17 @@ class LoggedInWidget extends StatelessWidget {
                   );
                 },
               ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddProductPage()));
+                },
+                child: const Text('Add product'),
+              ),
+              const SizedBox(height: 30),
             ],
           ),
         ));
@@ -105,4 +117,3 @@ void logOut(BuildContext context) {
   provider.logout();
   user = null;
 }
-

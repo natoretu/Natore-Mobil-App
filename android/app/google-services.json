@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "769317945130-4e8tj4gcd5ka8k3oa1ap66relf99mh41.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.natore_project",
+            "certificate_hash": "fcc0d13bcff242c36bb8bbf83c2135985d71deed"
+          }
+        },
+        {
+          "client_id": "769317945130-hphn6cd69eed3m2un0aa37lbebnp6i5l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.natore_project",
+            "certificate_hash": "d6ad8b371ecfbe588ea0f110539f0e5aeacdf143"
+          }
+        },
+        {
           "client_id": "769317945130-re6u2n6bo2gc5j8l6gfhe266vf1h7ppe.apps.googleusercontent.com",
           "client_type": 3
         }
