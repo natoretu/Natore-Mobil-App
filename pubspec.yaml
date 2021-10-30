@@ -40,6 +40,8 @@ dependencies:
   font_awesome_flutter: ^9.2.0
   #state management
   provider: ^6.0.1
+  cloud_firestore: ^2.5.4
+  firebase_core: ^1.8.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
