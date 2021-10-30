@@ -56,7 +56,7 @@ class MainPage extends StatelessWidget {
                       // Replace with a Row for horizontal icon + text
                       children: <Widget>[
                         FaIcon(FontAwesomeIcons.google, color: Colors.red),
-                        Text("  Login")
+                        Text("Login")
                       ],
                     ),
                     //const Text("Login"),
