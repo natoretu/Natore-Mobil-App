@@ -3,17 +3,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/page/home_page.dart';
-//import 'package:natore_project/provider/google_sign_in.dart';
 
-String mesajlasilanKisi = "";
+//import 'package:natore_project/provider/google_sign_in.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
+String mesajlasilanKisi = ""; // mesaj atilacak kisinin maili buraya yazilir.
 //user = FirebaseAuth.instance.currentUser!;
+void mesajGondermeEkraniniAc(String mail, BuildContext context) {
+  mesajlasilanKisi = mail;
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
+  );
+}
 
 class Sohbet extends StatelessWidget {
+  final Stream<QuerySnapshot> allMessages =
+      FirebaseFirestore.instance.collection('mesajlar').snapshots();
+  List<dynamic> userMessagesList = <dynamic>[];
   @override
-  String mustafaEmail = "mustafa.krks.09@gmail.com";
-  String grupEmail = "birkacmumingenc@gmail.com";
-
   Widget build(BuildContext context) {
+    TextField textField;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(100, 109, 23, 1),
@@ -26,38 +35,83 @@ class Sohbet extends StatelessWidget {
           color: Colors.blueGrey.shade900,
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text(
-                  'Kişiler',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                ),
-                const SizedBox(height: 32),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 15,
-                      height: 30,
-                    ),
-                    kisiButonu(mustafaEmail, context),
-                    const SizedBox(
-                      width: 15,
-                      height: 30,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 15,
-                      height: 30,
-                    ),
-                    kisiButonu(grupEmail, context),
-                    const SizedBox(
-                      width: 15,
-                      height: 30,
-                    ),
-                  ],
+                Container(
+                    //!! arayüz daha once konusulan kısıler,
+                    height:
+                        300, // bu deger gecmıs sohbetlerın kac piksel asagıya kadar gosterılecegını belırlıyor
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: allMessages,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError)
+                            return Text('Something went wrong.');
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) return Text('Loading');
+                          final data = snapshot.requireData;
+                          var currentMessages = (data.docs.where((element) =>
+                              (element.get('Sender') ==
+                                  user!.email.toString()) ||
+                              (element.get('Receiver') ==
+                                  user!.email.toString())));
+
+                          if (currentMessages.isNotEmpty) {
+                            userMessagesList = List.from(currentMessages);
+                            userMessagesList.sort((b, a) => a
+                                .get('Messages')[a.get('Messages').length - 1]
+                                    ['Time']
+                                .compareTo(b.get('Messages')[
+                                    b.get('Messages').length - 1]['Time']));
+                            return ListView.builder(
+                              itemCount: userMessagesList.length,
+                              itemBuilder: (context, index) {
+                                var sohbet = userMessagesList[index];
+                                var messagesWithSpecificUser =
+                                    sohbet.get('Messages');
+                                var messageList =
+                                    List.from(messagesWithSpecificUser);
+                                var lastMessage =
+                                    messageList[messageList.length - 1]
+                                        ['Message'];
+                                var lastMessageTime =
+                                    messageList[messageList.length - 1]['Time'];
+
+                                String konusulanKisi = userMessagesList[index]
+                                    .get(((userMessagesList[index]
+                                                .get('Receiver') !=
+                                            user!.email.toString())
+                                        ? 'Receiver'
+                                        : 'Sender'));
+                                //!!arayüz
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Row(
+                                    children: [
+                                      kisiButonu(
+                                          konusulanKisi,
+                                          lastMessageTime.toDate(),
+                                          mailiCikar(lastMessage, user!.email,
+                                              konusulanKisi),
+                                          context)
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                          //!arayüz
+                          return const Text(
+                              'Gorusmeye Basla'); // daha once konusulmus kımse yoksa bu basiliyor
+                        })),
+                // !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
+                textField = TextField(
+                  decoration: new InputDecoration.collapsed(
+                      hintText: "Yeni Sohbet için mail"),
+                  onSubmitted: (String mail) {
+                    mesajGondermeEkraniniAc(mail, context);
+                  },
                 ),
               ],
             ),
@@ -65,177 +119,47 @@ class Sohbet extends StatelessWidget {
         ));
   }
 
-  FlatButton kisiButonu(String mail, BuildContext context) {
+  // !!arayüz gecmıs sohbetler ıcın son mesaj zamanını son mesajını ve son konusulan kısıyı gosterıyor
+  FlatButton kisiButonu(
+      String mail, DateTime time, String message, BuildContext context) {
     return FlatButton(
-      color: Colors.blue,
+      color: Colors.white,
       child: Row(
-        // Replace with a Row for horizontal icon + text
         children: <Widget>[
-          const FaIcon(FontAwesomeIcons.facebookMessenger, color: Colors.red),
-          Text(" $mail'e  mesaj gonder")
+          const FaIcon(FontAwesomeIcons.facebookMessenger, color: Colors.blue),
+          Text("  $mail\n  $message\n  $time"),
         ],
       ),
-      //const Text("Login"),
-      //icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
       onPressed: () {
         mesajlasilanKisi = mail;
-
-        /*Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => mesajlasmaEkrani()),
-        );*/
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyCustomForm()),
+          MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
         );
       },
     );
   }
 }
 
-/*
-List<Map<String, dynamic>>? firebaseVeriAl() {
-  /*
-  StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-    stream: FirebaseFirestore.instance.collection('mesajlar').snapshots(),
-    builder: (_, snapshot) {
-      if (snapshot.hasError) return Text('Error = ${snapshot.error}');
-
-      if (snapshot.hasData) {
-        final docs = snapshot.data!.docs;
-        return ListView.builder(
-          itemCount: docs.length,
-          itemBuilder: (_, i) {
-            final data = docs[i].data();
-            return ListTile(
-              title: Text(getMessages(data)),
-              subtitle: Text(data['phone']),
-            );
-          },
-        );
-      }
-
-      return Center(child: CircularProgressIndicator());
-    },
-  )
-  */
-  FirebaseFirestore.instance
-      .collection('mesajlar')
-      .where('Sender', isEqualTo: user!.email.toString())
-      .where('Receiver', isEqualTo: mesajlasilanKisi)
-      //.where('Sender', isEqualTo: "${user.email}")
-      .get()
-      .then((value) {
-    // sadece 1 tane aynı kullanıcılara sahip document bırakıyor her seferınde 1 tane sildiğinden hic bir zaman 2 den fazla olmuyor 1 tane silmesi yetiyor
-    //QuerySnapshot<Map<String, dynamic>> asilCollection = value;
-    //value.docs.first.get('Messages')
-    List<Map<String, dynamic>> messages =
-        List.from(value.docs.first.get('Messages'));
-
-    for (int i = 0; i < messages.length; i++) {
-      List<dynamic> messagesValues = messages[i]
-          .values
-          .toList(); // first message is actual message second is timestamp
-      if (messagesValues.length != 2) {
-        print("hataaaaa");
-        print(messagesValues);
-      }
-      print("message: " +
-          messagesValues[0].toString() +
-          "\nzamani: " +
-          messagesValues[1].toDate().toString()); // timestamp to date
-    }
-
-    //for(int i=0;i<value
-
-    /*for (var element in value.docs) {
-          //List<String> pointlist = List.from(element.get('Message'));
-          //element.
-          if (element.get('Receiver') == Receiver) {
-            print("Receiver2 bulundu" + text);
-            element.reference.update({
-              'Message': FieldValue.arrayUnion([text])
-            });
-
-            mesajGondermeBasarili = true; // sohbet bulundu mesaj eklendi
-            break;
-          }
-        }*/
-    //print(value.data['Message']);
-    //print("???" + value.toString());
-    return messages;
-  });
-  return null;
-}
-*/
-class mesajlasmaEkrani extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(100, 109, 23, 1),
-          title: Text('${mesajlasilanKisi}'),
-          centerTitle: true,
-        ),
-        body: StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection('mesajlar').snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              return ListView(
-                  children: snapshot.data!.docs.map((document) {
-                return Container(
-                  child: Column(
-                    children: [
-                      Center(child: Text(document['Sender'])),
-                      Center(child: Text(document['Receiver'])),
-                      //Center(child: Text(document['Message'])),
-                    ],
-                  ),
-                );
-              }).toList());
-              /*Container(
-          alignment: Alignment.bottomCenter,
-          color: Colors.blueGrey.shade900,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'mesajlar burda gozukcek inşaAllah\nbiraz sabır',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-              SizedBox(height: 32),
-              TextField(
-                decoration: InputDecoration(
-                    focusColor: Colors.white,
-                    border: OutlineInputBorder(),
-                    hintText: 'Mesajınızı yazın'),
-              ),
-            ],
-          ),
-        ));
+String mailiCikar(String message, String? email, String konusulanKisi) {
+  if (message.length - email!.length > 0 &&
+      message.substring(message.length - email.length, message.length) ==
+          email) {
+    return message.substring(0, message.length - email.length);
   }
-}*/
-            }));
-  }
+  return message.substring(0, message.length - konusulanKisi.length);
 }
 
-class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({Key? key}) : super(key: key);
+class MesajGondermeEkrani extends StatefulWidget {
+  const MesajGondermeEkrani({Key? key}) : super(key: key);
 
   @override
-  _MyCustomFormState createState() => _MyCustomFormState();
+  _MesajGondermeEkrani createState() => _MesajGondermeEkrani();
 }
 
 // Define a corresponding State class.
 // This class holds the data related to the Form.
-class _MyCustomFormState extends State<MyCustomForm> {
+class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
   final Stream<QuerySnapshot> messages =
       FirebaseFirestore.instance.collection('mesajlar').snapshots();
 
@@ -254,14 +178,17 @@ class _MyCustomFormState extends State<MyCustomForm> {
   Widget build(BuildContext context) {
     //firebaseVeriAl();
     return Scaffold(
+      //!!arayüz
       appBar: AppBar(
-        title: const Text('Retrieve Text Input'),
+        title: Text('$mesajlasilanKisi'),
       ),
+      //!!arayüz
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          //!!arayüz
           Container(
-            height: 250,
+            height: 350, // burası mesajların gorunecegı kısmın boyu
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: StreamBuilder<QuerySnapshot>(
                 stream: messages,
@@ -281,68 +208,41 @@ class _MyCustomFormState extends State<MyCustomForm> {
                   if (currentMessages.isNotEmpty) {
                     List<Map<String, dynamic>> messagesAndDates =
                         List.from(currentMessages.first.get('Messages'));
-                    /*
-                    for (int i = 0; i < messagesAndDates.length; i++) {
-                      List<dynamic> messagesValues = messagesAndDates[i]
-                          .values
-                          .toList(); // first message is actual message second is timestamp
-                      if (messagesValues.length != 2) {
-                        print("hataaaaa");
-                        print(messagesValues);
-                      }
-                      print("message: " +
-                          messagesValues[0].toString() +
-                          "\nzamani: " +
-                          messagesValues[1].toDate().toString()); // timestamp to date
-                  }
-                  //messagesList[0].get('Messages').
-                  /*
-                  List<Map<String, dynamic>> messages =
-        List.from(value.docs.first.get('Messages'));
 
-    for (int i = 0; i < messages.length; i++) {
-      List<dynamic> messagesValues = messages[i]
-          .values
-          .toList(); // first message is actual message second is timestamp
-      if (messagesValues.length != 2) {
-        print("hataaaaa");
-        print(messagesValues);
-      }
-      print("message: " +
-          messagesValues[0].toString() +
-          "\nzamani: " +
-          messagesValues[1].toDate().toString()); // timestamp to date
-    }
-*/
-                  */
-                    print("ne gelmis");
-                    if (messagesAndDates.length == 0) {
-                      return const Text('Gorusmeye Basla');
-                    }
                     return ListView.builder(
                       itemCount: messagesAndDates.length,
                       itemBuilder: (context, index) {
                         var messagesTaken = messagesAndDates[index]['Message'];
-                        //List
-                        //return Text('${data.docs[index].get('Messages')[0].get('Message')}');
-                        //return Text('${data.docs[index].get('Receiver')}');
-                        // (bool) ? ((bool) ? asdad: asdsa)
+                        var messageTime = messagesAndDates[index]['Time'];
+
+                        String ekranaBasilacakMesaj = mailiCikar(
+                            messagesTaken, user!.email, mesajlasilanKisi);
+                        String mesajinZamani = messageTime.toDate().toString();
+                        // !!Arayüz
+                        // mesajı saga mı sola mı yaslayacagız onu belırlıyor
                         return Padding(
-                          padding: (index % 2 == 0)
+                          padding: (isItOurMessage(
+                                  messagesTaken)) // bizim mesaj ise sagda yoksa solda
                               ? const EdgeInsets.only(left: 100)
                               : const EdgeInsets.only(right: 100),
                           child: Row(
+                            //!! arayüz mesajın sekli, whatsapp dakı gıbı mesajıns zamanını mesajın sag altında verebilirsek hos olur tabı gunler de gereklı dun 12 de atılan mesajla bugun 12 de atılanı ayırt etmek ıcın
                             children: [
-                              Text('${messagesTaken}'),
+                              Text('$ekranaBasilacakMesaj' +
+                                  "\n" +
+                                  '$mesajinZamani'),
                             ],
                           ),
                         );
                       },
                     );
                   }
-                  return const Text('Gorusmeye Basla');
+                  //!! arayüz
+                  return const Text(
+                      'Gorusmeye Basla2'); // eğer daha önce hiç bu kisiyle konusulmamışsa bu yazıyor
                 }),
           ),
+          //!! arayüz mesajın yazıldıgı textFormField
           Padding(
             padding: const EdgeInsets.all(16),
             child: TextFormField(
@@ -353,16 +253,9 @@ class _MyCustomFormState extends State<MyCustomForm> {
               controller: myController,
             ),
           ),
-          SizedBox(width: 30, height: 15),
-          /*Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(20.0),
-              children:
-                  _getListings(), // <<<<< Note this change for the return type
-            ),
-          )*/
         ],
       ),
+      //!! arayüz gonder butonu
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           String message = myController.text;
@@ -377,59 +270,14 @@ class _MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
-  /*
-  List<Widget> _listings = [];
-
-  List<Widget> _getListings() {
-    // <<<<< Note this change for the return type
-    List<Widget> listings = <Widget>[];
-    int i = 0;
-    List<Map<String, dynamic>>? messages = firebaseVeriAl();
-    /*
-    for (int i = 0; i < messages.length; i++) {
-      List<dynamic> messagesValues = messages[i]
-          .values
-          .toList(); // first message is actual message second is timestamp
-      if (messagesValues.length != 2) {
-        print("hataaaaa");
-        print(messagesValues);
-      }
-      print("message: " +
-          messagesValues[0].toString() +
-          "\nzamani: " +
-          messagesValues[1].toDate().toString()); // timestamp to date
-    }
-   */
-    if (messages == null) {
-      List<Widget> temp = [];
-      return temp;
-    }
-    for (i = 0; i < messages!.length; i++) {
-      List<dynamic> messagesValues = messages![i].values.toList();
-      print("Girdi " + messagesValues[0].toString());
-      listings.add(
-        RadioListTile<String>(
-          title: Text(
-              '${messagesValues[0].toString() + messagesValues[1].toDate().toString()}'),
-          value: "c",
-          groupValue: "x",
-          onChanged: (_) {},
-        ),
-      );
-    }
-    return listings;
+  void verilenKisiyeMesajGonder(String mail, String text) {
+    mesajlasilanKisi = mail;
+    sendMessage(text);
   }
-  */
+
   Future<void> sendMessage(String text) async {
-    String kullanici1 = user!.email.toString(); //olcak
-    String kullanici2 = mesajlasilanKisi; //'nin maili olcak
-    /*bool mesajGonderildi = sohbeteMesajEkle(kullanici1, kullanici2, text);
-    if (!mesajGonderildi)
-      mesajGonderildi = sohbeteMesajEkle(kullanici2, kullanici1, text);
-    if (!mesajGonderildi) {
-      // bu iki kişi daha once konusmamıslar, yeni bir sohbet alani acilmali
-      sohbetOlustur(kullanici1, kullanici2, text);
-    }*/
+    String kullanici1 = user!.email.toString();
+    String kullanici2 = mesajlasilanKisi;
     sonMesajBasariylaGonderildi = false;
     await sohbeteMesajEkle(kullanici1, kullanici2, text);
     if (!sonMesajBasariylaGonderildi) {
@@ -438,43 +286,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
     if (!sonMesajBasariylaGonderildi) {
       sohbetOlustur(kullanici1, kullanici2, text);
     }
-    /*if (sohbeteMesajEkle(kullanici1, kullanici2, text) == true ||
-        sohbeteMesajEkle(kullanici2, kullanici1, text) == true) {
-    } else {
-      // bu iki kişi daha once konusmamıslar, yeni bir sohbet alani acilmali
-      sohbetOlustur(kullanici1, kullanici2, text);
-    }*/
-    // burdaki element her farklı 2 kişi arasındaki sohbet
-    //print(element.get('Message') + "++");
-    //element.get('Message').
-    // mesajlar arrayini alıyor
-
-    /*for (int i = 0; i < pointlist.length; i++) {
-            print("--" + pointlist[i]);
-          }*/
-    /*pointlist.add(myController.text);
-                element.data().update('Message', (pointlist)) add({
-                  'Message':FieldValue.arrayUnion(pointlist);
-                });*/
-    //'Message':FieldValue.arrayUnion(pointlist);
-    //element.get('Message')
-    /*     });
-        //print(value.data['Message']);
-        //print("???" + value.toString());
-      });
-    });*/
-    //.add({'text': 'data added through app'});
-    //.add({'Message': '15'});
-    /*showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                // Retrieve the text the that user has entered by using the
-                // TextEditingController.
-                content: Text(myController.text),
-              );
-            },
-          );*/
   }
 
   bool sonMesajBasariylaGonderildi = false;
@@ -497,7 +308,6 @@ class _MyCustomFormState extends State<MyCustomForm> {
         }
         //removeUnnecessaryDoc(value);
         // sadece 1 tane aynı kullanıcılara sahip document bırakıyor her seferınde 1 tane sildiğinden hic bir zaman 2 den fazla olmuyor 1 tane silmesi yetiyor
-        //QuerySnapshot<Map<String, dynamic>> asilCollection = value;
         value.docs.forEach((element) {
           print(element.toString() + Sender + " " + Receiver + "qqq");
           element.reference.update({
@@ -510,39 +320,10 @@ class _MyCustomFormState extends State<MyCustomForm> {
             ])
           });
         });
-        //removeUnnecessaryDoc(value);
-
-        //for(int i=0;i<value
-
         mesajGondermeBasarili = true;
         sonMesajBasariylaGonderildi = true;
-        /*for (var element in value.docs) {
-          //List<String> pointlist = List.from(element.get('Message'));
-          //element.
-          if (element.get('Receiver') == Receiver) {
-            print("Receiver2 bulundu" + text);
-            element.reference.update({
-              'Message': FieldValue.arrayUnion([text])
-            });
-
-            mesajGondermeBasarili = true; // sohbet bulundu mesaj eklendi
-            break;
-          }
-        }*/
-        //print(value.data['Message']);
-        //print("???" + value.toString());
       });
     });
-    print(text + mesajGondermeBasarili.toString());
-    //-----------------
-    /*FirebaseFirestore.instance
-        .collection('mesajlar')
-        .where('Sender', isEqualTo: Sender)
-    //.where('Sender', isEqualTo: "${user.email}")
-        .where('Receiver',isEqualTo: Receiver);*/
-    //-----------------
-    print("Sonra bu gelmeli");
-    //return mesajGondermeBasarili;
   }
 
   Future<void> sohbetOlustur(
@@ -561,58 +342,14 @@ class _MyCustomFormState extends State<MyCustomForm> {
       'DateOfFirstMessage': myTimeStamp
     });
     print('Yeni mesaj olusturuldu');
-    /*
-    Firestore.instance
-        .collection('Mesajlar')
-        .document(kullanici1 + kullanici2)
-        .setData({
-      'map1': {
-        'key1': 'value1',
-        'key2': 'value2',
-      }
-    });*/
   }
 
-  void removeUnnecessaryDoc(QuerySnapshot<Map<String, dynamic>> collection) {
-    if (collection.size == 0 || collection.docs.length < 2) {
-      return;
-    }
-    int length = collection.docs.length;
-    List<DateTime> toRemove = <DateTime>[];
-    /*for(int i=length;i>0;i--){ // tersten basladık ki remove edince indexler degismesin
-      DateTime dateOfFirst =
-      collection.docs[i].get('DateOfFirstMessage').toDate();
-      DateTime dateOfSecond =
-      collection.docs[i-1].get('DateOfFirstMessage').toDate();
-      int indexToRemove = (dateOfFirst.isAfter(dateOfSecond) == true) ? i : i-1;
-      //remove the date comes later
-      FirebaseFirestore.instance
-          .collection('mesajlar')
-          .doc(collection.docs[indexToRemove].reference.id)
-          .delete();
-    }*/
-    for (int i = 0; i < length; i++) {
-      DateTime dateOfDoc =
-          collection.docs[i].get('DateOfFirstMessage').toDate();
-      toRemove.add(dateOfDoc);
-    }
-    int firstDate = 0;
-    for (int i = 1; i < length; i++) {
-      if (toRemove[firstDate].isAfter(toRemove[i])) {
-        firstDate = i;
-      }
-    }
-    for (int i = length - 1; i >= 0; i--) {
-      if (i != firstDate) {
-        print("Bundan 2 tane olmali");
-        // en erken haric tum mesaj documentlerini siliyoruz
-        FirebaseFirestore.instance
-            .collection('mesajlar')
-            .doc(collection.docs[i].reference.id)
-            .delete();
-      } else {
-        print("Bundan 1 tane olmali");
-      }
-    }
+  bool isItOurMessage(String message) {
+    if (message.length - user!.email!.length <= 0) return false;
+
+    return (message.substring(
+            message.length - user!.email!.length, message.length) ==
+        user!
+            .email!); // message holds the mail of sender, if it is from us, it will be on right side
   }
 }
