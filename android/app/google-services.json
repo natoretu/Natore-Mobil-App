@@ -22,11 +22,27 @@
           }
         },
         {
+          "client_id": "769317945130-d8ecbh019ots1pp4p05irajafjr266h3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.natore_project",
+            "certificate_hash": "1b313cb769c2c5b3d85adce3171811a102767ea6"
+          }
+        },
+        {
           "client_id": "769317945130-hphn6cd69eed3m2un0aa37lbebnp6i5l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.natore_project",
             "certificate_hash": "d6ad8b371ecfbe588ea0f110539f0e5aeacdf143"
+          }
+        },
+        {
+          "client_id": "769317945130-kbl56sijutg4r4fpdhieprljpg7f1ljd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.natore_project",
+            "certificate_hash": "cc9dcd615ca76ccdba1bf00aa5c3291c35983d5e"
           }
         },
         {
