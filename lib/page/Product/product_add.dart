@@ -29,15 +29,16 @@ class AddProductPageState extends State<AddProductPage> {
     double height = MediaQuery.of(context).size.height;
     if (image != null) {
       return CircleAvatar(
-        backgroundImage: FileImage(File(image!.path)),
+        backgroundImage: FileImage(image),
         radius: height * 0.08,
       );
     } else {
       if (_pickImage != null) {
         return CircleAvatar(
           // backgroundImage: NetworkImage(_pickImage),
+          // ignore: avoid_print
           backgroundImage: NetworkImage(
-              "https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg"),
+              "https://helpx.adobe.com/content/dam/help/en/stock/how-to/visual-reverse-image-search/jcr_content/main-pars/image/visual-reverse-image-search-v2_intro.jpg"),
           radius: height * 0.08,
         );
       } else {
@@ -100,8 +101,7 @@ class AddProductPageState extends State<AddProductPage> {
                   width: 10,
                 ),
                 InkWell(
-                    onTap: () => _onImageButtonPressed(ImageSource.gallery,
-                        context: context),
+                    onTap: () => _onImageButtonPressed(ImageSource.gallery, context: context),
                     child: Icon(
                       Icons.image,
                       size: 30,
@@ -116,13 +116,11 @@ class AddProductPageState extends State<AddProductPage> {
                 backgroundColor: Colors.black54,
               ),
               onPressed: () {
-                print(image);
                 _productServices
-                    .addProduct(_name.text, double.parse(_price.text),
-                        _properties.text, (image))
+                    .addProduct(_name.text, double.parse(_price.text), _properties.text, image)
                     .then((value) {
                   Fluttertoast.showToast(
-                    msg: "Durum eklendi!",
+                    msg: "Product eklendi!",
                     timeInSecForIosWeb: 2,
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
@@ -141,15 +139,12 @@ class AddProductPageState extends State<AddProductPage> {
     );
   }
 
-  // FIX PICKING IMAGE setState undefined
-  // https://stackoverflow.com/questions/59101356/the-function-setstate-is-not-defined-flutter
-  void _onImageButtonPressed(ImageSource source,
-      {required BuildContext context}) async {
+  void _onImageButtonPressed(ImageSource source, {required BuildContext context}) async {
     try {
-      final pickedFile = _pickImage.getImage(source: source);
+      final pickedFile = await _imagePicker.pickImage(source: source);
       setState(() {
-        image = pickedFile!;
-        print("dosyaya geldim: $image");
+        image = File(pickedFile!.path);
+        print("dosyaya geldim: ${image}");
         if (image != null) {}
       });
     } catch (e) {

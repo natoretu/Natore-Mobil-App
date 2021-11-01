@@ -5,8 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
-
-import 'product_add.dart';
+import 'Product/product_add.dart';
+import 'Product/product_list.dart';
 import '../main.dart';
 
 User? user = null;
@@ -47,7 +47,8 @@ class LoggedInWidget extends StatelessWidget {
                 'Logout',
               ),
               onPressed: () {
-                logOut(context);
+                final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+                provider.logout();
               },
             )
           ],
@@ -100,6 +101,15 @@ class LoggedInWidget extends StatelessWidget {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddProductPage()));
                 },
                 child: const Text('Add product'),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage()));
+                },
+                child: const Text('Products'),
               ),
               const SizedBox(height: 30),
             ],
