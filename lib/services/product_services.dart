@@ -1,8 +1,7 @@
-import 'dart:ffi';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:natore_project/model/product.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:natore_project/services/storage_services.dart';
 
 class ProductServices {
@@ -10,7 +9,8 @@ class ProductServices {
   StorageServices _storageServices = StorageServices();
   String mediaUrl = "";
 
-  Future<Product> addProduct(String name, double price, String properties, File pickedFile) async {
+  Future<Product> addProduct(
+      String name, double price, String properties, File pickedFile) async {
     var ref = _firestore.collection('Products');
     mediaUrl = await _storageServices.uploadMedia(pickedFile);
     print(mediaUrl);
@@ -54,6 +54,7 @@ class ProductServices {
 
     ref.snapshots().first.then((value) => {
           value.docs.forEach((element) {
+            print("asdasd" + element.id.toString());
             if (name == element.get('name')) {
               obj = element;
             }

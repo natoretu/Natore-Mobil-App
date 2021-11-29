@@ -108,8 +108,6 @@ class LoggedInWidget extends StatelessWidget {
                     Text("  Urune yorum ekle")
                   ],
                 ),
-                //const Text("Login"),
-                //icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
                 onPressed: () {
                   Navigator.push(
                     context,

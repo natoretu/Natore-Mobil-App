@@ -19,20 +19,11 @@ class Yorumlar extends StatefulWidget {
 class _Yorumlar extends State<Yorumlar> {
   late FocusNode myFocusNode;
   final myController = TextEditingController();
-  /*Stream<QuerySnapshot> allMessages = FirebaseFirestore.instance
-      .collection('Products')
-      .where("name", isEqualTo: nameOfProductHardCodedWillBeTakenFromDatabase)
-      .snapshots();*/
+
   late Stream<QuerySnapshot> allMessages;
   String productName =
       "ProductName"; // buralar firebase'den veya tıklanılan yerden alıncak
-  /*DocumentReference docRef = FirebaseFirestore.instance
-      .collection('Products')
-      .firestore
-      .doc("LdAE4nEGqGaWtK1s92kv");*/
-  /*String productName = "";
-  String productPrice = "";
-  String productProperties="";*/
+
   bool firstUpdate = true;
   List<dynamic> userMessagesList = <dynamic>[];
   var selectedArray = [false];
@@ -54,9 +45,6 @@ class _Yorumlar extends State<Yorumlar> {
 
   @override
   Widget build(BuildContext context) {
-    /*await docRef.get().then((snapshot){
-
-    }*/
     TextField textField;
     nameOfProductHardCodedWillBeTakenFromDatabase = "nameOfProduct";
     allMessages = FirebaseFirestore.instance
@@ -112,17 +100,12 @@ class _Yorumlar extends State<Yorumlar> {
 
                               firstUpdate = false;
                             }
-                            /*userMessagesList.sort((b, a) => a
-                                .get('Messages')[a.get('Messages').length - 1]
-                            ['Time']
-                                .compareTo(b.get('Messages')[
-                            b.get('Messages').length - 1]['Time']));*/
+
                             if (yorumlar.length == 0) {
                               return Text("Hiç yorum yok");
                             }
 
                             return ListView.builder(
-                              //itemCount: userMessagesList.length, // burda item countu alıyoruz ama daha fazlasını bastırıyoruz ekrana gui de sıkıntı olursa goz onunde bulunduralım
                               itemCount: yorumlar.length,
                               itemBuilder: (context, index) {
                                 List<Map<String, dynamic>> yanitlar = List.from(
@@ -151,14 +134,6 @@ class _Yorumlar extends State<Yorumlar> {
                                           sender +
                                           "\n"
                                               '$mesajinZamani'),
-                                      /*TextButton(
-                                        style: TextButton.styleFrom(
-                                          textStyle:
-                                              const TextStyle(fontSize: 20),
-                                        ),
-                                        onPressed: () {},
-                                        child: const Text('Yanıtla'),
-                                      ),*/
                                       IconButton(
                                         icon: ((selectedArray[index])
                                             ? Icon(Icons.comment)
@@ -196,19 +171,6 @@ class _Yorumlar extends State<Yorumlar> {
                                           : SizedBox(
                                               height: 1,
                                             ))
-                                      /*ListView.builder(
-                                          padding: const EdgeInsets.all(8),
-                                          itemCount: yanitlar.length,
-                                          itemBuilder: (BuildContext context,
-                                              int yanitlarindex) {
-                                            return Container(
-                                              height: 50,
-                                              //color: Colors.amber[colorCodes[index]],
-                                              child: Center(
-                                                  child: Text(
-                                                      'Entry ${yanitlar[yanitlarindex]['Response']}')),
-                                            );
-                                          })*/
                                     ],
                                   ),
                                 );
@@ -227,7 +189,6 @@ class _Yorumlar extends State<Yorumlar> {
                       labelText: 'Herkese açık bir yorum ekle...'),
                   controller: myController,
                 ),
-                //yorumlariniListele(userMessagesList),
                 FloatingActionButton(
                   onPressed: () async {
                     String message = myController.text;
@@ -255,20 +216,12 @@ class _Yorumlar extends State<Yorumlar> {
                 ),
 
                 // !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
-                /*textField = TextField(
-                  decoration: new InputDecoration.collapsed(
-                      hintText: "Yeni Sohbet için mail"),
-                  onSubmitted: (String mail) {
-                    mesajGondermeEkraniniAc(mail, context);
-                  },
-                ),*/
               ],
             ),
           ),
         ));
   }
 
-  //bool sonMesajBasariylaGonderildi = false;
   Future<void> yorumEkle(String? Sender, String text) async {
     bool mesajGondermeBasarili = false;
     await FirebaseFirestore.instance
@@ -281,8 +234,6 @@ class _Yorumlar extends State<Yorumlar> {
         mesajGondermeBasarili = false;
         return;
       }
-      //removeUnnecessaryDoc(value);
-      // sadece 1 tane aynı kullanıcılara sahip document bırakıyor her seferınde 1 tane sildiğinden hic bir zaman 2 den fazla olmuyor 1 tane silmesi yetiyor
       value.docs.forEach((element) {
         //print(element.toString() + Sender + " " +  + "qqq");
         element.reference.update({
@@ -292,11 +243,6 @@ class _Yorumlar extends State<Yorumlar> {
               'comment': text,
               'Time': Timestamp.fromDate(DateTime.now()),
               'sender': Sender,
-              /*'responds': FieldValue.arrayUnion([
-                {
-                  //'RespondComment':""//yoruma yanıt eklenınce eklencek
-                }
-              ])*/
             }
           ])
         });
@@ -316,50 +262,13 @@ class _Yorumlar extends State<Yorumlar> {
           Text("  $name\n  $message\n  $text3"),
         ],
       ),
-      onPressed: () {
-        /*mesajlasilanKisi = mail;
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
-        );*/
-      },
+      onPressed: () {},
     );
   }
 
   void openTextFieldForRespond(
       List<Map<String, dynamic>> yorumlar, int index) {}
 
-  /*Future<void> yanitEkle(
-      String? email, String text, int indexOfLastRespondAttempt) async {
-    await FirebaseFirestore.instance
-        .collection('Products')
-        .where('name', isEqualTo: nameOfProductHardCodedWillBeTakenFromDatabase)
-        .get()
-        .then((value) {
-      if (value.size == 0 || value.docs.isEmpty) {
-        return;
-      }
-      //removeUnnecessaryDoc(value);
-      // sadece 1 tane aynı kullanıcılara sahip document bırakıyor her seferınde 1 tane sildiğinden hic bir zaman 2 den fazla olmuyor 1 tane silmesi yetiyor
-      value.docs.forEach((element) {
-        var temp = FieldValue.arrayUnion([
-          {
-            'comment': text,
-            'Time': Timestamp.fromDate(DateTime.now()),
-            'sender': email,
-          }
-        ]);
-        //print(element.toString() + Sender + " " +  + "qqq");
-        element.reference.update({
-          // sadece 1 tane var=> first aradigimız
-          'comments': FieldValue.arrayUnion([
-            {'responds': temp}
-          ])
-        });
-        //element.reference.update({'OlmayanField': "deneme123"});
-      });
-    });
-  }*/
   Future<void> yanitEkle(String? emailOfResponder, String text,
       int indexOfLastRespondAttempt, Timestamp time) async {
     await FirebaseFirestore.instance
@@ -383,49 +292,12 @@ class _Yorumlar extends State<Yorumlar> {
               'ResponseTime': Timestamp.fromDate(DateTime.now()),
               'Responser': emailOfResponder,
               'IndexOfRespondedComment': indexOfLastRespondAttempt
-              /*'responds': FieldValue.arrayUnion([
-                {
-                  //'RespondComment':""//yoruma yanıt eklenınce eklencek
-                }
-              ])*/
             }
           ]
               //element.reference.update({'OlmayanField': "deneme123"});
               )
         });
       });
-
-      //String responseSender = email!;
-      //String kullanici2 = mesajlasilanKisi;
-      /*sonMesajBasariylaGonderildi = false;
-    await sohbeteMesajEkle(kullanici1, kullanici2, text);
-    if (!sonMesajBasariylaGonderildi) {
-      await sohbeteMesajEkle(kullanici2, kullanici1, text);
-    }
-    if (!sonMesajBasariylaGonderildi) {
-      sohbetOlustur(kullanici1, kullanici2, text);
-    }*/
-      /*
-
-    value.docs.forEach((element) {
-        //print(element.toString() + Sender + " " +  + "qqq");
-        element.reference.update({
-          // sadece 1 tane var=> first aradigimız
-          'responses': FieldValue.arrayUnion([
-            {
-              'Response': text,
-              'ResponseTime': Timestamp.fromDate(DateTime.now()),
-              'Responser': Sender,
-              'IndexOfRespondedComment': indexOfLastRespondAttempt
-              /*'responds': FieldValue.arrayUnion([
-                {
-                  //'RespondComment':""//yoruma yanıt eklenınce eklencek
-                }
-              ])*/
-            }
-          ])
-        });
-        */
     });
   }
 
@@ -443,9 +315,6 @@ class _Yorumlar extends State<Yorumlar> {
           (isResponsesShown[index]) ? "Yanıtları gizle" : "Yanıtları göster"),
     );
   }
-/*  List<Widget> yorumlariniListele(List userMessagesList) {
-    return null;
-  }*/
 }
 
 Widget yanitlariGoster(
