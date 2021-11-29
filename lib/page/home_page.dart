@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/page/sohbet.dart';
+import 'package:natore_project/page/yorum.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
+
+import '../main.dart';
 import 'Product/product_add.dart';
 import 'Product/product_list.dart';
-import '../main.dart';
 
 User? user = null;
 
@@ -47,7 +49,8 @@ class LoggedInWidget extends StatelessWidget {
                 'Logout',
               ),
               onPressed: () {
-                final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+                final provider =
+                    Provider.of<GoogleSignInProvider>(context, listen: false);
                 provider.logout();
               },
             )
@@ -82,7 +85,10 @@ class LoggedInWidget extends StatelessWidget {
                 color: Colors.blue,
                 child: Row(
                   // Replace with a Row for horizontal icon + text
-                  children: <Widget>[FaIcon(FontAwesomeIcons.mailBulk, color: Colors.red), Text("  Sohbet")],
+                  children: <Widget>[
+                    FaIcon(FontAwesomeIcons.mailBulk, color: Colors.red),
+                    Text("  Sohbet")
+                  ],
                 ),
                 //const Text("Login"),
                 //icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
@@ -93,12 +99,31 @@ class LoggedInWidget extends StatelessWidget {
                   );
                 },
               ),
+              FlatButton(
+                color: Colors.blue,
+                child: Row(
+                  // Replace with a Row for horizontal icon + text
+                  children: <Widget>[
+                    FaIcon(FontAwesomeIcons.mailBulk, color: Colors.red),
+                    Text("  Urune yorum ekle")
+                  ],
+                ),
+                //const Text("Login"),
+                //icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Yorumlar()),
+                  );
+                },
+              ),
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddProductPage()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddProductPage()));
                 },
                 child: const Text('Add product'),
               ),
@@ -107,7 +132,8 @@ class LoggedInWidget extends StatelessWidget {
                   textStyle: const TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProductListPage()));
                 },
                 child: const Text('Products'),
               ),
