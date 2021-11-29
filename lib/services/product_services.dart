@@ -54,7 +54,6 @@ class ProductServices {
 
     ref.snapshots().first.then((value) => {
           value.docs.forEach((element) {
-            print("asdasd" + element.id.toString());
             if (name == element.get('name')) {
               obj = element;
             }
