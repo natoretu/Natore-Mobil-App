@@ -129,7 +129,7 @@ class Sohbet extends StatelessWidget {
             children: <Widget>[
               const CircleAvatar(
                 radius: 24,
-                backgroundImage: AssetImage("images/pp.jfif"),
+                backgroundImage: AssetImage("assets/chatimages/pp.jfif"),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
