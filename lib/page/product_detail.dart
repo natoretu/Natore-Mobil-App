@@ -52,19 +52,18 @@ class _ProductDetailState extends State<ProductDetail> {
               floating: true,
               pinned: true,
               snap: true,
-              /*
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 title: Text(
-                  'Satıcıyla İletişime Geç',
+                  'Ürün Bilgisi',
                   style: TextStyle(
-                      fontFamily: "Zen Antique Soft",
+                      //fontFamily: "Zen Antique Soft",
                       color: Colors.white,
-                      fontSize: 22,
-                      //letterSpacing: 0.5,
+                      fontSize: 20,
+                      letterSpacing: 0.5,
                       fontWeight: FontWeight.w600),
                 ),
-              ),*/
+              ),
             ),
             /***-------------------------***/
             /*** Product Image and Info ***/
@@ -102,7 +101,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                             "Doğal Keçi Sütü",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 20),
+                                                fontSize: 18),
                                           ),
                                         ),
                                         Padding(
@@ -110,7 +109,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                           child: Text(
                                             "20 TL",
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 18,
                                             ),
                                           ),
                                         ),
@@ -222,164 +221,199 @@ class _Yorumlar extends State<Yorumlar> {
   @override
   Widget build(BuildContext context) {
     TextField textField;
-    nameOfProductHardCodedWillBeTakenFromDatabase = "nameOfProduct";
+
     allMessages = FirebaseFirestore.instance
         .collection('Products')
         .where("name", isEqualTo: nameOfProductHardCodedWillBeTakenFromDatabase)
         .snapshots();
     // final productName = allMessages.first;
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // kisiButonu("ProductName", "Price", "Properties", context),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        // kisiButonu("ProductName", "Price", "Properties", context),
+        SendMessageWidget(myFocusNode: myFocusNode, myController: myController),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
+          child: buildFloatingActionButton(),
+        ),
+        StreamBuilder<QuerySnapshot>(
+            stream: allMessages,
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) return const Text('Something went wrong.');
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return const Text('Loading');
+              final data = snapshot.requireData;
+              var currentMessages = (data.docs.where((element) => (true)));
 
-          StreamBuilder<QuerySnapshot>(
-              stream: allMessages,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError)
-                  return const Text('Something went wrong.');
-                if (snapshot.connectionState == ConnectionState.waiting)
-                  return const Text('Loading');
-                final data = snapshot.requireData;
-                var currentMessages = (data.docs.where((element) => (true)));
+              if (currentMessages.isNotEmpty) {
+                List<Map<String, dynamic>> yorumlar =
+                    List.from(currentMessages.first.get('comments'));
 
-                if (currentMessages.isNotEmpty) {
-                  List<Map<String, dynamic>> yorumlar =
-                      List.from(currentMessages.first.get('comments'));
-
-                  if (firstUpdate) {
-                    for (int i = 0; i < yorumlar.length - 1; i++) {
-                      selectedArray.add(false);
-                      isResponsesShown.add(false);
-                    }
-
-                    firstUpdate = false;
+                if (firstUpdate) {
+                  for (int i = 0; i < yorumlar.length; i++) {
+                    selectedArray.add(false);
+                    isResponsesShown.add(false);
                   }
 
-                  if (yorumlar.length == 0) {
-                    return const Text("Hiç yorum yok");
-                  }
-
-                  return Column(
-                    children: [
-                      SingleChildScrollView(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: yorumlar.length,
-                          itemBuilder: (context, index) {
-                            List<Map<String, dynamic>> yanitlar = List.from(
-                                currentMessages.first.get('responses'));
-                            for (int i = yanitlar.length - 1; i >= 0; i--) {
-                              if (yanitlar[i]['IndexOfRespondedComment'] !=
-                                  yorumlar.length - 1 - index)
-                                yanitlar.removeAt(i);
-                            }
-
-                            var messagesTaken =
-                                yorumlar[yorumlar.length - 1 - index]
-                                    ['comment'];
-                            var messageTime =
-                                yorumlar[yorumlar.length - 1 - index]['Time'];
-                            var sender =
-                                yorumlar[yorumlar.length - 1 - index]['sender'];
-                            //var responds = yorumlar[yorumlar.length-1-index]['responses'];
-
-                            String mesajinZamani = messageTime
-                                .toDate()
-                                .toString()
-                                .substring(0, 10);
-                            // !!Arayüz
-                            // mesajı saga mı sola mı yaslayacagız onu belırlıyor
-                            return Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                //!!
-                                children: [
-                                  Text('$messagesTaken' +
-                                      "\n" +
-                                      sender +
-                                      "\n"
-                                          '$mesajinZamani'),
-                                  IconButton(
-                                    icon: ((selectedArray[
-                                            yorumlar.length - 1 - index])
-                                        ? Icon(Icons.comment)
-                                        : Icon(Icons.mode_comment_outlined)),
-                                    onPressed: () {
-                                      setState(() {
-                                        selectedArray[
-                                                yorumlar.length - 1 - index] =
-                                            !selectedArray[
-                                                yorumlar.length - 1 - index];
-                                        if (selectedArray[
-                                                yorumlar.length - 1 - index] ==
-                                            true) {
-                                          indexOfLastRespondAttempt =
-                                              yorumlar.length - 1 - index;
-                                          myFocusNode.requestFocus();
-                                          for (int i = 0;
-                                              i < yorumlar.length;
-                                              i++) {
-                                            if (i !=
-                                                yorumlar.length - 1 - index) {
-                                              selectedArray[i] = false;
-                                            }
-                                          }
-                                        } else {
-                                          indexOfLastRespondAttempt = -1;
-                                        }
-                                        openTextFieldForRespond(yorumlar,
-                                            yorumlar.length - 1 - index);
-                                        //_volume += 10;
-                                      });
-                                    },
-                                  ),
-                                  (yanitlar.isNotEmpty)
-                                      ? yanitlariGosterEnableDisable(
-                                          isResponsesShown,
-                                          yorumlar.length - 1 - index)
-                                      : SizedBox(height: 1),
-                                  ((yanitlar.isNotEmpty &&
-                                          isResponsesShown[
-                                              yorumlar.length - 1 - index])
-                                      ? yanitlariGoster(context, yanitlar)
-                                      : SizedBox(
-                                          height: 1,
-                                        ))
-                                ],
-                              ),
-                            ); //yorum 0
-                          },
-                        ),
-                      ),
-                    ],
+                  firstUpdate = false;
+                }
+/*
+                if (yorumlar.length == 0) {
+                  return const Text(
+                    "Hiç yorum yok",
                   );
                 }
-                //!arayüz
-                return const Text(
-                    'Hiç yorum yok'); // daha once konusulmus kımse yoksa bu basiliyor
-              }),
-          SendMessageWidget(
-              myFocusNode: myFocusNode, myController: myController),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
-            child: buildFloatingActionButton(),
-          ),
+*/
+                return Column(
+                  children: [
+                    SingleChildScrollView(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: yorumlar.length,
+                        itemBuilder: (context, index) {
+                          List<Map<String, dynamic>> yanitlar =
+                              List.from(currentMessages.first.get('responses'));
+                          for (int i = yanitlar.length - 1; i >= 0; i--) {
+                            if (yanitlar[i]['IndexOfRespondedComment'] !=
+                                yorumlar.length - 1 - index)
+                              yanitlar.removeAt(i);
+                          }
 
-          // !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
-        ],
-      ),
+                          var messagesTaken =
+                              yorumlar[yorumlar.length - 1 - index]['comment'];
+                          var messageTime =
+                              yorumlar[yorumlar.length - 1 - index]['Time'];
+                          var sender =
+                              yorumlar[yorumlar.length - 1 - index]['sender'];
+                          //var responds = yorumlar[yorumlar.length-1-index]['responses'];
+
+                          String mesajinZamani =
+                              messageTime.toDate().toString().substring(0, 10);
+                          // !!Arayüz
+                          // mesajı saga mı sola mı yaslayacagız onu belırlıyor
+                          return Padding(
+                            padding: EdgeInsets.all(0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              //!!
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Material(
+                                    elevation: 0.5,
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white),
+                                      child: Column(children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text.rich(
+                                            TextSpan(children: <TextSpan>[
+                                              TextSpan(
+                                                  text: '$messagesTaken\n',
+                                                  style:
+                                                      TextStyle(fontSize: 16)),
+                                              TextSpan(
+                                                  text: sender,
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.grey)),
+                                              TextSpan(
+                                                  text: '\n$mesajinZamani',
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey)),
+                                            ]),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: ((selectedArray[
+                                                  yorumlar.length - 1 - index])
+                                              ? Icon(Icons.comment,
+                                                  semanticLabel: "Yanıt ekle")
+                                              : Icon(
+                                                  Icons.mode_comment_outlined)),
+                                          onPressed: () {
+                                            setState(() {
+                                              selectedArray[
+                                                  yorumlar.length -
+                                                      1 -
+                                                      index] = !selectedArray[
+                                                  yorumlar.length - 1 - index];
+                                              if (selectedArray[
+                                                      yorumlar.length -
+                                                          1 -
+                                                          index] ==
+                                                  true) {
+                                                indexOfLastRespondAttempt =
+                                                    yorumlar.length - 1 - index;
+                                                myFocusNode.requestFocus();
+                                                for (int i = 0;
+                                                    i < yorumlar.length;
+                                                    i++) {
+                                                  if (i !=
+                                                      yorumlar.length -
+                                                          1 -
+                                                          index) {
+                                                    selectedArray[i] = false;
+                                                  }
+                                                }
+                                              } else {
+                                                indexOfLastRespondAttempt = -1;
+                                              }
+                                              openTextFieldForRespond(yorumlar,
+                                                  yorumlar.length - 1 - index);
+                                              //_volume += 10;
+                                            });
+                                          },
+                                        ),
+                                      ]),
+                                    ),
+                                  ),
+                                ),
+                                (yanitlar.isNotEmpty)
+                                    ? yanitlariGosterEnableDisable(
+                                        isResponsesShown,
+                                        yorumlar.length - 1 - index)
+                                    : SizedBox(height: 1),
+                                ((yanitlar.isNotEmpty &&
+                                        isResponsesShown[
+                                            yorumlar.length - 1 - index])
+                                    ? yanitlariGoster(context, yanitlar)
+                                    : SizedBox(
+                                        height: 1,
+                                      )),
+                                Divider(),
+                              ],
+                            ),
+                          ); //yorum 0
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              }
+              //!arayüz
+              return const Text(
+                  'Hiç yorum yok'); // daha once konusulmus kımse yoksa bu basiliyor
+            }),
+
+        // !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
+      ],
     );
   }
 
   FloatingActionButton buildFloatingActionButton() {
     return FloatingActionButton(
+      mini: true,
       elevation: 2,
       onPressed: () async {
         String message = myController.text;
@@ -489,17 +523,26 @@ class _Yorumlar extends State<Yorumlar> {
   }
 
   Widget yanitlariGosterEnableDisable(List<bool> isResponsesShown, int index) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        textStyle: const TextStyle(fontSize: 15),
-      ),
-      onPressed: () {
-        setState(() {
-          isResponsesShown[index] = !isResponsesShown[index];
-        });
-      },
-      child: Text(
-          (isResponsesShown[index]) ? "Yanıtları gizle" : "Yanıtları göster"),
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              elevation: 1,
+              onPrimary: Colors.cyan, // basinca olusan renk
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              )),
+          onPressed: () {
+            setState(() {
+              isResponsesShown[index] = !isResponsesShown[index];
+            });
+          },
+          child: Text(
+              (isResponsesShown[index])
+                  ? "Yanıtları gizle"
+                  : "Yanıtları göster",
+              style: TextStyle(fontSize: 15, color: Colors.cyan))),
     );
   }
 }
@@ -517,21 +560,27 @@ class SendMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
+      textInputAction: TextInputAction.newline,
+      cursorColor: Colors.cyan,
+      textCapitalization: TextCapitalization.sentences,
       focusNode: myFocusNode,
       textAlignVertical: TextAlignVertical.bottom,
       decoration: const InputDecoration(
-        /*enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 1, color: Colors.cyan),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 1, color: Colors.cyan),
-            borderRadius: BorderRadius.circular(8),
-          ),*/
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(width: 2, color: Colors.cyan),
+          //borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(width: 2, color: Color(0xff06D6A0)),
+          //borderRadius: BorderRadius.circular(8),
+        ),
         //fillColor: Colors.white,
         //filled: true, // dont forget this line
-        border: UnderlineInputBorder(),
+        // border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
         labelText: ' Herkese açık bir yorum ekle...',
+        labelStyle: TextStyle(color: Colors.grey),
       ),
       controller: myController,
     );
@@ -548,15 +597,32 @@ Widget yanitlariGoster(
       physics: NeverScrollableScrollPhysics(),
       itemCount: yanitlar.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          trailing: Text(yanitlar[yanitlar.length - 1 - index]['Response'] +
-              "\n" +
-              yanitlar[yanitlar.length - 1 - index]['Responser'] +
-              "\n" +
-              yanitlar[yanitlar.length - 1 - index]['ResponseTime']
-                  .toDate()
-                  .toString()
-                  .substring(0, 10)),
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(41, 6, 6, 6),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            //contentPadding: EdgeInsets.only(left: 61),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text.rich(
+                TextSpan(children: <TextSpan>[
+                  TextSpan(
+                      text: yanitlar[index]['Response'] + '\n',
+                      style: TextStyle(fontSize: 16)),
+                  TextSpan(
+                      text: yanitlar[index]['Responser'] + '\n',
+                      style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  TextSpan(
+                      text: yanitlar[index]['ResponseTime']
+                          .toDate()
+                          .toString()
+                          .substring(0, 10),
+                      style: TextStyle(fontSize: 14, color: Colors.grey)),
+                ]),
+              ),
+            ),
+          ),
         );
       },
     ),
