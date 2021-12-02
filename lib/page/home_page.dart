@@ -7,7 +7,7 @@ import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
-import '../mainroduct_add.dart';
+import '../main.dart';
 import 'Product/product_list.dart';
 
 User? user = null;
