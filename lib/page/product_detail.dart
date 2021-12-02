@@ -9,10 +9,6 @@ import 'home_page.dart';
 
 String nameOfProductHardCodedWillBeTakenFromDatabase = "12";
 
-void main() {
-  runApp(const ProductDetail());
-}
-
 class ProductDetail extends StatefulWidget {
   const ProductDetail({
     Key? key,

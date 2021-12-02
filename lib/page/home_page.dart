@@ -2,13 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:natore_project/page/product_detail.dart';
 import 'package:natore_project/page/sohbet.dart';
-import 'package:natore_project/page/yorum.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
-import '../main.dart';
-import 'Product/product_add.dart';
+import '../mainroduct_add.dart';
 import 'Product/product_list.dart';
 
 User? user = null;
@@ -111,7 +110,7 @@ class LoggedInWidget extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Yorumlar()),
+                    MaterialPageRoute(builder: (context) => ProductDetail()),
                   );
                 },
               ),
@@ -121,7 +120,8 @@ class LoggedInWidget extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AddProductPage()));
+                      builder: (context) =>
+                          ProductDetail())); //TODO: AddProductPage()
                 },
                 child: const Text('Add product'),
               ),
