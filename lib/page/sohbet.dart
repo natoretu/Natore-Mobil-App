@@ -25,14 +25,13 @@ class Sohbet extends StatelessWidget {
     TextField textField;
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(100, 109, 23, 1),
+          backgroundColor: Colors.blueGrey,
           title: const Text('Sohbet'),
-          centerTitle: true,
           actions: [],
         ),
         body: Container(
           alignment: Alignment.center,
-          color: Colors.blueGrey.shade900,
+          color: Colors.white,
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -105,14 +104,14 @@ class Sohbet extends StatelessWidget {
                           return const Text(
                               'Gorusmeye Basla'); // daha once konusulmus kımse yoksa bu basiliyor
                         })),
-                // !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
+                /*// !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
                 textField = TextField(
                   decoration: new InputDecoration.collapsed(
                       hintText: "Yeni Sohbet için mail"),
                   onSubmitted: (String mail) {
                     mesajGondermeEkraniniAc(mail, context);
                   },
-                ),
+                ),*/
               ],
             ),
           ),
@@ -120,23 +119,68 @@ class Sohbet extends StatelessWidget {
   }
 
   // !!arayüz gecmıs sohbetler ıcın son mesaj zamanını son mesajını ve son konusulan kısıyı gosterıyor
-  FlatButton kisiButonu(
+  Expanded kisiButonu(
       String mail, DateTime time, String message, BuildContext context) {
-    return FlatButton(
-      color: Colors.white,
-      child: Row(
-        children: <Widget>[
-          const FaIcon(FontAwesomeIcons.facebookMessenger, color: Colors.blue),
-          Text("  $mail\n  $message\n  $time"),
-        ],
+    return Expanded(
+      child: Container(
+        color: Colors.white,
+        child: TextButton(
+          child: Row(
+            children: <Widget>[
+              const CircleAvatar(
+                radius: 24,
+                backgroundImage: AssetImage("images/pp.jfif"),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Container(
+                      child: Text(
+                        mail,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 14),
+                      ),
+                      width: 220,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      width: 220,
+                      child: Text(
+                        message,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300, color: Colors.black),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 30,
+                child: Text(
+                  "${time.hour}:${time.minute}",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+          onPressed: () {
+            mesajlasilanKisi = mail;
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
+            );
+          },
+        ),
       ),
-      onPressed: () {
-        mesajlasilanKisi = mail;
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
-        );
-      },
     );
   }
 }
@@ -157,6 +201,82 @@ class MesajGondermeEkrani extends StatefulWidget {
   _MesajGondermeEkrani createState() => _MesajGondermeEkrani();
 }
 
+class MessageTile extends StatelessWidget {
+  final String message;
+  final bool sendByMe;
+  final String messageTime;
+  MessageTile(
+      {required this.message,
+      required this.sendByMe,
+      required this.messageTime});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+          top: 8, bottom: 8, left: sendByMe ? 0 : 24, right: sendByMe ? 24 : 0),
+      alignment: sendByMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin:
+            sendByMe ? EdgeInsets.only(left: 30) : EdgeInsets.only(right: 30),
+        padding: EdgeInsets.only(top: 17, bottom: 17, left: 20, right: 20),
+        decoration: BoxDecoration(
+            borderRadius: sendByMe
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23),
+                    bottomLeft: Radius.circular(23))
+                : BorderRadius.only(
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23),
+                    bottomRight: Radius.circular(23)),
+            gradient: LinearGradient(
+              colors: sendByMe
+                  ? [const Color(0xff90a4ae), const Color(0xff90a4ae)]
+                  : [const Color(0xff546e7a), const Color(0xff546e7a)],
+            )),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //" $messageTime"
+            Flexible(
+              child: Container(
+                child: Text(message,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'OverpassRegular',
+                        fontWeight: FontWeight.w300)),
+              ),
+            ),
+            SizedBox(
+              width: 7,
+            ),
+
+            Column(
+              children: [
+                SizedBox(
+                  height: 8,
+                ),
+                Container(
+                  child: Text('$messageTime',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontFamily: 'OverpassRegular',
+                          fontWeight: FontWeight.w300)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // Define a corresponding State class.
 // This class holds the data related to the Form.
 class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
@@ -167,6 +287,14 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
   // of the TextField.
   final myController = TextEditingController();
 
+  /*void afterfirst(BuildContext context) {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
+  }*/
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -174,100 +302,148 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
     super.dispose();
   }
 
+  final ScrollController _scrollController =
+      ScrollController(initialScrollOffset: 100000);
+
   @override
   Widget build(BuildContext context) {
     //firebaseVeriAl();
     return Scaffold(
-      //!!arayüz
-      appBar: AppBar(
-        title: Text('$mesajlasilanKisi'),
-      ),
-      //!!arayüz
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          //!!arayüz
-          Container(
-            height: 350, // burası mesajların gorunecegı kısmın boyu
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: StreamBuilder<QuerySnapshot>(
-                stream: messages,
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) return Text('Something went wrong.');
-                  if (snapshot.connectionState == ConnectionState.waiting)
-                    return Text('Loading');
-                  final data = snapshot.requireData;
-                  //data.docs.where()
-                  var currentMessages = (data.docs.where((element) => ((element
-                                  .get('Receiver') ==
-                              mesajlasilanKisi &&
-                          element.get('Sender') == user!.email.toString()) ||
-                      (element.get('Sender') == mesajlasilanKisi &&
-                          element.get('Receiver') == user!.email.toString()))));
-                  if (currentMessages.isNotEmpty) {
-                    List<Map<String, dynamic>> messagesAndDates =
-                        List.from(currentMessages.first.get('Messages'));
+        //!!arayüz
+        backgroundColor: Color(0xffcfd8dc),
+        appBar: AppBar(
+          title: Text('$mesajlasilanKisi'),
+          backgroundColor: Color(0xff37474f),
+        ),
+        //!!arayüz
+        body: Container(
+          child: ListView(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height -
+                    135, // burası mesajların gorunecegı kısmın boyu
+                //padding: const EdgeInsets.symmetric(vertical: 20),
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: messages,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong.');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('Loading');
+                      }
+                      final data = snapshot.requireData;
+                      //data.docs.where()
+                      var currentMessages = (data.docs.where((element) =>
+                          ((element.get('Receiver') == mesajlasilanKisi &&
+                                  element.get('Sender') ==
+                                      user!.email.toString()) ||
+                              (element.get('Sender') == mesajlasilanKisi &&
+                                  element.get('Receiver') ==
+                                      user!.email.toString()))));
+                      if (currentMessages.isNotEmpty) {
+                        List<Map<String, dynamic>> messagesAndDates =
+                            List.from(currentMessages.first.get('Messages'));
 
-                    return ListView.builder(
-                      itemCount: messagesAndDates.length,
-                      itemBuilder: (context, index) {
-                        var messagesTaken = messagesAndDates[index]['Message'];
-                        var messageTime = messagesAndDates[index]['Time'];
+                        return ListView.builder(
+                          controller: _scrollController,
+                          itemCount: messagesAndDates.length,
+                          itemBuilder: (context, index) {
+                            var messagesTaken =
+                                messagesAndDates[index]['Message'];
+                            var messageTime = messagesAndDates[index]['Time'];
 
-                        String ekranaBasilacakMesaj = mailiCikar(
-                            messagesTaken, user!.email, mesajlasilanKisi);
-                        String mesajinZamani = messageTime.toDate().toString();
-                        // !!Arayüz
-                        // mesajı saga mı sola mı yaslayacagız onu belırlıyor
-                        return Padding(
-                          padding: (isItOurMessage(
-                                  messagesTaken)) // bizim mesaj ise sagda yoksa solda
-                              ? const EdgeInsets.only(left: 100)
-                              : const EdgeInsets.only(right: 100),
-                          child: Row(
-                            //!! arayüz mesajın sekli, whatsapp dakı gıbı mesajıns zamanını mesajın sag altında verebilirsek hos olur tabı gunler de gereklı dun 12 de atılan mesajla bugun 12 de atılanı ayırt etmek ıcın
-                            children: [
-                              Text('$ekranaBasilacakMesaj' +
-                                  "\n" +
-                                  '$mesajinZamani'),
-                            ],
-                          ),
+                            String ekranaBasilacakMesaj = mailiCikar(
+                                messagesTaken, user!.email, mesajlasilanKisi);
+                            String mesajinZamani =
+                                messageTime.toDate().toString().split(' ')[1];
+                            mesajinZamani = mesajinZamani.substring(0, 5);
+
+                            // !!Arayüz
+                            // mesajı saga mı sola mı yaslayacagız onu belırlıyor
+
+                            return MessageTile(
+                              message: ekranaBasilacakMesaj,
+                              sendByMe: isItOurMessage(messagesTaken),
+                              messageTime: mesajinZamani,
+                            );
+                          },
                         );
-                      },
-                    );
-                  }
-                  //!! arayüz
-                  return const Text(
-                      'Gorusmeye Basla2'); // eğer daha önce hiç bu kisiyle konusulmamışsa bu yazıyor
-                }),
+                      }
+                      //!! arayüz
+                      return const Text(
+                          'Gorusmeye Basla2'); // eğer daha önce hiç bu kisiyle konusulmamışsa bu yazıyor
+                    }),
+              ),
+              //!! arayüz mesajın yazıldıgı textFormField
+
+              Container(
+                alignment: Alignment.bottomCenter,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  height: 50,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Color(0xffeceff1)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: myController,
+                          //style: simpleTextStyle(),
+                          decoration: const InputDecoration(
+                              hintText: "Message ",
+                              hintStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
+                              border: InputBorder.none),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          String message = myController.text;
+                          if (message.isNotEmpty) {
+                            sendMessage(message);
+                          }
+                          myController.clear();
+                          _scrollController.animateTo(
+                            _scrollController.position.maxScrollExtent,
+                            curve: Curves.easeOut,
+                            duration: const Duration(milliseconds: 300),
+                          );
+                        },
+                        child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0x36FFFFFF),
+                                      Color(0x0FFFFFFF)
+                                    ],
+                                    begin: FractionalOffset.topLeft,
+                                    end: FractionalOffset.bottomRight),
+                                borderRadius: BorderRadius.circular(40)),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 12),
+                            child: const Icon(
+                              Icons.send,
+                              size: 25,
+                            )),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-          //!! arayüz mesajın yazıldıgı textFormField
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextFormField(
-              textAlignVertical: TextAlignVertical.bottom,
-              decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Enter your message'),
-              controller: myController,
-            ),
-          ),
-        ],
-      ),
-      //!! arayüz gonder butonu
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          String message = myController.text;
-          if (message.isNotEmpty) {
-            sendMessage(message);
-          }
-          myController.clear();
-        },
-        tooltip: 'Show me the value!',
-        child: const Icon(Icons.send),
-      ),
-    );
+        )
+        //!! arayüz gonder butonu
+        );
   }
 
   void verilenKisiyeMesajGonder(String mail, String text) {
@@ -353,3 +529,4 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
             .email!); // message holds the mail of sender, if it is from us, it will be on right side
   }
 }
+
