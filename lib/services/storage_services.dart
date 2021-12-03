@@ -7,7 +7,8 @@ class StorageServices {
   Future<String> uploadMedia(File file) async {
     var uploadTask = _firebaseStorage
         .ref()
-        .child("${DateTime.now().millisecondsSinceEpoch}.${file.path.split(".").last}")
+        .child(
+            "${DateTime.now().millisecondsSinceEpoch}.${file.path.split(".").last}")
         .putFile(file);
 
     uploadTask.snapshotEvents.listen((event) {});

@@ -42,11 +42,15 @@ class _ProductListPageState extends State<ProductListPage> {
                                 itemBuilder: (context, index) {
                                   return Card(
                                       child: ListTile(
-                                          title: Text('${list.elementAt(index).data()}'),
+                                          title: Text(
+                                              '${list.elementAt(index).data()}'),
                                           trailing: IconButton(
                                             icon: Icon(Icons.delete),
                                             onPressed: () async {
-                                              await list.elementAt(index).reference.delete();
+                                              await list
+                                                  .elementAt(index)
+                                                  .reference
+                                                  .delete();
                                             },
                                           )));
                                 }));

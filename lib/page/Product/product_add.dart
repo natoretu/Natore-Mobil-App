@@ -101,7 +101,8 @@ class AddProductPageState extends State<AddProductPage> {
                   width: 10,
                 ),
                 InkWell(
-                    onTap: () => _onImageButtonPressed(ImageSource.gallery, context: context),
+                    onTap: () => _onImageButtonPressed(ImageSource.gallery,
+                        context: context),
                     child: Icon(
                       Icons.image,
                       size: 30,
@@ -117,7 +118,8 @@ class AddProductPageState extends State<AddProductPage> {
               ),
               onPressed: () {
                 _productServices
-                    .addProduct(_name.text, double.parse(_price.text), _properties.text, image)
+                    .addProduct(_name.text, double.parse(_price.text),
+                        _properties.text, image, "mail@mail")
                     .then((value) {
                   Fluttertoast.showToast(
                     msg: "Product eklendi!",
@@ -139,7 +141,8 @@ class AddProductPageState extends State<AddProductPage> {
     );
   }
 
-  void _onImageButtonPressed(ImageSource source, {required BuildContext context}) async {
+  void _onImageButtonPressed(ImageSource source,
+      {required BuildContext context}) async {
     try {
       final pickedFile = await _imagePicker.pickImage(source: source);
       setState(() {
