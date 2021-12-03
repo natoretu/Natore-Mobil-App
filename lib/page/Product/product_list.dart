@@ -43,7 +43,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   return Card(
                                       child: ListTile(
                                           title: Text(
-                                              '${list.elementAt(index).data()}'),
+                                              '${list.elementAt(index).data().toString()}'),
                                           trailing: IconButton(
                                             icon: Icon(Icons.delete),
                                             onPressed: () async {

@@ -4,11 +4,14 @@ import 'package:natore_project/model/product.dart';
 void main() {
   test('product model test', () async {
     final product = Product(
+      id: "aks",
       image: "Image",
       name: "some Name",
       properties: "some Properties",
       price: 233,
-      ownerMail: "mail@mail.com",
+      mail: "mail@mail.com",
+      commments: <dynamic>[],
+      responses: <dynamic>[],
     );
 
     expect(product.price, 233);

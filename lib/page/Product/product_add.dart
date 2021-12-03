@@ -18,6 +18,7 @@ class AddProductPageState extends State<AddProductPage> {
   TextEditingController _name = TextEditingController();
   TextEditingController _price = TextEditingController();
   TextEditingController _properties = TextEditingController();
+  TextEditingController _ownermail = TextEditingController();
 
   ProductServices _productServices = ProductServices();
 
@@ -77,6 +78,13 @@ class AddProductPageState extends State<AddProductPage> {
               height: 10.0,
             ),
             TextFormField(
+              controller: _ownermail,
+              decoration: InputDecoration(hintText: "owner mail"),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            TextFormField(
               controller: _properties,
               decoration: InputDecoration(hintText: "Properties"),
             ),
@@ -119,7 +127,7 @@ class AddProductPageState extends State<AddProductPage> {
               onPressed: () {
                 _productServices
                     .addProduct(_name.text, double.parse(_price.text),
-                        _properties.text, image, "mail@mail")
+                        _properties.text, image, _ownermail.text)
                     .then((value) {
                   Fluttertoast.showToast(
                     msg: "Product eklendi!",

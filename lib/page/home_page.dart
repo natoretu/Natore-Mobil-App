@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/page/product_detail.dart';
+import 'package:natore_project/model/product.dart';
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
+import 'package:natore_project/services/product_services.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
@@ -134,6 +136,23 @@ class LoggedInWidget extends StatelessWidget {
                       builder: (context) => ProductListPage()));
                 },
                 child: const Text('Products'),
+              ),
+              const SizedBox(height: 30),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () async {
+                  print("========entered");
+                  ProductServices _productServives = ProductServices();
+                  List plist = await _productServives.getProducts2();
+                  plist.forEach((value) {
+                    print("--");
+                    print(value);
+                  });
+                  print("========existed");
+                },
+                child: const Text('test api'),
               ),
               const SizedBox(height: 30),
             ],

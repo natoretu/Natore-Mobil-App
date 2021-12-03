@@ -13,20 +13,29 @@ class ProductServices {
       File pickedFile, String mail) async {
     var ref = _firestore.collection('Products');
     mediaUrl = await _storageServices.uploadMedia(pickedFile);
-    print(mediaUrl);
-    var documentRef = await ref.doc(name).set({
+    // print(mediaUrl);
+
+    String id = mail + "-" + name;
+    var documentRef = await ref.doc(id).set({
+      'id': id,
       'name': name,
       'price': price,
       'properties': properties,
       'image': mediaUrl,
       'mail': mail,
+      'commments': <dynamic>[],
+      'responses': <dynamic>[],
     });
+
     return Product(
+      id: id,
       name: name,
       price: price,
       properties: properties,
       image: mediaUrl,
-      ownerMail: mail,
+      mail: mail,
+      commments: <dynamic>[],
+      responses: <dynamic>[],
     );
   }
 
@@ -50,6 +59,22 @@ class ProductServices {
     return ref.snapshots();
   }
 
+  Future<List<dynamic>> getProducts2() async {
+    CollectionReference ref = _firestore.collection('Products');
+    List<Product> productsArray = [];
+
+    await ref.snapshots().first.then((value) => {
+          value.docs.forEach((element) {
+            print(element.id);
+            var p = Product.fromSnapshot(element);
+            productsArray.add(p);
+          })
+        });
+    print("size: " + productsArray.length.toString());
+
+    return productsArray;
+  }
+
   Product getProduct(String name) {
     CollectionReference ref = _firestore.collection('Products');
     DocumentSnapshot? obj = null;
@@ -62,6 +87,7 @@ class ProductServices {
             }
           })
         });
+
     return Product.fromSnapshot(obj!);
   }
 
