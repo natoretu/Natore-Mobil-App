@@ -145,7 +145,8 @@ class LoggedInWidget extends StatelessWidget {
                 onPressed: () async {
                   print("========entered");
                   ProductServices _productServives = ProductServices();
-                  List plist = await _productServives.getProducts2();
+                  List plist =
+                      await _productServives.getProductsOfSeller("tavsan@");
                   plist.forEach((value) {
                     print("--");
                     print(value);

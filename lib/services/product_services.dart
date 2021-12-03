@@ -91,6 +91,22 @@ class ProductServices {
     return productsArray;
   }
 
+  Future<List<dynamic>> getProductsOfName(String name) async {
+    CollectionReference ref = _firestore.collection('Products');
+    List<Product> productsArray = [];
+
+    await ref.snapshots().first.then((value) => {
+          value.docs.forEach((element) {
+            var p = Product.fromSnapshot(element);
+            if (p.name == name) {
+              productsArray.add(p);
+            }
+          })
+        });
+
+    return productsArray;
+  }
+
   Product getProduct(String name) {
     CollectionReference ref = _firestore.collection('Products');
     DocumentSnapshot? obj = null;
