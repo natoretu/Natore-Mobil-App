@@ -10,6 +10,7 @@ import 'package:natore_project/services/product_services.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
+import 'Product/product_add.dart';
 import 'Product/product_list.dart';
 
 User? user = null;
@@ -124,6 +125,17 @@ class LoggedInWidget extends StatelessWidget {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
                           ProductDetail())); //TODO: AddProductPage()
+                },
+                child: const Text('Product Detail'),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          AddProductPage())); //TODO: AddProductPage()
                 },
                 child: const Text('Add product'),
               ),

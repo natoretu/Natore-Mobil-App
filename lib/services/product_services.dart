@@ -59,6 +59,14 @@ class ProductServices {
     return ref.snapshots();
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> getProductsOfSellerStream(
+      String mail) {
+    Query<Map<String, dynamic>> ref =
+        _firestore.collection('Products').where('mail', isEqualTo: mail);
+
+    return ref.snapshots();
+  }
+
   Future<List<dynamic>> getProducts2() async {
     CollectionReference ref = _firestore.collection('Products');
     List<Product> productsArray = [];

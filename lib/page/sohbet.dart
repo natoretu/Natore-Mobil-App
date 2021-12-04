@@ -529,4 +529,3 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
             .email!); // message holds the mail of sender, if it is from us, it will be on right side
   }
 }
-
