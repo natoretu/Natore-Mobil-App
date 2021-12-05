@@ -9,8 +9,15 @@ class ProductServices {
   StorageServices _storageServices = StorageServices();
   String mediaUrl = "";
 
-  Future<Product> addProduct(String name, double price, String properties,
-      File pickedFile, String mail) async {
+  Future<Product> addProduct(
+      String name,
+      double price,
+      String properties,
+      File pickedFile,
+      String mail,
+      String category,
+      String market,
+      int quantity) async {
     var ref = _firestore.collection('Products');
     mediaUrl = await _storageServices.uploadMedia(pickedFile);
     // print(mediaUrl);
@@ -20,6 +27,10 @@ class ProductServices {
       'id': id,
       'name': name,
       'price': price,
+      'rate': 0,
+      'category': category,
+      'market': market,
+      'quantity': quantity,
       'properties': properties,
       'image': mediaUrl,
       'mail': mail,
@@ -31,6 +42,10 @@ class ProductServices {
       id: id,
       name: name,
       price: price,
+      rate: 0,
+      category: category,
+      market: market,
+      quantity: quantity,
       properties: properties,
       image: mediaUrl,
       mail: mail,

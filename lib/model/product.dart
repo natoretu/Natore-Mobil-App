@@ -4,6 +4,10 @@ class Product {
   String id;
   String name;
   double price;
+  double rate;
+  String category;
+  String market;
+  int quantity;
   String properties;
   String image;
   String mail;
@@ -14,6 +18,10 @@ class Product {
     required this.id,
     required this.name,
     required this.price,
+    required this.rate,
+    required this.category,
+    required this.market,
+    required this.quantity,
     required this.properties,
     required this.image,
     required this.mail,
@@ -31,6 +39,10 @@ class Product {
       id: snapShot["id"].toString(),
       name: snapShot["name"].toString(),
       price: snapShot["price"],
+      rate: snapShot["rate"],
+      category: snapShot["category"],
+      market: snapShot["market"],
+      quantity: snapShot["quantity"],
       properties: snapShot["properties"],
       image: snapShot["image"].toString(),
       mail: snapShot["mail"],

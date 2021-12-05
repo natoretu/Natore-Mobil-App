@@ -17,8 +17,11 @@ class AddProductPage extends StatefulWidget {
 class AddProductPageState extends State<AddProductPage> {
   TextEditingController _name = TextEditingController();
   TextEditingController _price = TextEditingController();
+  TextEditingController _quantity = TextEditingController();
   TextEditingController _properties = TextEditingController();
   TextEditingController _ownermail = TextEditingController();
+  TextEditingController _category = TextEditingController();
+  TextEditingController _market = TextEditingController();
 
   ProductServices _productServices = ProductServices();
 
@@ -78,8 +81,30 @@ class AddProductPageState extends State<AddProductPage> {
               height: 10.0,
             ),
             TextFormField(
+              controller: _quantity,
+              decoration: InputDecoration(hintText: "Quantity"),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            TextFormField(
               controller: _ownermail,
               decoration: InputDecoration(hintText: "owner mail"),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            TextFormField(
+              controller: _category,
+              decoration: InputDecoration(hintText: "Enter category"),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            TextFormField(
+              controller: _market,
+              decoration: InputDecoration(hintText: "Enter the market"),
             ),
             SizedBox(
               height: 10.0,
@@ -126,8 +151,16 @@ class AddProductPageState extends State<AddProductPage> {
               ),
               onPressed: () {
                 _productServices
-                    .addProduct(_name.text, double.parse(_price.text),
-                        _properties.text, image, _ownermail.text)
+                    .addProduct(
+                  _name.text,
+                  double.parse(_price.text),
+                  _properties.text,
+                  image,
+                  _ownermail.text,
+                  _category.text,
+                  _market.text,
+                  int.parse(_quantity.text),
+                )
                     .then((value) {
                   Fluttertoast.showToast(
                     msg: "Product eklendi!",
