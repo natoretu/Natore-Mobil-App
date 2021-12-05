@@ -56,28 +56,58 @@ class ProductServices {
 
   Stream<QuerySnapshot> getProducts() {
     CollectionReference ref = _firestore.collection('Products');
-    List<dynamic> productsArray = [];
-
-    // print(ref);
-    // print(ref.snapshots());
-    // print(ref.snapshots().first);
-    // ids.first.then((value) => (value.docs.forEach((element) {
-    //       print(element.data());
-    //     })));
-
-    // ref.snapshots().first.then((value) => (value.docs.forEach((element) {
-    //       // var a = Product.fromSnapshot(element);
-    //       productsArray.add(element.data());
-    //       print(productsArray);
-    //     })));
 
     return ref.snapshots();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getProductsOfSellerStream(
+  Stream<QuerySnapshot<Map<String, dynamic>>> getProductsOfSellerStreamMail(
       String mail) {
     Query<Map<String, dynamic>> ref =
         _firestore.collection('Products').where('mail', isEqualTo: mail);
+
+    return ref.snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getProductsOfSellerStreamMarket(
+      String market) {
+    Query<Map<String, dynamic>> ref =
+        _firestore.collection('Products').where('market', isEqualTo: market);
+
+    return ref.snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getProductsOfSellerStreamCategory(
+      String category) {
+    Query<Map<String, dynamic>> ref = _firestore
+        .collection('Products')
+        .where('category', isEqualTo: category);
+
+    return ref.snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>>
+      getProductsOfSellerStreamMarketCategory(String market, String category) {
+    Query<Map<String, dynamic>> ref = _firestore
+        .collection('Products')
+        .where('market', isEqualTo: market)
+        .where('category', isEqualTo: category);
+
+    return ref.snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>>
+      getProductsOfSellerStreamGreaterRate(int rate) {
+    Query<Map<String, dynamic>> ref = _firestore
+        .collection('Products')
+        .where('rate', isGreaterThanOrEqualTo: rate);
+
+    return ref.snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getProductStream(String id) {
+    Query<Map<String, dynamic>> ref = _firestore
+        .collection('Products')
+        .where('id', isGreaterThanOrEqualTo: id);
 
     return ref.snapshots();
   }

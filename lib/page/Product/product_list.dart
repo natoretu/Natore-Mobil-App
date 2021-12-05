@@ -27,7 +27,8 @@ class _ProductListPageState extends State<ProductListPage> {
                 child: null,
               ),
               StreamBuilder(
-                  stream: _productServices.getProductsOfSellerStream("tavsan@"),
+                  stream:
+                      _productServices.getProductsOfSellerStreamMail("tavsan@"),
                   builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
                     if (asyncSnapshot.hasError) {
                       return Center(
