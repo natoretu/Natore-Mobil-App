@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'dart:async';
@@ -6,12 +7,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:natore_project/services/order_services.dart';
 import 'package:flutter/material.dart'; // new
 
-class OrderPage extends StatefulWidget {
+class AddOrderPage extends StatefulWidget {
   @override
-  _OrderPageState createState() => _OrderPageState();
+  _AddOrderPageState createState() => _AddOrderPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _AddOrderPageState extends State<AddOrderPage> {
+  var _firebase = FirebaseFirestore.instance;
+  var _orderServices = OrderServices();
+
   @override
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Add Order'),
+      ),
+    );
+  }
 }
