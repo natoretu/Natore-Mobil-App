@@ -8,6 +8,7 @@ class ProductServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   StorageServices _storageServices = StorageServices();
   String mediaUrl = "";
+  String collection = "products";
 
   Future<Product> addProduct(
       String name,
@@ -18,7 +19,7 @@ class ProductServices {
       String category,
       String market,
       int quantity) async {
-    var ref = _firestore.collection('Products');
+    var ref = _firestore.collection(collection);
     mediaUrl = await _storageServices.uploadMedia(pickedFile);
     // print(mediaUrl);
 
@@ -55,7 +56,7 @@ class ProductServices {
   }
 
   Stream<QuerySnapshot> getProducts() {
-    CollectionReference ref = _firestore.collection('Products');
+    CollectionReference ref = _firestore.collection(collection);
 
     return ref.snapshots();
   }
@@ -63,7 +64,7 @@ class ProductServices {
   Stream<QuerySnapshot<Map<String, dynamic>>> getProductsOfSellerStreamMail(
       String mail) {
     Query<Map<String, dynamic>> ref =
-        _firestore.collection('Products').where('mail', isEqualTo: mail);
+        _firestore.collection(collection).where('mail', isEqualTo: mail);
 
     return ref.snapshots();
   }
@@ -71,7 +72,7 @@ class ProductServices {
   Stream<QuerySnapshot<Map<String, dynamic>>> getProductsOfSellerStreamMarket(
       String market) {
     Query<Map<String, dynamic>> ref =
-        _firestore.collection('Products').where('market', isEqualTo: market);
+        _firestore.collection(collection).where('market', isEqualTo: market);
 
     return ref.snapshots();
   }
@@ -88,7 +89,7 @@ class ProductServices {
   Stream<QuerySnapshot<Map<String, dynamic>>>
       getProductsOfSellerStreamMarketCategory(String market, String category) {
     Query<Map<String, dynamic>> ref = _firestore
-        .collection('Products')
+        .collection(collection)
         .where('market', isEqualTo: market)
         .where('category', isEqualTo: category);
 
@@ -98,7 +99,7 @@ class ProductServices {
   Stream<QuerySnapshot<Map<String, dynamic>>>
       getProductsOfSellerStreamGreaterRate(int rate) {
     Query<Map<String, dynamic>> ref = _firestore
-        .collection('Products')
+        .collection(collection)
         .where('rate', isGreaterThanOrEqualTo: rate);
 
     return ref.snapshots();
@@ -106,14 +107,14 @@ class ProductServices {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getProductStream(String id) {
     Query<Map<String, dynamic>> ref = _firestore
-        .collection('Products')
+        .collection(collection)
         .where('id', isGreaterThanOrEqualTo: id);
 
     return ref.snapshots();
   }
 
   Future<List<dynamic>> getProducts2() async {
-    CollectionReference ref = _firestore.collection('Products');
+    CollectionReference ref = _firestore.collection(collection);
     List<Product> productsArray = [];
 
     await ref.snapshots().first.then((value) => {
@@ -129,7 +130,7 @@ class ProductServices {
   }
 
   Future<List<dynamic>> getProductsOfSeller(String name) async {
-    CollectionReference ref = _firestore.collection('Products');
+    CollectionReference ref = _firestore.collection(collection);
     List<Product> productsArray = [];
 
     await ref.snapshots().first.then((value) => {
@@ -145,7 +146,7 @@ class ProductServices {
   }
 
   Future<List<dynamic>> getProductsOfName(String name) async {
-    CollectionReference ref = _firestore.collection('Products');
+    CollectionReference ref = _firestore.collection(collection);
     List<Product> productsArray = [];
 
     await ref.snapshots().first.then((value) => {
@@ -161,7 +162,7 @@ class ProductServices {
   }
 
   Product getProduct(String name) {
-    CollectionReference ref = _firestore.collection('Products');
+    CollectionReference ref = _firestore.collection(collection);
     DocumentSnapshot? obj = null;
 
     ref.snapshots().first.then((value) => {
@@ -177,7 +178,37 @@ class ProductServices {
   }
 
   Future<void> removeProdut(String id) {
-    var ref = _firestore.collection("Products").doc(id).delete();
+    var ref = _firestore.collection(collection).doc(id).delete();
     return ref;
+  }
+
+  Future<void> updateProduct(
+      String id,
+      String name,
+      double price,
+      String properties,
+      File pickedFile,
+      String mail,
+      String category,
+      String market,
+      int quantity) async {
+    var ref = _firestore.collection(collection).doc(id);
+    mediaUrl = await _storageServices.uploadMedia(pickedFile);
+    // print(mediaUrl);
+
+    var documentRef = await ref.update({
+      'id': id,
+      'name': name,
+      'price': price,
+      'rate': 0,
+      'category': category,
+      'market': market,
+      'quantity': quantity,
+      'properties': properties,
+      'image': mediaUrl,
+      'mail': mail,
+      'commments': <dynamic>[],
+      'responses': <dynamic>[],
+    });
   }
 }

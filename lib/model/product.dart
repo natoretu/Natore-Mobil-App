@@ -52,4 +52,20 @@ class Product {
       // responses: List.from(snapShot["responses"]),
     );
   }
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "name": name,
+      "price": price,
+      "rate": rate,
+      "category": category,
+      "market": market,
+      "quantity": quantity,
+      "properties": properties,
+      "image": image,
+      "mail": mail,
+      "commments": commments,
+      "responses": responses,
+    };
+  }
 }
