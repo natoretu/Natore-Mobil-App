@@ -1,12 +1,13 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 
-import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:natore_project/services/product_services.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // new
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:natore_project/services/product_services.dart';
 
 //Page Must be Stateles
 class AddProductPage extends StatefulWidget {
@@ -54,130 +55,265 @@ class AddProductPageState extends State<AddProductPage> {
     }
   }
 
+  String dropdownValue = 'Süt';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add product'),
+        title: const Text(
+          'Ürün Ekle',
+          style: TextStyle(
+              //fontFamily: "Zen Antique Soft",
+              color: Colors.white,
+              fontSize: 20,
+              letterSpacing: 0.5,
+              fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.cyan, //Color(0xff06D6A0),
+        centerTitle: true,
+        elevation: 1,
       ),
-      body: Container(
-        padding: const EdgeInsets.all(40.0),
-        child: Center(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(40, 29, 40, 40),
+          child: Center(
             child: Column(
-          children: [
-            TextFormField(
-              controller: _name,
-              decoration: InputDecoration(hintText: "Product Name"),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextFormField(
-              controller: _price,
-              decoration: InputDecoration(hintText: "Price"),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextFormField(
-              controller: _quantity,
-              decoration: InputDecoration(hintText: "Quantity"),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextFormField(
-              controller: _ownermail,
-              decoration: InputDecoration(hintText: "owner mail"),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextFormField(
-              controller: _category,
-              decoration: InputDecoration(hintText: "Enter category"),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextFormField(
-              controller: _market,
-              decoration: InputDecoration(hintText: "Enter the market"),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            TextFormField(
-              controller: _properties,
-              decoration: InputDecoration(hintText: "Properties"),
-            ),
-            SizedBox(
-              height: 50.0,
-            ),
-            imagePlace(context),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                InkWell(
-                    onTap: () => _onImageButtonPressed(
-                          ImageSource.camera,
-                          context: context,
-                        ),
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: 30,
-                      color: Colors.blue,
-                    )),
-                SizedBox(
-                  width: 10,
+                Row(
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Text(
+                        'Ürün kategorisini seçiniz : ',
+                        style: TextStyle(fontSize: 17, color: Colors.black54),
+                      ),
+                    ),
+                    DropdownButton<String>(
+                      alignment: Alignment.center,
+                      value: dropdownValue,
+                      icon: const Icon(
+                        Icons.arrow_downward,
+                        size: 18,
+                      ),
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.black, fontSize: 16),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.cyan,
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue!;
+                        });
+                      },
+                      items: <String>[
+                        'Süt',
+                        'Yumurta',
+                        'Yağ',
+                        'Yoğurt',
+                        'Peynir'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
-                InkWell(
-                    onTap: () => _onImageButtonPressed(ImageSource.gallery,
-                        context: context),
-                    child: Icon(
-                      Icons.image,
-                      size: 30,
-                      color: Colors.blue,
-                    ))
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  controller: _name,
+                  inputFormatters: [
+                    new LengthLimitingTextInputFormatter(42),
+                  ],
+                  decoration: InputDecoration(
+                    labelText: "Ürün ismi",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(width: 2, color: Colors.cyan),
+                    ),
+                  ),
+                  textCapitalization: TextCapitalization.sentences,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  controller: _price,
+                  inputFormatters: [
+                    new LengthLimitingTextInputFormatter(4),
+                  ],
+                  decoration: InputDecoration(
+                    labelText: "Ürün fiyatı",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    prefixText: '\₺',
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(width: 2, color: Colors.cyan),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  controller: _quantity,
+                  inputFormatters: [
+                    new LengthLimitingTextInputFormatter(9),
+                  ],
+                  decoration: InputDecoration(
+                    labelText: "Ürün adeti",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(width: 2, color: Colors.cyan),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  controller: _ownermail,
+                  decoration: InputDecoration(
+                    labelText: "E-mail adresi",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(width: 2, color: Colors.cyan),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  controller: _market,
+                  inputFormatters: [
+                    new LengthLimitingTextInputFormatter(42),
+                  ],
+                  decoration: InputDecoration(
+                    labelText: "Market adı",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(width: 2, color: Colors.cyan),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                TextFormField(
+                  controller: _properties,
+                  inputFormatters: [
+                    new LengthLimitingTextInputFormatter(42),
+                  ],
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: InputDecoration(
+                    labelText: "Ürün detayları",
+                    labelStyle: TextStyle(color: Colors.black54),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(width: 2, color: Colors.cyan),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.cyan, width: 2)),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        imagePlace(context),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: InkWell(
+                                      onTap: () => _onImageButtonPressed(
+                                        ImageSource.camera,
+                                        context: context,
+                                      ),
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        size: 30,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () => _onImageButtonPressed(
+                                        ImageSource.gallery,
+                                        context: context),
+                                    child: Icon(
+                                      Icons.image,
+                                      size: 28,
+                                      color: Colors.black54,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  textStyle: const TextStyle(fontSize: 20),
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.cyan,
+                                ),
+                                onPressed: () {
+                                  _productServices
+                                      .addProduct(
+                                    _name.text,
+                                    double.parse(_price.text),
+                                    _properties.text,
+                                    image,
+                                    _ownermail.text,
+                                    _category.text,
+                                    _market.text,
+                                    int.parse(_quantity.text),
+                                  )
+                                      .then((value) {
+                                    Fluttertoast.showToast(
+                                      msg: "Product eklendi!",
+                                      timeInSecForIosWeb: 2,
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.grey[600],
+                                      textColor: Colors.white,
+                                      fontSize: 14,
+                                    );
+                                  });
+                                },
+                                child: const Text('Ürünü Ekle'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 20),
-                primary: Colors.white60,
-                backgroundColor: Colors.black54,
-              ),
-              onPressed: () {
-                _productServices
-                    .addProduct(
-                  _name.text,
-                  double.parse(_price.text),
-                  _properties.text,
-                  image,
-                  _ownermail.text,
-                  _category.text,
-                  _market.text,
-                  int.parse(_quantity.text),
-                )
-                    .then((value) {
-                  Fluttertoast.showToast(
-                    msg: "Product eklendi!",
-                    timeInSecForIosWeb: 2,
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.grey[600],
-                    textColor: Colors.white,
-                    fontSize: 14,
-                  );
-                });
-              },
-              child: const Text('Add product'),
-            ),
-            const SizedBox(height: 30),
-          ],
-        )),
+          ),
+        ),
       ),
     );
   }
