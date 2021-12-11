@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/page/product_detail.dart';
-import 'package:natore_project/model/product.dart';
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:natore_project/services/product_services.dart';
@@ -134,8 +133,7 @@ class LoggedInWidget extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          AddProductPage())); //TODO: AddProductPage()
+                      builder: (context) => AddProductPage()));
                 },
                 child: const Text('Add product'),
               ),
@@ -148,6 +146,16 @@ class LoggedInWidget extends StatelessWidget {
                       builder: (context) => ProductListPage()));
                 },
                 child: const Text('Products'),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MainPage())); //TODO!!!!!!!!!
+                },
+                child: const Text('Ana sayfa'),
               ),
               const SizedBox(height: 30),
               TextButton(
