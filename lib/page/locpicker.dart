@@ -37,7 +37,7 @@ class _CitySelectorState extends State<CitySelector> {
 
   readFileData() async {
     String responseText;
-    responseText = await rootBundle.loadString('locations/cities.txt');
+    responseText = await rootBundle.loadString('assets/locations/cities.txt');
     if (this.mounted) {
       setState(() {
         citiesText = responseText;
@@ -133,7 +133,7 @@ class _CountiesSelectorState extends State<CountiesSelector> {
   String countiesText = "";
   readFileData() async {
     String responseText;
-    responseText = await rootBundle.loadString('locations/counties.txt');
+    responseText = await rootBundle.loadString('assets/locations/counties.txt');
     if (this.mounted) {
       setState(() {
         countiesText = responseText;
