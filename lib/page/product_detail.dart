@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'home_page.dart';
 
-String nameOfProductHardCodedWillBeTakenFromDatabase = "12";
+String nameOfProductHardCodedWillBeTakenFromDatabase = "normal";
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail({

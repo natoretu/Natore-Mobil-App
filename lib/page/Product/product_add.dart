@@ -128,6 +128,7 @@ class AddProductPageState extends State<AddProductPage> {
                 ),
                 TextFormField(
                   controller: _name,
+                  cursorColor: Colors.cyan,
                   inputFormatters: [
                     new LengthLimitingTextInputFormatter(42),
                   ],
@@ -145,6 +146,7 @@ class AddProductPageState extends State<AddProductPage> {
                 ),
                 TextFormField(
                   controller: _price,
+                  cursorColor: Colors.cyan,
                   inputFormatters: [
                     new LengthLimitingTextInputFormatter(4),
                   ],
@@ -163,6 +165,7 @@ class AddProductPageState extends State<AddProductPage> {
                 ),
                 TextFormField(
                   controller: _quantity,
+                  cursorColor: Colors.cyan,
                   inputFormatters: [
                     new LengthLimitingTextInputFormatter(9),
                   ],
@@ -180,6 +183,7 @@ class AddProductPageState extends State<AddProductPage> {
                 ),
                 TextFormField(
                   controller: _ownermail,
+                  cursorColor: Colors.cyan,
                   decoration: InputDecoration(
                     labelText: "E-mail adresi",
                     labelStyle: TextStyle(color: Colors.black54),
@@ -193,6 +197,7 @@ class AddProductPageState extends State<AddProductPage> {
                 ),
                 TextFormField(
                   controller: _market,
+                  cursorColor: Colors.cyan,
                   inputFormatters: [
                     new LengthLimitingTextInputFormatter(42),
                   ],
@@ -209,6 +214,7 @@ class AddProductPageState extends State<AddProductPage> {
                 ),
                 TextFormField(
                   controller: _properties,
+                  cursorColor: Colors.cyan,
                   inputFormatters: [
                     new LengthLimitingTextInputFormatter(42),
                   ],

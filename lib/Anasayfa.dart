@@ -98,9 +98,9 @@ class _MyHomePageState extends State<MyHomePage> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);*/
 
   List<Widget> tabs = [
-    MainPage(),
-    MyStatefulWidget(),
     UserProfile(),
+    MyStatefulWidget(),
+    MainPage(),
   ];
 
   int _selectedIndex = 0;
@@ -1061,7 +1061,7 @@ class _MyAdressState extends State<MyAdress> {
                                             borderRadius:
                                                 BorderRadius.circular(8))),
                                     onPressed: () {},
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.edit_location_outlined,
                                       color: Colors.pinkAccent,
                                       size: 24,
@@ -1354,9 +1354,9 @@ class _PreviousOrdersState extends State<PreviousOrders> {
   ];
 
   final List<ImageProvider> Image_list = [
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/butter-toast.png"),
-    AssetImage("assets/real_milk.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/butter-toast.png"),
+    AssetImage("assets/homepageImages/real_milk.png"),
   ];
 
   @override
@@ -1604,11 +1604,11 @@ class _ProductCategoriesState extends State<ProductCategories> {
   ];
 
   final List<ImageProvider> Image_list = [
-    AssetImage("assets/real_milk.png"),
-    AssetImage("assets/eggs_2.png"),
-    AssetImage("assets/butter-toast.png"),
-    AssetImage("assets/yogurt.png"),
-    AssetImage("assets/cheese.png"),
+    AssetImage("assets/homepageImages/real_milk.png"),
+    AssetImage("assets/homepageImages/eggs_2.png"),
+    AssetImage("assets/homepageImages/butter-toast.png"),
+    AssetImage("assets/homepageImages/yogurt.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
   ];
 
   final List<String> ProductName_list = [
@@ -1726,21 +1726,21 @@ class _StoreState extends State<Store> {
   ];
 
   final List<ImageProvider> StoreIconList = [
-    AssetImage("assets/sutcu_dede_f.png"),
-    AssetImage("assets/butter-toast.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/real_milk.png"),
-    AssetImage("assets/eggs_2.png"),
-    AssetImage("assets/yogurt.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/cheese.png"),
-    AssetImage("assets/cheese.png"),
+    AssetImage("assets/homepageImages/sutcu_dede_f.png"),
+    AssetImage("assets/homepageImages/butter-toast.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/real_milk.png"),
+    AssetImage("assets/homepageImages/eggs_2.png"),
+    AssetImage("assets/homepageImages/yogurt.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
+    AssetImage("assets/homepageImages/cheese.png"),
   ];
 
   Color? RateColor(double rate) {
@@ -1810,7 +1810,7 @@ class _StoreState extends State<Store> {
               Opacity(
                   opacity: 1,
                   child: Image.asset(
-                    "assets/k2_c.png",
+                    "assets/homepageImages/k2_c.png",
                     /** !!!  **/
                     fit: BoxFit.fill,
                     color: Color(0xff264653),

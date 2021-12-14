@@ -6,9 +6,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:natore_project/Anasayfa.dart';
-import 'package:natore_project/main.dart';
+
+import 'main.dart';
 
 // ignore_for_file: file_names
 SingingCharacter? character;
@@ -20,38 +23,46 @@ class googleLoginPage2 extends StatelessWidget {
   bool check = false;
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasData) {
-              //final user = FirebaseAuth.instance.currentUser! as var; // <-- Your data using 'as'
-              final user = FirebaseAuth.instance.currentUser!;
-              FirebaseFirestore.instance
-                  .collection('Users')
-                  .doc(user.email)
-                  .get()
-                  .then((DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists) {
-                  check = false;
-                } else {
-                  check = true;
-                }
-              });
-              if (check) {
-                return MainPage2();
+          body: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            final user = FirebaseAuth.instance.currentUser!;
+            FirebaseFirestore.instance
+                .collection('Users')
+                .doc(user.email)
+                .get()
+                .then((DocumentSnapshot documentSnapshot) {
+              if (documentSnapshot.exists) {
+                check = false;
               } else {
-                function();
-                return MyApp1();
+                check = true;
               }
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Something went wrong!'));
-            } else
-              return MainPage1();
-          },
-        ),
-      );
+            });
+            if (check) {
+              return MainPage2();
+            } else {
+              function();
+
+              return MyApp1();
+            }
+
+            // giris yapılmış
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Something went wrong!'));
+          } else
+            return MainPage1(); /*NewWidget(
+              nameController: TextEditingController(),
+              surnameController: TextEditingController(),
+              AdressController: TextEditingController(),
+              mailController: TextEditingController(),
+            ); */ //MainPage1();
+        },
+      )
+          //body: MainPage(),
+          );
   //body: MainPage(),
 }
 
@@ -238,11 +249,12 @@ class NewWidget extends StatefulWidget {
     required this.nameController,
     required this.surnameController,
     required this.mailController,
+    required this.AdressController,
   }) : super(key: key);
   final TextEditingController nameController;
   final TextEditingController surnameController;
   final TextEditingController mailController;
-
+  final TextEditingController AdressController;
   @override
   State<NewWidget> createState() => _NewWidgetState();
 }
@@ -258,6 +270,17 @@ class _NewWidgetState extends State<NewWidget> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        //statusBarColor: Color(0xff07cc99), //Color(0xff00ADB5),
+        //statusBarBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.cyan,
+        systemNavigationBarContrastEnforced: true,
+        //systemNavigationBarIconBrightness: Brightness.dark,
+        //systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+
     CollectionReference UsersRef = _firestore.collection('Users');
     String Filename = user.photoURL!;
     File imagefile = File(user.photoURL!);
@@ -281,114 +304,188 @@ class _NewWidgetState extends State<NewWidget> {
       return await storageRef.ref.getDownloadURL();
     }
 
-    return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(
-            width: 150,
-            height: 30,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-                child: Column(
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: [0.3, 0.8],
+              colors: [Color(0xff06D6A0), Colors.cyan])),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
               children: [
-                TextFormField(
-                  controller: widget.nameController,
-                  decoration: InputDecoration(hintText: "Adınızı Giriniz"),
-                ),
-                TextFormField(
-                  controller: widget.surnameController,
-                  decoration: InputDecoration(hintText: "Soyadınızı Giriniz"),
-                ),
-                Container(
-                  child: imagefile != null
-                      ? Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image: FileImage(imagefile),
-                          )),
-                        )
-                      : Container(
-                          height: 200,
-                          width: 200,
-                          decoration: BoxDecoration(color: Colors.grey),
-                        ),
-                ),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Form(
+                      child: Column(
                     children: [
-                      // ignore: deprecated_member_use
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlatButton(
-                          onPressed: () {
-                            chooseImage(ImageSource.camera);
-                          },
-                          color: Colors.redAccent,
-                          child: Text("Camera",
-                              style: TextStyle(color: Colors.white)),
+                      TextFormField(
+                        controller: widget.nameController,
+                        cursorColor: Colors.white,
+                        inputFormatters: [
+                          new LengthLimitingTextInputFormatter(42),
+                        ],
+                        decoration: const InputDecoration(
+                          labelText: "İsim",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 2, color: Colors.black38),
+                          ),
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      TextFormField(
+                        controller: widget.surnameController,
+                        cursorColor: Colors.white,
+                        inputFormatters: [
+                          new LengthLimitingTextInputFormatter(42),
+                        ],
+                        decoration: const InputDecoration(
+                          labelText: "Soy isim",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 2, color: Colors.black38),
+                          ),
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      TextFormField(
+                        controller: widget.AdressController,
+                        cursorColor: Colors.white,
+                        inputFormatters: [
+                          new LengthLimitingTextInputFormatter(42),
+                        ],
+                        decoration: const InputDecoration(
+                          labelText: "Adres",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(width: 2, color: Colors.black38),
+                          ),
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      Container(
+                        child: imagefile != null
+                            ? Container(
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                  image: FileImage(imagefile),
+                                )),
+                              )
+                            : Container(
+                                height: 200,
+                                width: 200,
+                                decoration: BoxDecoration(color: Colors.grey),
+                              ),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // ignore: deprecated_member_use
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  chooseImage(ImageSource.camera);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  primary: Colors.white,
+                                  onPrimary: Colors.cyan,
+                                ),
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  size: 29,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                            // ignore: deprecated_member_use
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  chooseImage(ImageSource.gallery);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  primary: Colors.white,
+                                  onPrimary: Colors.cyan,
+                                ),
+                                child: Icon(
+                                  Icons.image,
+                                  size: 29,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                      // ignore: deprecated_member_use
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlatButton(
-                          onPressed: () {
-                            chooseImage(ImageSource.gallery);
-                          },
-                          color: Colors.redAccent,
-                          child: Text("Galerry",
-                              style: TextStyle(color: Colors.white)),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          primary: Colors.white,
+                          onPrimary: Color(0xff06D6A0),
                         ),
-                      )
+                        onPressed: () async {
+                          String a = await uploadMedia(imagefile);
+                          Map<String, dynamic> UsersData = {
+                            'Name': widget.nameController.text,
+                            'Surname': widget.surnameController.text,
+                            'Email': user.email!,
+                            'Adress': widget.AdressController.text,
+                            'Image': a,
+                            'saticiMi': false
+                          };
+                          await UsersRef.doc(user.email!).set(UsersData);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyApp1()),
+                          );
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Bitir',
+                              style: GoogleFonts.lemon(
+                                  color: Color(0xff06D6A0), fontSize: 18),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Icon(Icons.done_all),
+                            ),
+                          ],
+                        ),
+                      ),
+                      /*ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Geri Dön'),
+                      ),*/
                     ],
-                  ),
-                ),
-                TextButton(
-                  style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.hovered))
-                          return Colors.blue.withOpacity(0.04);
-                        if (states.contains(MaterialState.focused) ||
-                            states.contains(MaterialState.pressed))
-                          return Colors.blue.withOpacity(0.12);
-                        return null; // Defer to the widget's default.
-                      },
-                    ),
-                  ),
-                  onPressed: () async {
-                    String a = await uploadMedia(imagefile);
-                    Map<String, dynamic> UsersData = {
-                      'Name': widget.nameController.text,
-                      'Surname': widget.surnameController.text,
-                      'Email': user.email!,
-                      'Image': a,
-                      'saticiMi': false
-                    };
-                    await UsersRef.doc(user.email!).set(UsersData);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyApp1()),
-                    );
-                  },
-                  child: Text('Gönder'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Go back!'),
-                ),
+                  )),
+                )
               ],
-            )),
-          )
-        ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -447,135 +544,145 @@ class _NewWidget1State extends State<NewWidget1> {
     }
 
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(
-            width: 150,
-            height: 30,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-                child: Column(
-              children: [
-                TextFormField(
-                  controller: widget.nameController,
-                  decoration: InputDecoration(hintText: "Adınızı Giriniz"),
-                ),
-                TextFormField(
-                  controller: widget.surnameController,
-                  decoration: InputDecoration(hintText: "Soyadınızı Giriniz"),
-                ),
-                TextFormField(
-                  controller: widget.MarketNameController,
-                  decoration: InputDecoration(hintText: "Market Adını Giriniz"),
-                ),
-                TextFormField(
-                  controller: widget.TimeController,
-                  decoration: InputDecoration(
-                      hintText: "Marketin Açılış Kapanış Saatlerini Giriniz"),
-                ),
-                TextFormField(
-                  controller: TelNoController,
-                  decoration: InputDecoration(
-                      hintText: "Telefon numaranızı Giriniz(Zorunlu Değil)"),
-                ),
-                TextFormField(
-                  controller: AdressController,
-                  decoration: InputDecoration(hintText: "Adresinizi Giriniz"),
-                ),
-                Container(
-                  child: imagefile != null
-                      ? Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image: FileImage(imagefile),
-                          )),
-                        )
-                      : Container(
-                          height: 200,
-                          width: 200,
-                          decoration: BoxDecoration(color: Colors.grey),
-                        ),
-                ),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // ignore: deprecated_member_use
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlatButton(
-                          onPressed: () {
-                            chooseImage(ImageSource.camera);
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(
+                width: 150,
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                    child: Column(
+                  children: [
+                    TextFormField(
+                      controller: widget.nameController,
+                      decoration: InputDecoration(hintText: "Adınızı Giriniz"),
+                    ),
+                    TextFormField(
+                      controller: widget.surnameController,
+                      decoration:
+                          InputDecoration(hintText: "Soyadınızı Giriniz"),
+                    ),
+                    TextFormField(
+                      controller: widget.MarketNameController,
+                      decoration:
+                          InputDecoration(hintText: "Market Adını Giriniz"),
+                    ),
+                    TextFormField(
+                      controller: widget.TimeController,
+                      decoration: InputDecoration(
+                          hintText:
+                              "Marketin Açılış Kapanış Saatlerini Giriniz"),
+                    ),
+                    TextFormField(
+                      controller: TelNoController,
+                      decoration: InputDecoration(
+                          hintText:
+                              "Telefon numaranızı Giriniz(Zorunlu Değil)"),
+                    ),
+                    TextFormField(
+                      controller: AdressController,
+                      decoration:
+                          InputDecoration(hintText: "Adresinizi Giriniz"),
+                    ),
+                    Container(
+                      child: imagefile != null
+                          ? Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                image: FileImage(imagefile),
+                              )),
+                            )
+                          : Container(
+                              height: 200,
+                              width: 200,
+                              decoration: BoxDecoration(color: Colors.grey),
+                            ),
+                    ),
+                    Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // ignore: deprecated_member_use
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FlatButton(
+                              onPressed: () {
+                                chooseImage(ImageSource.camera);
+                              },
+                              color: Colors.redAccent,
+                              child: Text("Camera",
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
+                          // ignore: deprecated_member_use
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: FlatButton(
+                              onPressed: () {
+                                chooseImage(ImageSource.gallery);
+                              },
+                              color: Colors.redAccent,
+                              child: Text("Galerry",
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blue),
+                        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.hovered))
+                              return Colors.blue.withOpacity(0.04);
+                            if (states.contains(MaterialState.focused) ||
+                                states.contains(MaterialState.pressed))
+                              return Colors.blue.withOpacity(0.12);
+                            return null; // Defer to the widget's default.
                           },
-                          color: Colors.redAccent,
-                          child: Text("Camera",
-                              style: TextStyle(color: Colors.white)),
                         ),
                       ),
-                      // ignore: deprecated_member_use
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlatButton(
-                          onPressed: () {
-                            chooseImage(ImageSource.gallery);
-                          },
-                          color: Colors.redAccent,
-                          child: Text("Galerry",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                TextButton(
-                  style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.hovered))
-                          return Colors.blue.withOpacity(0.04);
-                        if (states.contains(MaterialState.focused) ||
-                            states.contains(MaterialState.pressed))
-                          return Colors.blue.withOpacity(0.12);
-                        return null; // Defer to the widget's default.
+                      onPressed: () async {
+                        String a = await uploadMedia(imagefile);
+                        Map<String, dynamic> UsersData = {
+                          'Name': widget.nameController.text,
+                          'Surname': widget.surnameController.text,
+                          'TelNo': TelNoController.text,
+                          'Adress': AdressController.text,
+                          'Email': user.email!,
+                          'Image': a,
+                          'saticiMi': true,
+                          'MarketName': widget.MarketNameController.text,
+                          'TimeCont': widget.TimeController.text
+                        };
+                        await UsersRef.doc(user.email!).set(UsersData);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyApp1()),
+                        );
                       },
+                      child: Text('Gönder'),
                     ),
-                  ),
-                  onPressed: () async {
-                    String a = await uploadMedia(imagefile);
-                    Map<String, dynamic> UsersData = {
-                      'Name': widget.nameController.text,
-                      'Surname': widget.surnameController.text,
-                      'TelNo': TelNoController.text,
-                      'Adress': AdressController.text,
-                      'Email': user.email!,
-                      'Image': a,
-                      'saticiMi': true,
-                      'MarketName': widget.MarketNameController.text,
-                      'TimeCont': widget.TimeController.text
-                    };
-                    await UsersRef.doc(user.email!).set(UsersData);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyApp1()),
-                    );
-                  },
-                  child: Text('Gönder'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Go back!'),
-                ),
-              ],
-            )),
-          )
-        ],
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Go back!'),
+                    ),
+                  ],
+                )),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -593,66 +700,199 @@ class _MainPage2State extends State<MainPage2> {
   TextEditingController mailController = TextEditingController();
   TextEditingController MarketNameController = TextEditingController();
   TextEditingController TimeController = TextEditingController();
+  TextEditingController AdressController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const SizedBox(
-          width: 150,
-          height: 30,
-        ),
-        ListTile(
-          title: const Text('Alici'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.Alici,
-            groupValue: character,
-            onChanged: (SingingCharacter? value) {
-              setState(() {
-                character = value;
-                checksaticioralici = false;
-              });
-            },
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        //statusBarColor: Color(0xff07cc99), //Color(0xff00ADB5),
+        //statusBarBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.cyan,
+        systemNavigationBarContrastEnforced: true,
+        //systemNavigationBarIconBrightness: Brightness.dark,
+        //systemNavigationBarIconBrightness: Brightness.light,
+      ),
+    );
+    return MaterialApp(
+      home: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [0.3, 0.8],
+                colors: [Color(0xff06D6A0), Colors.cyan])),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Colors.blue,
+                      //backgroundColor: Color(0xff06D6A0),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      'Natore',
+                      style:
+                          GoogleFonts.lemon(color: Colors.white, fontSize: 56),
+                    ),
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    children: [
+                      Text(
+                        "- Bir zamanlar saglıksız beslenenlere -",
+                        style: GoogleFonts.lemon(
+                            color: Colors.white, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 4.0),
+                              child: Icon(
+                                Icons.face,
+                                color: Color(0xff06D6A0),
+                                size: 29,
+                              ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Theme(
+                                  data: Theme.of(context).copyWith(
+                                      unselectedWidgetColor: Color(0xff06D6A0),
+                                      disabledColor: Colors.red),
+                                  child: Radio<SingingCharacter>(
+                                    activeColor: Colors.red,
+                                    value: SingingCharacter.Alici,
+                                    groupValue: character,
+                                    onChanged: (SingingCharacter? value) {
+                                      setState(() {
+                                        character = value;
+                                        checksaticioralici = false;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Text(
+                                  "Alıcı    ",
+                                  style: GoogleFonts.lemon(
+                                      color: Color(0xff06D6A0), fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 4.0),
+                              child: Icon(Icons.store,
+                                  color: Colors.cyan, size: 29),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Theme(
+                                  data: Theme.of(context).copyWith(
+                                      unselectedWidgetColor: Colors.cyan,
+                                      disabledColor: Colors.blue),
+                                  child: Radio<SingingCharacter>(
+                                    activeColor: Colors.red,
+                                    value: SingingCharacter.Satici,
+                                    groupValue: character,
+                                    onChanged: (SingingCharacter? value) {
+                                      setState(() {
+                                        character = value;
+                                        checksaticioralici = true;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                Text(
+                                  "Satıcı  ",
+                                  style: GoogleFonts.lemon(
+                                      color: Colors.cyan, fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24)),
+                      primary: Colors.white,
+                      onPrimary: Colors.cyan,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 0, vertical: 8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          //FaIcon(FontAwesomeIcons.google, color: Colors.red),
+                          Text(
+                            "  Devam Et",
+                            style: GoogleFonts.lemon(
+                                color: Colors.red, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        character == SingingCharacter.Alici
+                            ? MaterialPageRoute(
+                                builder: (context) => NewWidget(
+                                      nameController: nameController,
+                                      surnameController: surnameController,
+                                      mailController: mailController,
+                                      AdressController: AdressController,
+                                    ))
+                            : MaterialPageRoute(
+                                builder: (context) => NewWidget1(
+                                    nameController: nameController,
+                                    surnameController: surnameController,
+                                    mailController: mailController,
+                                    MarketNameController: MarketNameController,
+                                    TimeController: TimeController)),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
-        ListTile(
-          title: const Text('Satici'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.Satici,
-            groupValue: character,
-            onChanged: (SingingCharacter? value) {
-              setState(() {
-                character = value;
-                checksaticioralici = true;
-              });
-            },
-          ),
-        ),
-        ElevatedButton(
-          child: Text('Bir Sonraki Adım'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              character == SingingCharacter.Alici
-                  ? MaterialPageRoute(
-                      builder: (context) => NewWidget(
-                          nameController: nameController,
-                          surnameController: surnameController,
-                          mailController: mailController))
-                  : MaterialPageRoute(
-                      builder: (context) => NewWidget1(
-                          nameController: nameController,
-                          surnameController: surnameController,
-                          mailController: mailController,
-                          MarketNameController: MarketNameController,
-                          TimeController: TimeController)),
-            );
-          },
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.red),
-              padding: MaterialStateProperty.all(EdgeInsets.all(50)),
-              textStyle: MaterialStateProperty.all(TextStyle(fontSize: 30))),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -666,7 +906,6 @@ class FavoriteWidget extends StatefulWidget {
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   final user = FirebaseAuth.instance.currentUser!;
   final _firestore = FirebaseFirestore.instance;
-  TextEditingController textEditingController = TextEditingController();
   late bool check;
 
   final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
@@ -699,6 +938,17 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
     return await storageRef.ref.getDownloadURL();
   }
 
+  TextEditingController _name = TextEditingController();
+  TextEditingController _surname = TextEditingController();
+  TextEditingController _adress = TextEditingController();
+
+  TextEditingController _Saticiname = TextEditingController();
+  TextEditingController _Saticisurname = TextEditingController();
+  TextEditingController _MarketName = TextEditingController();
+  TextEditingController _TimeCont = TextEditingController();
+  TextEditingController _TelNo = TextEditingController();
+  TextEditingController _Adress = TextEditingController();
+
   @override
   Widget build(context) {
     CollectionReference updateRef = _firestore.collection('Users');
@@ -706,313 +956,675 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
 
     if (checksaticioralici == false) {
       return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            title: Text("Profil"),
+            backgroundColor: Color(0xff06D6A0),
+            title: const Text(
+              "Profil Bilgileri",
+              style: TextStyle(
+                  fontFamily: 'Zen Antique Soft',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                  fontSize: 22),
+            ),
+            elevation: 1,
           ),
-          body: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: textEditingController,
-                  decoration: const InputDecoration(
-                      hintText:
-                          "Degiştirmek istediğiniz değeri girip uygun butona basın!"),
-                ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    await updateRef
-                        .doc(user.email!)
-                        .update({'Name': textEditingController.text});
-                  },
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: babaRef.snapshots(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                      return Text('${asyncSnapshot.data.data()['Name']}');
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    await updateRef
-                        .doc(user.email!)
-                        .update({'Surname': textEditingController.text});
-                  },
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: babaRef.snapshots(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                      return Text('${asyncSnapshot.data.data()['Surname']}');
-                    },
-                  ),
-                ),
-                checksaticioralici == false
-                    ? ElevatedButton(
-                        style: raisedButtonStyle,
-                        onPressed: () async {
-                          await updateRef
-                              .doc(user.email!)
-                              .update({'saticiMi': true});
-                          FirebaseFirestore.instance
-                              .collection('Users')
-                              .where('Email', isEqualTo: user.email!)
-                              .get()
-                              .then((value) {
-                            value.docs.forEach((element) {
-                              checksaticioralici = element.get('saticiMi');
-                            });
-                          });
-                        },
-                        child: StreamBuilder<DocumentSnapshot>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return Text('Satici olmak için basınız');
-                          },
-                        ),
-                      )
-                    : ElevatedButton(
-                        style: raisedButtonStyle,
-                        onPressed: () async {
-                          await updateRef
-                              .doc(user.email!)
-                              .update({'saticiMi': false});
-                          FirebaseFirestore.instance
-                              .collection('Users')
-                              .where('Email', isEqualTo: user.email!)
-                              .get()
-                              .then((value) {
-                            value.docs.forEach((element) {
-                              checksaticioralici = element.get('saticiMi');
-                            });
-                          });
-                        },
-                        child: StreamBuilder<DocumentSnapshot>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return Text('Alici olmak için basınız');
-                          },
-                        ),
+          body: SingleChildScrollView(
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StreamBuilder<Object>(
+                        stream: babaRef.snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot asyncSnapshot) {
+                          return TextFormField(
+                            controller: _name
+                              ..text = '${asyncSnapshot.data.data()['Name']}',
+                            cursorColor: Colors.cyan,
+                            inputFormatters: [
+                              new LengthLimitingTextInputFormatter(42),
+                            ],
+                            decoration: const InputDecoration(
+                              labelText: "İsim",
+                              labelStyle: TextStyle(color: Colors.black54),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 2, color: Colors.cyan),
+                              ),
+                            ),
+                            textCapitalization: TextCapitalization.sentences,
+                          );
+                        }),
+                    StreamBuilder<Object>(
+                        stream: babaRef.snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot asyncSnapshot) {
+                          return TextFormField(
+                            controller: _surname
+                              ..text =
+                                  '${asyncSnapshot.data.data()['Surname']}',
+                            cursorColor: Colors.cyan,
+                            inputFormatters: [
+                              new LengthLimitingTextInputFormatter(42),
+                            ],
+                            decoration: const InputDecoration(
+                              labelText: "Soy isim",
+                              labelStyle: TextStyle(color: Colors.black54),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 2, color: Colors.cyan),
+                              ),
+                            ),
+                            textCapitalization: TextCapitalization.sentences,
+                          );
+                        }),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    OutlinedButton(
+                      onPressed: () async {
+                        /*await updateRef
+                            .doc(user.email!)
+                            .update({'Adress': _adress.text});*/
+                      },
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        side: BorderSide(width: 1, color: Colors.cyan),
+                        primary: Colors.white,
+                        //onPrimary: Colors.cyan,
                       ),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlatButton(
+                      child: StreamBuilder<DocumentSnapshot>(
+                        stream: babaRef.snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot asyncSnapshot) {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(right: 120.0),
+                                child: Icon(
+                                  Icons.edit_location_outlined,
+                                  color: Colors.cyan,
+                                  size: 20,
+                                ),
+                              ),
+                              Text(
+                                '${asyncSnapshot.data.data()['Adress']}',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        OutlinedButton(
                           onPressed: () {
                             chooseImage(ImageSource.gallery);
                           },
-                          color: Colors.redAccent,
-                          child: const Text("Galerry",
-                              style: TextStyle(color: Colors.white)),
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            side: BorderSide(width: 1, color: Colors.cyan),
+                            primary: Colors.white,
+                            //onPrimary: Colors.cyan,
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.image,
+                                color: Colors.cyan,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  "Profil Resmi",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.cyan),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+
+                    /*ElevatedButton(
+                      onPressed: () async {
+                        String a = await uploadMedia(imagefile);
+                        await updateRef.doc(user.email!).update({'Image': a});
+                      },
+                      child: Text("Resim güncelle"),
+                    ),*/
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                content: const Text(
+                                    'Profil bilgileriniz güncellendi.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Tamam'),
+                                    child: const Text('Tamam'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            updateRef
+                                .doc(user.email!)
+                                .update({'Name': _name.text});
+                            await updateRef
+                                .doc(user.email!)
+                                .update({'Surname': _surname.text});
+                            String a = await uploadMedia(imagefile);
+                            await updateRef
+                                .doc(user.email!)
+                                .update({'Image': a});
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24)),
+                            primary: Colors.white,
+                            onPrimary: Colors.cyan,
+                          ),
+                          child: const Text(
+                            "Güncelle",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 180,
+                    ),
+                    checksaticioralici == false
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24)),
+                                  primary: Colors.white,
+                                  onPrimary: Colors.deepOrange,
+                                ),
+                                onPressed: () async {
+                                  await updateRef
+                                      .doc(user.email!)
+                                      .update({'saticiMi': true});
+                                  FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .where('Email', isEqualTo: user.email!)
+                                      .get()
+                                      .then((value) {
+                                    value.docs.forEach((element) {
+                                      checksaticioralici =
+                                          element.get('saticiMi');
+                                    });
+                                  });
+                                },
+                                child: StreamBuilder<DocumentSnapshot>(
+                                  stream: babaRef.snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot asyncSnapshot) {
+                                    return Row(
+                                      children: const [
+                                        Icon(Icons.store),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            'Satıcı olmak için basınız',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24)),
+                                  primary: Colors.white,
+                                  onPrimary: Colors.deepOrange,
+                                ),
+                                onPressed: () async {
+                                  await updateRef
+                                      .doc(user.email!)
+                                      .update({'saticiMi': false});
+                                  FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .where('Email', isEqualTo: user.email!)
+                                      .get()
+                                      .then((value) {
+                                    value.docs.forEach((element) {
+                                      checksaticioralici =
+                                          element.get('saticiMi');
+                                    });
+                                  });
+                                },
+                                child: StreamBuilder<DocumentSnapshot>(
+                                  stream: babaRef.snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot asyncSnapshot) {
+                                    return Row(
+                                      children: const [
+                                        Icon(Icons.face),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            'Alıcı olmak için basınız',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                  ],
                 ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    String a = await uploadMedia(imagefile);
-                    await updateRef.doc(user.email!).update({'Image': a});
-                  },
-                  child: Text("Resim guncelle"),
-                ),
-              ],
+              ),
             ),
           ));
     } else {
       return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            title: Text("Profil"),
+            backgroundColor: Color(0xff06D6A0),
+            title: const Text(
+              "Profil Bilgileri",
+              style: TextStyle(
+                  fontFamily: 'Zen Antique Soft',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  letterSpacing: 0.5,
+                  fontSize: 22),
+            ),
+            centerTitle: true,
+            elevation: 1,
           ),
-          body: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: textEditingController,
-                  decoration: const InputDecoration(
-                      hintText:
-                          "Degiştirmek istediğiniz değeri girip uygun butona basın!"),
-                ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    await updateRef
-                        .doc(user.email!)
-                        .update({'Name': textEditingController.text});
-                  },
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: babaRef.snapshots(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                      return Text('${asyncSnapshot.data.data()['Name']}');
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    await updateRef
-                        .doc(user.email!)
-                        .update({'Surname': textEditingController.text});
-                  },
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: babaRef.snapshots(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                      return Text('${asyncSnapshot.data.data()['Surname']}');
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    await updateRef
-                        .doc(user.email!)
-                        .update({'MarketName': textEditingController.text});
-                  },
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: babaRef.snapshots(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                      return Text('${asyncSnapshot.data.data()['MarketName']}');
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    await updateRef
-                        .doc(user.email!)
-                        .update({'TimeCont': textEditingController.text});
-                  },
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: babaRef.snapshots(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                      return Text('${asyncSnapshot.data.data()['TimeCont']}');
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    await updateRef
-                        .doc(user.email!)
-                        .update({'TelNo': textEditingController.text});
-                  },
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: babaRef.snapshots(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                      return Text('${asyncSnapshot.data.data()['TelNo']}');
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    await updateRef
-                        .doc(user.email!)
-                        .update({'Adress': textEditingController.text});
-                  },
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: babaRef.snapshots(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                      return Text('${asyncSnapshot.data.data()['Adress']}');
-                    },
-                  ),
-                ),
-                checksaticioralici == false
-                    ? ElevatedButton(
-                        style: raisedButtonStyle,
-                        onPressed: () async {
-                          await updateRef
-                              .doc(user.email!)
-                              .update({'saticiMi': true});
-                          FirebaseFirestore.instance
-                              .collection('Users')
-                              .where('Email', isEqualTo: user.email!)
-                              .get()
-                              .then((value) {
-                            value.docs.forEach((element) {
-                              checksaticioralici = element.get('saticiMi');
-                            });
-                          });
-                        },
-                        child: StreamBuilder<DocumentSnapshot>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return Text('Satici olmak için basınız');
-                          },
-                        ),
-                      )
-                    : ElevatedButton(
-                        style: raisedButtonStyle,
-                        onPressed: () async {
-                          await updateRef
-                              .doc(user.email!)
-                              .update({'saticiMi': false});
-                          FirebaseFirestore.instance
-                              .collection('Users')
-                              .where('Email', isEqualTo: user.email!)
-                              .get()
-                              .then((value) {
-                            value.docs.forEach((element) {
-                              checksaticioralici = element.get('saticiMi');
-                              print(checksaticioralici);
-                            });
-                          });
-                        },
-                        child: StreamBuilder<DocumentSnapshot>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return Text('Alici olmak için basınız');
-                          },
-                        ),
-                      ),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+          body: SingleChildScrollView(
+            child: SafeArea(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(40, 29, 40, 40),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlatButton(
-                          onPressed: () {
-                            chooseImage(ImageSource.gallery);
+                      StreamBuilder<Object>(
+                          stream: babaRef.snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot asyncSnapshot) {
+                            return TextFormField(
+                              controller: _Saticiname
+                                ..text = '${asyncSnapshot.data.data()['Name']}',
+                              cursorColor: Colors.cyan,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(42),
+                              ],
+                              decoration: const InputDecoration(
+                                labelText: "İsim",
+                                labelStyle: TextStyle(color: Colors.black54),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 2, color: Colors.cyan),
+                                ),
+                              ),
+                              textCapitalization: TextCapitalization.sentences,
+                            );
+                          }),
+                      StreamBuilder<Object>(
+                          stream: babaRef.snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot asyncSnapshot) {
+                            return TextFormField(
+                              controller: _Saticisurname
+                                ..text =
+                                    '${asyncSnapshot.data.data()['Surname']}',
+                              cursorColor: Colors.cyan,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(42),
+                              ],
+                              decoration: const InputDecoration(
+                                labelText: "Soy isim",
+                                labelStyle: TextStyle(color: Colors.black54),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 2, color: Colors.cyan),
+                                ),
+                              ),
+                              textCapitalization: TextCapitalization.sentences,
+                            );
+                          }),
+                      StreamBuilder<Object>(
+                          stream: babaRef.snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot asyncSnapshot) {
+                            return TextFormField(
+                              controller: _MarketName
+                                ..text =
+                                    '${asyncSnapshot.data.data()['MarketName']}',
+                              cursorColor: Colors.cyan,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(42),
+                              ],
+                              decoration: const InputDecoration(
+                                labelText: "Market adı",
+                                labelStyle: TextStyle(color: Colors.black54),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 2, color: Colors.cyan),
+                                ),
+                              ),
+                              textCapitalization: TextCapitalization.sentences,
+                            );
+                          }),
+                      StreamBuilder<Object>(
+                          stream: babaRef.snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot asyncSnapshot) {
+                            return TextFormField(
+                              controller: _TimeCont
+                                ..text =
+                                    '${asyncSnapshot.data.data()['TimeCont']}',
+                              cursorColor: Colors.cyan,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(42),
+                              ],
+                              decoration: const InputDecoration(
+                                labelText: "Açılış - Kapanış Saati",
+                                labelStyle: TextStyle(color: Colors.black54),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 2, color: Colors.cyan),
+                                ),
+                              ),
+                              textCapitalization: TextCapitalization.sentences,
+                            );
+                          }),
+                      StreamBuilder<Object>(
+                          stream: babaRef.snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot asyncSnapshot) {
+                            return TextFormField(
+                              controller: _TelNo
+                                ..text =
+                                    '${asyncSnapshot.data.data()['TelNo']}',
+                              cursorColor: Colors.cyan,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(42),
+                              ],
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: "Telefon Numarası",
+                                labelStyle: TextStyle(color: Colors.black54),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 2, color: Colors.cyan),
+                                ),
+                              ),
+                              textCapitalization: TextCapitalization.sentences,
+                            );
+                          }),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () {
+                              chooseImage(ImageSource.gallery);
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              side: BorderSide(width: 1, color: Colors.cyan),
+                              primary: Colors.white,
+                              //onPrimary: Colors.cyan,
+                            ),
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  Icons.image,
+                                  color: Colors.cyan,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    "Profil Resmi",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.cyan),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      OutlinedButton(
+                        onPressed: () async {
+                          /*await updateRef
+                            .doc(user.email!)
+                            .update({'Adress': _adress.text});*/
+                        },
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          side: BorderSide(width: 1, color: Colors.cyan),
+                          primary: Colors.white,
+                          //onPrimary: Colors.cyan,
+                        ),
+                        child: StreamBuilder<DocumentSnapshot>(
+                          stream: babaRef.snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot asyncSnapshot) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 120.0),
+                                  child: Icon(
+                                    Icons.edit_location_outlined,
+                                    color: Colors.cyan,
+                                    size: 20,
+                                  ),
+                                ),
+                                Text(
+                                  '${asyncSnapshot.data.data()['Adress']}',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            );
                           },
-                          color: Colors.redAccent,
-                          child: const Text("Galerry",
-                              style: TextStyle(color: Colors.white)),
                         ),
                       ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  content: const Text(
+                                      'Profil bilgileriniz güncellendi.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'Tamam'),
+                                      child: const Text('Tamam'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              updateRef
+                                  .doc(user.email!)
+                                  .update({'Name': _Saticiname.text});
+                              await updateRef
+                                  .doc(user.email!)
+                                  .update({'Surname': _Saticisurname.text});
+                              await updateRef
+                                  .doc(user.email!)
+                                  .update({'MarketName': _MarketName.text});
+                              await updateRef
+                                  .doc(user.email!)
+                                  .update({'TimeCont': _TimeCont.text});
+                              await updateRef
+                                  .doc(user.email!)
+                                  .update({'TelNo': _TelNo.text});
+                              await updateRef
+                                  .doc(user.email!)
+                                  .update({'Adress': _Adress.text});
+
+                              String a = await uploadMedia(imagefile);
+                              await updateRef
+                                  .doc(user.email!)
+                                  .update({'Image': a});
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24)),
+                              primary: Colors.white,
+                              onPrimary: Colors.cyan,
+                            ),
+                            child: const Text(
+                              "Güncelle",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      checksaticioralici == false
+                          ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24)),
+                                primary: Colors.white,
+                                onPrimary: Colors.deepOrange,
+                              ),
+                              onPressed: () async {
+                                await updateRef
+                                    .doc(user.email!)
+                                    .update({'saticiMi': true});
+                                FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .where('Email', isEqualTo: user.email!)
+                                    .get()
+                                    .then((value) {
+                                  value.docs.forEach((element) {
+                                    checksaticioralici =
+                                        element.get('saticiMi');
+                                  });
+                                });
+                              },
+                              child: StreamBuilder<DocumentSnapshot>(
+                                stream: babaRef.snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot asyncSnapshot) {
+                                  return Row(
+                                    children: const [
+                                      Icon(Icons.store),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8.0),
+                                        child: Text(
+                                          'Satıcı olmak için basınız',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(24)),
+                                    primary: Colors.white,
+                                    onPrimary: Colors.deepOrange,
+                                  ),
+                                  onPressed: () async {
+                                    await updateRef
+                                        .doc(user.email!)
+                                        .update({'saticiMi': false});
+                                    FirebaseFirestore.instance
+                                        .collection('Users')
+                                        .where('Email', isEqualTo: user.email!)
+                                        .get()
+                                        .then((value) {
+                                      value.docs.forEach((element) {
+                                        checksaticioralici =
+                                            element.get('saticiMi');
+                                        print(checksaticioralici);
+                                      });
+                                    });
+                                  },
+                                  child: StreamBuilder<DocumentSnapshot>(
+                                    stream: babaRef.snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot asyncSnapshot) {
+                                      return Row(
+                                        children: const [
+                                          Icon(Icons.face),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 8.0),
+                                            child: Text(
+                                              'Alıcı olmak için basınız',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                     ],
                   ),
                 ),
-                ElevatedButton(
-                  style: raisedButtonStyle,
-                  onPressed: () async {
-                    String a = await uploadMedia(imagefile);
-                    await updateRef.doc(user.email!).update({'Image': a});
-                  },
-                  child: Text("Resim guncelle"),
-                ),
-              ],
+              ),
             ),
           ));
     }
