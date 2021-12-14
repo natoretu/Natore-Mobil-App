@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "769317945130-8ps6d38uebq2h8oiv6unfdgga8ktjjjv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.natore_project",
+            "certificate_hash": "06bde052c2429b34176abc538b43f713a3591e34"
+          }
+        },
+        {
           "client_id": "769317945130-d8ecbh019ots1pp4p05irajafjr266h3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,11 +46,27 @@
           }
         },
         {
+          "client_id": "769317945130-jc7olehg3oea7ooi80k98jtipej0a596.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.natore_project",
+            "certificate_hash": "e7a51c4434557c72e4bd1f67e8fe77e10fa69e68"
+          }
+        },
+        {
           "client_id": "769317945130-kbl56sijutg4r4fpdhieprljpg7f1ljd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.natore_project",
             "certificate_hash": "cc9dcd615ca76ccdba1bf00aa5c3291c35983d5e"
+          }
+        },
+        {
+          "client_id": "769317945130-njl7abe9s4t70guva4skho2s16v5sno2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.natore_project",
+            "certificate_hash": "85d67f1ed6ba1f5d7d726d91780e81ad1b62bf21"
           }
         },
         {
