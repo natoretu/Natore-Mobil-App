@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//heyyo
 // satıcıyla iletişime geç butonuna basılınca bu sayfaya gelecek
 class SecondRoute extends StatelessWidget {
   const SecondRoute({Key? key}) : super(key: key);
