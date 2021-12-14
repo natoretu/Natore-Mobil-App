@@ -8,7 +8,7 @@ class ProductServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   StorageServices _storageServices = StorageServices();
   String mediaUrl = "";
-  String collection = "products";
+  String collection = "Products";
 
   Future<Product> addProduct(
       String name,
