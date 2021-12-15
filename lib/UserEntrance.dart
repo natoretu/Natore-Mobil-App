@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:natore_project/Anasayfa.dart';
+import 'package:natore_project/page/locpicker.dart';
 
 import 'main.dart';
 
@@ -45,7 +46,6 @@ class googleLoginPage2 extends StatelessWidget {
               return MainPage2();
             } else {
               function();
-
               return MyApp1();
             }
 
@@ -53,12 +53,7 @@ class googleLoginPage2 extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Something went wrong!'));
           } else
-            return MainPage1(); /*NewWidget(
-              nameController: TextEditingController(),
-              surnameController: TextEditingController(),
-              AdressController: TextEditingController(),
-              mailController: TextEditingController(),
-            ); */ //MainPage1();
+            return MainPage1(); //MainPage1();
         },
       )
           //body: MainPage(),
@@ -270,17 +265,6 @@ class _NewWidgetState extends State<NewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        //statusBarColor: Color(0xff07cc99), //Color(0xff00ADB5),
-        //statusBarBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.cyan,
-        systemNavigationBarContrastEnforced: true,
-        //systemNavigationBarIconBrightness: Brightness.dark,
-        //systemNavigationBarIconBrightness: Brightness.light,
-      ),
-    );
-
     CollectionReference UsersRef = _firestore.collection('Users');
     String Filename = user.photoURL!;
     File imagefile = File(user.photoURL!);
@@ -325,51 +309,85 @@ class _NewWidgetState extends State<NewWidget> {
                     children: [
                       TextFormField(
                         controller: widget.nameController,
-                        cursorColor: Colors.white,
+                        cursorColor: Color(0xffE76F51),
                         inputFormatters: [
-                          new LengthLimitingTextInputFormatter(42),
+                          new LengthLimitingTextInputFormatter(24),
                         ],
-                        decoration: const InputDecoration(
-                          labelText: "İsim",
-                          labelStyle: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
                           focusedBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(width: 2, color: Colors.black38),
+                                BorderSide(color: Color(0xffE76F51), width: 2),
                           ),
+                          border: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: BorderSide(color: Color(0xffE76F51)),
+                          ),
+                          fillColor: Colors.white.withOpacity(0.97),
+                          filled: true, // dont forget this line
+                          hintText: "İsim",
                         ),
                         textCapitalization: TextCapitalization.sentences,
+                      ),
+                      SizedBox(
+                        height: 14,
                       ),
                       TextFormField(
                         controller: widget.surnameController,
-                        cursorColor: Colors.white,
+                        cursorColor: Color(0xffE76F51),
                         inputFormatters: [
-                          new LengthLimitingTextInputFormatter(42),
+                          new LengthLimitingTextInputFormatter(24),
                         ],
-                        decoration: const InputDecoration(
-                          labelText: "Soy isim",
-                          labelStyle: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
                           focusedBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(width: 2, color: Colors.black38),
+                                BorderSide(color: Color(0xffE76F51), width: 2),
                           ),
+                          border: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Color(0xffE76F51)),
+                          ),
+                          fillColor: Colors.white.withOpacity(0.97),
+                          filled: true, // dont forget this line
+                          hintText: "Soy isim",
                         ),
                         textCapitalization: TextCapitalization.sentences,
                       ),
-                      TextFormField(
-                        controller: widget.AdressController,
-                        cursorColor: Colors.white,
-                        inputFormatters: [
-                          new LengthLimitingTextInputFormatter(42),
-                        ],
-                        decoration: const InputDecoration(
-                          labelText: "Adres",
-                          labelStyle: TextStyle(color: Colors.white),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(width: 2, color: Colors.black38),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 1,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              primary: Colors.white,
+                              onPrimary: Color(0xffE76F51),
+                            ),
+                            onPressed: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LocationPicker()),
+                              );
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Adres',
+                                  style: GoogleFonts.lemon(
+                                      color: Color(0xffE76F51), fontSize: 16),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 4.0),
+                                  child: Icon(Icons.location_on_sharp),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        textCapitalization: TextCapitalization.sentences,
+                        ],
                       ),
                       Container(
                         child: imagefile != null
@@ -385,7 +403,6 @@ class _NewWidgetState extends State<NewWidget> {
                                 decoration: BoxDecoration(color: Colors.grey),
                               ),
                       ),
-                      SizedBox(height: 10),
                       Container(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -400,14 +417,14 @@ class _NewWidgetState extends State<NewWidget> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
+                                      borderRadius: BorderRadius.circular(12)),
                                   primary: Colors.white,
                                   onPrimary: Colors.cyan,
                                 ),
                                 child: Icon(
                                   Icons.camera_alt,
                                   size: 29,
-                                  color: Colors.red,
+                                  color: Color(0xff264653),
                                 ),
                               ),
                             ),
@@ -420,14 +437,14 @@ class _NewWidgetState extends State<NewWidget> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
+                                      borderRadius: BorderRadius.circular(12)),
                                   primary: Colors.white,
                                   onPrimary: Colors.cyan,
                                 ),
                                 child: Icon(
                                   Icons.image,
                                   size: 29,
-                                  color: Colors.red,
+                                  color: Color(0xff264653),
                                 ),
                               ),
                             )
@@ -448,7 +465,8 @@ class _NewWidgetState extends State<NewWidget> {
                             'Name': widget.nameController.text,
                             'Surname': widget.surnameController.text,
                             'Email': user.email!,
-                            'Adress': widget.AdressController.text,
+                            'Adress': widget.AdressController
+                                .text, // TODO:ADRESSSSSSSSSSSSSSSSSSSS
                             'Image': a,
                             'saticiMi': false
                           };
@@ -473,6 +491,7 @@ class _NewWidgetState extends State<NewWidget> {
                           ],
                         ),
                       ),
+
                       /*ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -725,7 +744,7 @@ class _MainPage2State extends State<MainPage2> {
           backgroundColor: Colors.transparent,
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -739,16 +758,16 @@ class _MainPage2State extends State<MainPage2> {
                     child: Text(
                       'Natore',
                       style:
-                          GoogleFonts.lemon(color: Colors.white, fontSize: 56),
+                          GoogleFonts.lemon(color: Colors.white, fontSize: 52),
                     ),
                   ),
                   Wrap(
                     alignment: WrapAlignment.center,
                     children: [
                       Text(
-                        "- Bir zamanlar saglıksız beslenenlere -",
+                        "Bir zamanlar saglıksız beslenenlere",
                         style: GoogleFonts.lemon(
-                            color: Colors.white, fontSize: 16),
+                            color: Colors.white, fontSize: 15),
                       ),
                     ],
                   ),
@@ -849,7 +868,7 @@ class _MainPage2State extends State<MainPage2> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24)),
                       primary: Colors.white,
-                      onPrimary: Colors.cyan,
+                      onPrimary: Colors.red,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -1025,44 +1044,47 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                     const SizedBox(
                       height: 10,
                     ),
-                    OutlinedButton(
-                      onPressed: () async {
-                        /*await updateRef
-                            .doc(user.email!)
-                            .update({'Adress': _adress.text});*/
-                      },
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        side: BorderSide(width: 1, color: Colors.cyan),
-                        primary: Colors.white,
-                        //onPrimary: Colors.cyan,
-                      ),
-                      child: StreamBuilder<DocumentSnapshot>(
+                    StreamBuilder<Object>(
                         stream: babaRef.snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot asyncSnapshot) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 120.0),
-                                child: Icon(
-                                  Icons.edit_location_outlined,
-                                  color: Colors.cyan,
-                                  size: 20,
+                          return OutlinedButton(
+                            onPressed: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LocationPicker()),
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              side: BorderSide(
+                                  width: 1, color: Color(0xff2A9D8F)),
+                              primary: Colors.white,
+                              //onPrimary: Colors.cyan,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 8.0),
+                                  child: Icon(
+                                    Icons.edit_location_outlined,
+                                    color: Color(0xff2A9D8F),
+                                    size: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                '${asyncSnapshot.data.data()['Adress']}',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ],
+                                Text(
+                                  '${asyncSnapshot.data.data()['Adress']}',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Color(0xff2A9D8F)),
+                                ),
+                              ],
+                            ),
                           );
-                        },
-                      ),
-                    ),
+                        }),
                     const SizedBox(
                       height: 10,
                     ),
@@ -1076,7 +1098,8 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
-                            side: BorderSide(width: 1, color: Colors.cyan),
+                            side:
+                                BorderSide(width: 1, color: Color(0xff2A9D8F)),
                             primary: Colors.white,
                             //onPrimary: Colors.cyan,
                           ),
@@ -1084,14 +1107,14 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                             children: const [
                               Icon(
                                 Icons.image,
-                                color: Colors.cyan,
+                                color: Color(0xff2A9D8F),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   "Profil Resmi",
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.cyan),
+                                      fontSize: 16, color: Color(0xff2A9D8F)),
                                 ),
                               ),
                             ],

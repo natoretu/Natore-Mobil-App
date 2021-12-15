@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:natore_project/page/home_page.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
+
+import 'UserEntrance.dart';
 
 Future main() async {
   // Modify from here
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       create: (context) => GoogleSignInProvider(),
       child: MaterialApp(
         title: 'Welcome to Flutter',
-        home: googleLoginPage(), // TODO: googleLoginPage()
+        home: googleLoginPage2(), // TODO: googleLoginPage()
       ),
     );
   }
@@ -129,16 +130,16 @@ class MainPage1 extends StatelessWidget {
                   onPressed: () {},
                   child: Text(
                     'Natore',
-                    style: GoogleFonts.lemon(color: Colors.white, fontSize: 56),
+                    style: GoogleFonts.lemon(color: Colors.white, fontSize: 52),
                   ),
                 ),
                 Wrap(
                   alignment: WrapAlignment.center,
                   children: [
                     Text(
-                      "- Bir zamanlar saglıksız beslenenlere -",
+                      "Bir zamanlar saglıksız beslenenlere",
                       style:
-                          GoogleFonts.lemon(color: Colors.white, fontSize: 16),
+                          GoogleFonts.lemon(color: Colors.white, fontSize: 15),
                     ),
                   ],
                 ),
@@ -151,7 +152,7 @@ class MainPage1 extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24)),
                         primary: Colors.white,
-                        onPrimary: Colors.cyan,
+                        onPrimary: Colors.red,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
