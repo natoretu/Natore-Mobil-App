@@ -4,15 +4,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:natore_project/page/sohbet.dart';
 
 import 'home_page.dart';
 
 String nameOfProductHardCodedWillBeTakenFromDatabase = "normal";
+String prName = "";
+String prImage = "";
+String prId = "";
+String prEmail = "";
+double prPrice = 0.0;
 
 class ProductDetail extends StatefulWidget {
-  const ProductDetail({
-    Key? key,
-  }) : super(key: key);
+  // const ProductDetail({
+  //   Key? key,
+  // }) : super(key: key);
+  ProductDetail(
+      String nameX, String imageX, double priceX, String id, String emailX) {
+    prName = nameX;
+    prImage = imageX;
+    prPrice = priceX;
+    prId = id;
+    prEmail = emailX;
+    print(prEmail + "sadasdnakdjnasdnasdasda");
+  }
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -21,7 +36,6 @@ class ProductDetail extends StatefulWidget {
 class _ProductDetailState extends State<ProductDetail> {
   // Color(0xff52B69A),
   // Color(0xff168AAD),
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,12 +104,12 @@ class _ProductDetailState extends State<ProductDetail> {
                                       ),
                                     ),
                                     Column(
-                                      children: const [
+                                      children: [
                                         Padding(
                                           padding: EdgeInsets.only(top: 24.0),
                                           child: Text(
-                                            "Doğal Keçi Sütü",
-                                            style: TextStyle(
+                                            prName,
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18),
                                           ),
@@ -103,7 +117,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                         Padding(
                                           padding: EdgeInsets.only(bottom: 8.0),
                                           child: Text(
-                                            "20 TL",
+                                            prPrice.toString(),
                                             style: TextStyle(
                                               fontSize: 18,
                                             ),
@@ -132,7 +146,9 @@ class _ProductDetailState extends State<ProductDetail> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     )),
-                                onPressed: () {},
+                                onPressed: () {
+                                  mesajGondermeEkraniniAc(prEmail, context);
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
@@ -191,8 +207,8 @@ class _Yorumlar extends State<Yorumlar> {
   final myController = TextEditingController();
 
   late Stream<QuerySnapshot> allMessages;
-  String productName =
-      "ProductName"; // buralar firebase'den veya tıklanılan yerden alıncak
+  String productName = prName;
+  //"ProductName"; // buralar firebase'den veya tıklanılan yerden alıncak
 
   bool firstUpdate = true;
   List<dynamic> userMessagesList = <dynamic>[];
@@ -220,7 +236,7 @@ class _Yorumlar extends State<Yorumlar> {
 
     allMessages = FirebaseFirestore.instance
         .collection('Products')
-        .where("name", isEqualTo: nameOfProductHardCodedWillBeTakenFromDatabase)
+        .where('name', isEqualTo: prName)
         .snapshots();
     // final productName = allMessages.first;
 
@@ -443,7 +459,7 @@ class _Yorumlar extends State<Yorumlar> {
     bool mesajGondermeBasarili = false;
     await FirebaseFirestore.instance
         .collection('Products')
-        .where('name', isEqualTo: nameOfProductHardCodedWillBeTakenFromDatabase)
+        .where('name', isEqualTo: prName)
         .get()
         .then((value) {
       print("Ilk bu gelmeli");
@@ -490,7 +506,7 @@ class _Yorumlar extends State<Yorumlar> {
       int indexOfLastRespondAttempt, Timestamp time) async {
     await FirebaseFirestore.instance
         .collection('Products')
-        .where('name', isEqualTo: nameOfProductHardCodedWillBeTakenFromDatabase)
+        .where('name', isEqualTo: prName)
         .get()
         .then((value) {
       print("Ilk bu gelmeli");

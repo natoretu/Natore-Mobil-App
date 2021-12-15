@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       create: (context) => GoogleSignInProvider(),
       child: MaterialApp(
         title: 'Welcome to Flutter',
+        debugShowCheckedModeBanner: false,
         home: googleLoginPage2(), // TODO: googleLoginPage()
       ),
     );

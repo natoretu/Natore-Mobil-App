@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:natore_project/page/product_detail.dart';
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:natore_project/services/product_services.dart';
@@ -100,7 +99,7 @@ class LoggedInWidget extends StatelessWidget {
                   );
                 },
               ),
-              FlatButton(
+              /* FlatButton(
                 color: Colors.blue,
                 child: Row(
                   // Replace with a Row for horizontal icon + text
@@ -115,7 +114,7 @@ class LoggedInWidget extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => ProductDetail()),
                   );
                 },
-              ),
+              ),*/
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 20),
@@ -123,7 +122,7 @@ class LoggedInWidget extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
-                          ProductDetail())); //TODO: AddProductPage()
+                          AddProductPage())); //TODO: ProductDetail()
                 },
                 child: const Text('Product Detail'),
               ),

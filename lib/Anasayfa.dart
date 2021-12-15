@@ -9,6 +9,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:natore_project/UserEntrance.dart';
+import 'package:natore_project/page/Order/my_orders.dart';
+import 'package:natore_project/page/sohbet.dart';
+import 'package:natore_project/products_of_seller_page.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -62,13 +65,13 @@ class MyApp1 extends StatelessWidget {
     );
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Natore',
       /*
       theme: ThemeData(
           primarySwatch: Colors.white,
       ),
       */
+      debugShowCheckedModeBanner: false,
       initialRoute: MyHomePage.routeName,
       routes: {
         MyHomePage.routeName: (context) => MyHomePage(),
@@ -98,9 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);*/
 
   List<Widget> tabs = [
-    UserProfile(),
-    MyStatefulWidget(),
     MainPage(),
+    Sohbet(), //chat gelecek
+    MyOrders("Sütçü Dede"), //MyStatefulWidget(),
+    UserProfile(),
   ];
 
   int _selectedIndex = 0;
@@ -127,6 +131,10 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Mesajlar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_basket),
+            label: 'Sepetim',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_sharp),
@@ -177,6 +185,9 @@ class _MainPageState extends State<MainPage> {
   int _seller_num = 14;
   int _campaign_num = 4;
 
+  final user = FirebaseAuth.instance.currentUser!;
+  final _firestore = FirebaseFirestore.instance;
+
   final borderWidth = 2.0;
   final kInnerDecoration = BoxDecoration(
     color: Colors.white70,
@@ -190,7 +201,7 @@ class _MainPageState extends State<MainPage> {
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
         colors: [
-          (part == "Kampanyalar")
+          (part == "Tanıtımlar")
               ? (Color(0xffef233c))
               : (part == "Kategoriler")
                   ? (Color(0xff118AB2))
@@ -211,10 +222,12 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference updateRef = _firestore.collection('Users');
+    var babaRef = updateRef.doc(user.email!);
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          actions: [
+          /* actions: [
             TextButton(
               child: Text(
                 'Logout',
@@ -225,7 +238,7 @@ class _MainPageState extends State<MainPage> {
                 provider.logout();
               },
             )
-          ],
+          ],*/
           backgroundColor: Color(0xff07cc99), // Color(0xff06D6A0),
           centerTitle: true,
           elevation: 1,
@@ -276,59 +289,74 @@ class _MainPageState extends State<MainPage> {
         /*** GPS ***/
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(86, 8, 86, 8),
-            child: Material(
-              borderRadius: BorderRadius.circular(16),
-              elevation: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(width: 0.1, color: Colors.grey)
-                    //side: BorderSide(color: Colors.grey, width: 0.1),
-                    ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    side: BorderSide(width: 0.7, color: Colors.grey),
+                    primary: Colors.white,
+                    elevation: 1,
+                    onPrimary: Colors.white,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Icon(
-                        Icons.location_on_sharp,
-                        color: Colors.cyan,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: Icon(
+                          Icons.location_on_sharp,
+                          color: Colors.cyan,
+                        ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Teslimat Adresi',
-                            style: GoogleFonts.lato(
-                                color: Colors.grey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: 140),
-                            child: Text(
-                              'Erenköy Mah.',
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Teslimat Adresi',
                               style: GoogleFonts.lato(
-                                  color: Colors.black,
-                                  fontSize: 15,
+                                  color: Colors.grey,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w600),
                             ),
-                          ),
-                        ],
+                            StreamBuilder<Object>(
+                                stream: null,
+                                builder: (context, snapshot) {
+                                  return StreamBuilder<DocumentSnapshot>(
+                                    stream: babaRef.snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot asyncSnapshot) {
+                                      return Text(
+                                        "Pendik", // '${asyncSnapshot.data.data()['Adress']}',
+                                        style: GoogleFonts.lato(
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600),
+                                      );
+                                    },
+                                  );
+                                }),
+                          ],
+                        ),
                       ),
-                      Icon(
-                        Icons.arrow_drop_down_circle_outlined,
-                        color: Colors.cyan,
-                        size: 18,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Icon(
+                          Icons.arrow_drop_down_circle_outlined,
+                          color: Colors.cyan,
+                          size: 18,
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
@@ -345,7 +373,7 @@ class _MainPageState extends State<MainPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 0, 2),
                     child: Container(
-                      decoration: GradientBoxDecoration("Kampanyalar", 0.06),
+                      decoration: GradientBoxDecoration("Tanıtımlar", 0.06),
                       child: Padding(
                         padding: EdgeInsets.all(borderWidth),
                         child: DecoratedBox(
@@ -353,7 +381,7 @@ class _MainPageState extends State<MainPage> {
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 4, 2),
                             child: Text(
-                              'Kampanyalar (${_campaign_num})',
+                              'Tanıtımlar (${_campaign_num})',
                               style: TextStyle(
                                 fontFamily: 'Zen Antique Soft',
                                 color: Colors.black,
@@ -736,6 +764,7 @@ class _UserProfileState extends State<UserProfile> {
                                     AsyncSnapshot asyncSnapshot) {
                                   return CircleAvatar(
                                     radius: 40,
+                                    backgroundColor: Colors.white,
                                     //'${asyncSnapshot.data.data()['Image']}'
                                     backgroundImage: NetworkImage(
                                         '${asyncSnapshot.data.data()['Image']}'),
@@ -743,7 +772,7 @@ class _UserProfileState extends State<UserProfile> {
                                 },
                               ),
                               title: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: StreamBuilder<DocumentSnapshot>(
                                   stream: babaRef.snapshots(),
                                   builder: (BuildContext context,
@@ -759,7 +788,7 @@ class _UserProfileState extends State<UserProfile> {
                                 ),
                               ),
                               subtitle: Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
+                                padding: const EdgeInsets.only(left: 0.0),
                                 child: /*TODO*/ Text(
                                   user.email!,
                                   style: GoogleFonts.lato(
@@ -1042,14 +1071,14 @@ class _MyAdressState extends State<MyAdress> {
                                       );
                                     },
                                   ),
-                                  subtitle: Text(
+                                  /*subtitle: Text(
                                     DetailedAdressList[index],
                                     style: TextStyle(
                                       fontFamily: "Zen Antique Soft",
                                       color: Colors.black,
                                       fontSize: 14,
                                     ),
-                                  ),
+                                  ),*/
                                   trailing: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                         primary: Colors.white,
@@ -1089,7 +1118,7 @@ class _MyAdressState extends State<MyAdress> {
                                     )),
                                 onPressed: () {},
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(1.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -1558,7 +1587,18 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: Image.network(
-                          "https://www.sutkonagi.com.tr/uploads/slide/mobile_image/16/Mslider.jpg",
+                          "https://www.sivilsayfalar.org/wp-content/uploads/2019/04/1554272813_kampanya_4.png",
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    );
+                  } else if (index == 2) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: Image.network(
+                          "https://cdn.bumudur.com/cmp/img/s/full/6eef73465326c51cdbe23073e86c7e49.jpg",
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -1569,7 +1609,7 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: Image.network(
-                          "https://cdn.bumudur.com/cmp/img/s/full/6eef73465326c51cdbe23073e86c7e49.jpg",
+                          "https://d3vkdqr0qjxhag.cloudfront.net/AE_Milgo_2lt_Sut_Tikla_Gelsin_800x800px_d0446d5e44.jpg",
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -1828,7 +1868,15 @@ class _StoreState extends State<Store> {
                     bottom: BorderSide(color: Color(0xff264653), width: 2),
                   ),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ProductsOfSellerPage("Sütçü Dede")),
+                      );
+                      //ProductsOfSellerPage("hacia");
+                    }, // TODO: HACI
                     style: ElevatedButton.styleFrom(
                       primary: Colors.white,
                       onPrimary: Color(0xff06EFB1),
@@ -1956,18 +2004,20 @@ class _StoreState extends State<Store> {
                                     border: Border.all(
                                         color: Colors.cyan.shade800, width: 2),
                                   ),
-                                  child: Text(
-                                    saticilar1[index],
-                                    //overflow: TextOverflow.fade,
-                                    //maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.goudyBookletter1911(
-                                        fontWeight: FontWeight.w800,
-                                        color: Color(0xff091624),
-                                        letterSpacing: 1.1,
-                                        //wordSpacing: 2,
-                                        fontSize: 20),
-                                  ),
+                                  child: (index == 0)
+                                      ? Image.asset(
+                                          "assets/homepageImages/sutcu_dede_f.png",
+
+                                          /** !!!  **/
+                                          fit: BoxFit.fill,
+                                          //color: Color(0xff264653),
+                                          //alignment: Alignment.topCenter,
+                                          //filterQuality: FilterQuality.high,
+                                        )
+                                      : Image.asset(
+                                          "assets/homepageImages/yogurt.png",
+                                          fit: BoxFit.fill,
+                                        ),
                                 ),
                               ),
                             ],

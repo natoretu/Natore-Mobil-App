@@ -20,9 +20,11 @@ String resimUrl =
     'https://d2uiaykj5yb3c0.cloudfront.net/tahtakale/img/p/39006c70-bd82-42c0-929d-3c6cacaa31d7.jpg';
 double saticiPuani = 3.8;
 String eMail = "";
+String image_pr = "";
 
 class ProductsOfSellerPage extends StatelessWidget {
   ProductsOfSellerPage(String name) {
+    print(name);
     MarketName = name;
   }
   //bu gereksiz olabilir
@@ -32,11 +34,7 @@ class ProductsOfSellerPage extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //title: 'Flutter Demo',
-      theme: ThemeData(primaryColor: Colors.white),
-      home: MyHomePage(title: 'SATICI BILGILERI'),
-    );
+    return MyHomePage(title: 'SATICI BILGILERI');
   }
 }
 
@@ -66,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff06D6A0),
-        toolbarHeight: 120,
+        toolbarHeight: 80,
 
         // leading: IconButton(
         //   icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -75,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // ),
         actions: [
           Container(
-            width: 350,
+            width: 280,
             margin: const EdgeInsets.all(16.0),
             child: InkWell(
               child: Row(
@@ -211,15 +209,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                     //     list[index].get('id')*/
                                     //     ),
                                     BlueBox(
-                                        list[index * 2].get('image'),
-                                        list[index * 2].get('name'),
-                                        list[index * 2].get('price')),
+                                      list[index * 2].get('image'),
+                                      list[index * 2].get('name'),
+                                      list[index * 2].get('price'),
+                                      list[index * 2].get('id'),
+                                      list[index * 2].get('mail'),
+                                    ),
 
                                     if (index * 2 + 1 < list.length)
                                       BlueBox(
-                                          list[index * 2 + 1].get('image'),
-                                          list[index * 2 + 1].get('name'),
-                                          list[index * 2 + 1].get('price')),
+                                        list[index * 2 + 1].get('image'),
+                                        list[index * 2 + 1].get('name'),
+                                        list[index * 2 + 1].get('price'),
+                                        list[index * 2].get('id'),
+                                        list[index * 2].get('mail'),
+                                      ),
                                   ],
                                 ),
                               );
@@ -271,24 +275,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class BlueBox extends StatelessWidget {
   /*burdaki url daha sonra direkt Image'e dönecek*/
-  BlueBox(String _url, String productName, double price /*, String id*/) {
+  BlueBox(
+      String _url, String productName, double price, String id, String mail) {
     //unnamed constructor
     this._url = _url;
     this.productName = productName;
     this.price = price;
-    /*this.productID = id;*/
+    this.productID = id;
+    this.mail = mail;
   }
   //ikinci constructor
   //bu daha sonra databaseden image döndüren fonksiyonu yazdığımızda kullanılacak olan constructor.
   // BlueBox.ImageConstructor(...) şeklinde kullanılır
   BlueBox.ImageConstructor(
-      Image img, String productName, double price, String id) {
+      Image img, String productName, double price, String id, String mail) {
     this.img = img;
     this.productName = productName;
     this.price = price;
     this.productID = id;
+    //this.productID = mail;
   }
   //final String title = '';
+  String id = 'ID';
+  String mail = 'MAIL';
+
   String _url = 'BOŞ.ABi';
   String productName = 'BOŞ.ABi';
   double price = 0.0;
@@ -321,8 +331,8 @@ class BlueBox extends StatelessWidget {
                         height: width / 2.5, //1.9
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(//bu resim databaseden alıncak
-                                _url),
+                            image: AssetImage(//bu resim databaseden alıncak
+                                "assets/milk128.png"),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(8),
@@ -335,11 +345,12 @@ class BlueBox extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
+                      print(productName + _url + mail);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ProductDetail()), //burası arama butonu
+                            builder: (context) => ProductDetail(productName,
+                                _url, price, id, mail)), //burası arama butonu
                       );
                     }),
               ),
@@ -350,6 +361,7 @@ class BlueBox extends StatelessWidget {
                   child: const Icon(
                     Icons.add_circle_outline,
                     size: 40,
+                    color: Color(0xffE76F51),
                   ),
                   onTap: () {
                     //burdan databaseİ dolduracağım inşaAllah
@@ -379,7 +391,7 @@ class BlueBox extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   Text(
-                    price.toString() + ' TL',
+                    price.toString() + ' ₺',
                     style: const TextStyle(
                       fontSize: 18,
                     ),

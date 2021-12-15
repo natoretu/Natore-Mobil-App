@@ -27,12 +27,7 @@ class MyOrders extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //title: 'Flutter Demo',
-      theme: ThemeData(primaryColor: Colors.white),
-
-      home: MyHomePage(title: 'Siparişlerim'),
-    );
+    return MyHomePage(title: 'Sepetim');
   }
 }
 
@@ -64,9 +59,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Color(0xff06D6A0),
         //toolbarHeight: 120,
-        title: Text("Siparişlerim"),
+        title: Text(
+          "Sepetim",
+          style: TextStyle(
+              fontFamily: 'Zen Antique Soft',
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              letterSpacing: 0.5,
+              fontSize: 22),
+        ),
         centerTitle: true,
       ),
       body: Center(
@@ -74,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               const SizedBox(
-                height: 40,
+                height: 10,
               ),
               StreamBuilder(
                   stream: _productServices
@@ -117,32 +121,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_sharp),
-            label: 'Ev',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Mesajlar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_sharp),
-            label: 'Profilim',
-          ),
-        ],
-        backgroundColor: Colors.white,
-        iconSize: 22,
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
-        selectedItemColor: const Color(0xff34A0A4), //Color(0xff00ADB5),
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        elevation: 4,
-        unselectedFontSize: 14,
-        selectedFontSize: 14,
-      ),
     );
   }
 }
@@ -166,50 +144,61 @@ class OrderCardCreater extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(12, 3, 12, 3),
         child: Card(
           //shadowColor: Colors.black,
           //color: Colors.grey,
           //padding: EdgeInsets.all(10),
           borderOnForeground: true, //?
           child: InkWell(
+            borderRadius: BorderRadius.circular(8),
             splashColor: Colors.green.withAlpha(40),
             onTap: () {
               debugPrint('Card tapped.'); //bura başka bir sayfa açabilir belki
             },
             child: Container(
-              color: Colors.white,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.white,
+              ),
               padding: EdgeInsets.all(10),
               // width: 400,
               height: 120,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Image.network(
-                  //   "https://www.google.com/search?q=manda+s%C3%BCt%C3%BC&rlz=1C1CHBD_trTR918TR918&sxsrf=AOaemvLyU3gY5sBeh_pOT4c-mkyq5Z91yw:1639349111561&source=lnms&tbm=isch&sa=X&sqi=2&ved=2ahUKEwj749Orq9_0AhVrB2MBHWucBP8Q_AUoAnoECAMQBA&biw=1536&bih=731&dpr=1.25#imgrc=muV5w0xcmTQ3TM",
-                  //   fit: BoxFit.cover,
-                  // ),
-                  Container(
-                    height: 70,
-                    width: 80,
-                    //color: Colors.black,
-                    child: Image.network(urunImage),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(urunAdi,
-                          style: TextStyle(
-                              fontSize: 20)), //buraları database'den çekeceğim
-                      Text(dukkanAdi, style: TextStyle(fontSize: 20)),
-                    ],
-                  ),
-                  Text(
-                    fiyat.toString() + ' TL',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  //mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Image.network(
+                    //   "https://www.google.com/search?q=manda+s%C3%BCt%C3%BC&rlz=1C1CHBD_trTR918TR918&sxsrf=AOaemvLyU3gY5sBeh_pOT4c-mkyq5Z91yw:1639349111561&source=lnms&tbm=isch&sa=X&sqi=2&ved=2ahUKEwj749Orq9_0AhVrB2MBHWucBP8Q_AUoAnoECAMQBA&biw=1536&bih=731&dpr=1.25#imgrc=muV5w0xcmTQ3TM",
+                    //   fit: BoxFit.cover,
+                    // ),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: AspectRatio(
+                            aspectRatio: 0.7,
+                            child: Image.network(
+                              urunImage,
+                              fit: BoxFit.fill,
+                            ))),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(urunAdi,
+                            style: TextStyle(
+                                fontSize:
+                                    18)), //buraları database'den çekeceğim
+                        Text(dukkanAdi, style: TextStyle(fontSize: 19)),
+                      ],
+                    ),
+                    Text(
+                      fiyat.toString() + ' ₺',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

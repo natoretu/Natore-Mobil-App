@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:natore_project/Anasayfa.dart';
+import 'package:natore_project/page/home_page.dart';
 import 'package:natore_project/page/locpicker.dart';
 
 import 'main.dart';
@@ -17,6 +18,9 @@ import 'main.dart';
 // ignore_for_file: file_names
 SingingCharacter? character;
 bool checksaticioralici = false;
+
+String Ugurunkoddandonenadress = "boş"; //TODO
+bool check21 = false; //TODO
 
 String Adress1 = "boş";
 
@@ -30,10 +34,10 @@ class googleLoginPage2 extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData) {
-            final user = FirebaseAuth.instance.currentUser!;
+            user = FirebaseAuth.instance.currentUser!;
             FirebaseFirestore.instance
                 .collection('Users')
-                .doc(user.email)
+                .doc(user!.email)
                 .get()
                 .then((DocumentSnapshot documentSnapshot) {
               if (documentSnapshot.exists) {
@@ -45,6 +49,7 @@ class googleLoginPage2 extends StatelessWidget {
             if (check) {
               return MainPage2();
             } else {
+              check21 = true;
               function();
               return MyApp1();
             }
@@ -465,8 +470,8 @@ class _NewWidgetState extends State<NewWidget> {
                             'Name': widget.nameController.text,
                             'Surname': widget.surnameController.text,
                             'Email': user.email!,
-                            'Adress': widget.AdressController
-                                .text, // TODO:ADRESSSSSSSSSSSSSSSSSSSS
+                            'Adress':
+                                Ugurunkoddandonenadress, // TODO:ADRESSSSSSSSSSSSSSSSSSSS
                             'Image': a,
                             'saticiMi': false
                           };

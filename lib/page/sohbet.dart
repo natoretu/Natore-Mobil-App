@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/page/home_page.dart';
 
 //import 'package:natore_project/provider/google_sign_in.dart';
@@ -25,161 +24,162 @@ class Sohbet extends StatelessWidget {
     TextField textField;
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blueGrey,
-          title: const Text('Sohbet'),
-          actions: [],
+          backgroundColor: Color(0xff06D6A0),
+          centerTitle: true,
+          elevation: 0,
+          title: const Text(
+            'Sohbet',
+            style: TextStyle(
+                fontFamily: 'Zen Antique Soft',
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                letterSpacing: 0.5,
+                fontSize: 22),
+          ),
         ),
-        body: Container(
-          alignment: Alignment.center,
-          color: Colors.white,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                    //!! arayüz daha once konusulan kısıler,
-                    height:
-                        300, // bu deger gecmıs sohbetlerın kac piksel asagıya kadar gosterılecegını belırlıyor
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: StreamBuilder<QuerySnapshot>(
-                        stream: allMessages,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError)
-                            return Text('Something went wrong.');
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) return Text('Loading');
-                          final data = snapshot.requireData;
-                          var currentMessages = (data.docs.where((element) =>
-                              (element.get('Sender') ==
-                                  user!.email.toString()) ||
-                              (element.get('Receiver') ==
-                                  user!.email.toString())));
+        body: Center(
+          child: Column(
+            //  mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                  //!! arayüz daha once konusulan kısıler,
+                  height:
+                      300, // bu deger gecmıs sohbetlerın kac piksel asagıya kadar gosterılecegını belırlıyor
+                  //padding: const EdgeInsets.symmetric(vertical: 20),
+                  padding: const EdgeInsets.all(8),
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: allMessages,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError)
+                          return Text('Something went wrong.');
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Text('Loading');
+                        final data = snapshot.requireData;
+                        var currentMessages = (data.docs.where((element) =>
+                            (element.get('Sender') == user!.email.toString()) ||
+                            (element.get('Receiver') ==
+                                user!.email.toString())));
 
-                          if (currentMessages.isNotEmpty) {
-                            userMessagesList = List.from(currentMessages);
-                            userMessagesList.sort((b, a) => a
-                                .get('Messages')[a.get('Messages').length - 1]
-                                    ['Time']
-                                .compareTo(b.get('Messages')[
-                                    b.get('Messages').length - 1]['Time']));
-                            return ListView.builder(
-                              itemCount: userMessagesList.length,
-                              itemBuilder: (context, index) {
-                                var sohbet = userMessagesList[index];
-                                var messagesWithSpecificUser =
-                                    sohbet.get('Messages');
-                                var messageList =
-                                    List.from(messagesWithSpecificUser);
-                                var lastMessage =
-                                    messageList[messageList.length - 1]
-                                        ['Message'];
-                                var lastMessageTime =
-                                    messageList[messageList.length - 1]['Time'];
+                        if (currentMessages.isNotEmpty) {
+                          userMessagesList = List.from(currentMessages);
+                          userMessagesList.sort((b, a) => a
+                              .get('Messages')[a.get('Messages').length - 1]
+                                  ['Time']
+                              .compareTo(b.get(
+                                      'Messages')[b.get('Messages').length - 1]
+                                  ['Time']));
+                          return ListView.builder(
+                            itemCount: userMessagesList.length,
+                            itemBuilder: (context, index) {
+                              var sohbet = userMessagesList[index];
+                              var messagesWithSpecificUser =
+                                  sohbet.get('Messages');
+                              var messageList =
+                                  List.from(messagesWithSpecificUser);
+                              var lastMessage =
+                                  messageList[messageList.length - 1]
+                                      ['Message'];
+                              var lastMessageTime =
+                                  messageList[messageList.length - 1]['Time'];
 
-                                String konusulanKisi = userMessagesList[index]
-                                    .get(((userMessagesList[index]
-                                                .get('Receiver') !=
-                                            user!.email.toString())
-                                        ? 'Receiver'
-                                        : 'Sender'));
-                                //!!arayüz
-                                return Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Row(
-                                    children: [
-                                      kisiButonu(
-                                          konusulanKisi,
-                                          lastMessageTime.toDate(),
-                                          mailiCikar(lastMessage, user!.email,
-                                              konusulanKisi),
-                                          context)
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                          //!arayüz
-                          return const Text(
-                              'Gorusmeye Basla'); // daha once konusulmus kımse yoksa bu basiliyor
-                        })),
-                /*// !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
-                textField = TextField(
-                  decoration: new InputDecoration.collapsed(
-                      hintText: "Yeni Sohbet için mail"),
-                  onSubmitted: (String mail) {
-                    mesajGondermeEkraniniAc(mail, context);
-                  },
-                ),*/
-              ],
-            ),
+                              String konusulanKisi = userMessagesList[index]
+                                  .get(((userMessagesList[index]
+                                              .get('Receiver') !=
+                                          user!.email.toString())
+                                      ? 'Receiver'
+                                      : 'Sender'));
+                              //!!arayüz
+                              return Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: kisiButonu(
+                                    konusulanKisi,
+                                    lastMessageTime.toDate(),
+                                    mailiCikar(lastMessage, user!.email,
+                                        konusulanKisi),
+                                    context),
+                              );
+                            },
+                          );
+                        }
+                        //!arayüz
+                        return const Text(
+                            'Gorusmeye Basla'); // daha once konusulmus kımse yoksa bu basiliyor
+                      })),
+              // !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
+              /*textField = TextField(
+                decoration: new InputDecoration.collapsed(
+                    hintText: "Yeni Sohbet için mail"),
+                onSubmitted: (String mail) {
+                  mesajGondermeEkraniniAc(mail, context);
+                },
+              ),*/
+            ],
           ),
         ));
   }
 
   // !!arayüz gecmıs sohbetler ıcın son mesaj zamanını son mesajını ve son konusulan kısıyı gosterıyor
-  Expanded kisiButonu(
+  SafeArea kisiButonu(
       String mail, DateTime time, String message, BuildContext context) {
-    return Expanded(
-      child: Container(
-        color: Colors.white,
-        child: TextButton(
-          child: Row(
-            children: <Widget>[
-              const CircleAvatar(
-                radius: 24,
-                backgroundImage: AssetImage("assets/chatimages/pp.jfif"),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    Container(
-                      child: Text(
-                        mail,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 14),
-                      ),
-                      width: 220,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 220,
-                      child: Text(
-                        message,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                height: 30,
-                child: Text(
-                  "${time.hour}:${time.minute}",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12),
-                ),
-              ),
-            ],
-          ),
-          onPressed: () {
-            mesajlasilanKisi = mail;
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
-            );
-          },
+    return SafeArea(
+      child: TextButton(
+        style: TextButton.styleFrom(
+          elevation: 2,
+          backgroundColor: Colors.white,
         ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            CircleAvatar(
+              radius: 24,
+              backgroundImage: AssetImage("assets/chatimages/pp.jfif"),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 2, 10, 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    mail,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 14),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      message,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w300, color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 30,
+              child: Text(
+                "${time.hour}:${time.minute}",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+        onPressed: () {
+          mesajlasilanKisi = mail;
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
+          );
+        },
       ),
     );
   }
@@ -308,12 +308,14 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
   @override
   Widget build(BuildContext context) {
     //firebaseVeriAl();
+
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         //!!arayüz
-        backgroundColor: Color(0xffcfd8dc),
+        backgroundColor: Colors.white70, //Color(0xffcfd8dc),
         appBar: AppBar(
           title: Text('$mesajlasilanKisi'),
-          backgroundColor: Color(0xff37474f),
+          backgroundColor: Color(0xff2A9D8F), //Color(0xff37474f),
         ),
         //!!arayüz
         body: Container(
@@ -429,10 +431,11 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
                                     end: FractionalOffset.bottomRight),
                                 borderRadius: BorderRadius.circular(40)),
                             padding: const EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 12),
+                                vertical: 8, horizontal: 12),
                             child: const Icon(
                               Icons.send,
                               size: 25,
+                              color: Color(0xff264653),
                             )),
                       )
                     ],

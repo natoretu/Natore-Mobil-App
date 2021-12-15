@@ -79,6 +79,7 @@ flutter:
     - assets/images/
     - assets/
     - assets/chatimages/
+    - assets/homepageImages/
     - assets/locations/
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -5,6 +5,8 @@ import 'package:flutter/services.dart'
     show SystemChrome, SystemUiOverlayStyle, rootBundle;
 import 'package:google_fonts/google_fonts.dart';
 
+import '../UserEntrance.dart';
+
 class Selected extends StatelessWidget {
   final int check;
   final int i;
@@ -256,10 +258,14 @@ class _CountiesSelectorState extends State<CountiesSelector> {
                   child: TextButton(
                     onPressed: () async {
                       if (check != -1) {
-                        /* await updateRef
-                            .doc(user.email!)
-                            .update({'Adress': _adress.text});*/
-                        int count = 0;   // silmee
+                        if (check21 == true) {
+                          updateRef //TODO
+                              .doc(user.email!)
+                              .update({'Adress': cityName + counties[check]});
+                        }
+                        Ugurunkoddandonenadress =
+                            cityName + counties[check]; //TODO
+                        int count = 0; // silmee
                         Navigator.of(context).popUntil((_) => count++ >= 2);
                       }
                     },
