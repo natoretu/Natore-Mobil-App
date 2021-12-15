@@ -227,7 +227,7 @@ class _MainPageState extends State<MainPage> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          /* actions: [
+          actions: [
             TextButton(
               child: Text(
                 'Logout',
@@ -238,7 +238,7 @@ class _MainPageState extends State<MainPage> {
                 provider.logout();
               },
             )
-          ],*/
+          ],
           backgroundColor: Color(0xff07cc99), // Color(0xff06D6A0),
           centerTitle: true,
           elevation: 1,
@@ -333,7 +333,7 @@ class _MainPageState extends State<MainPage> {
                                     builder: (BuildContext context,
                                         AsyncSnapshot asyncSnapshot) {
                                       return Text(
-                                        "Pendik", // '${asyncSnapshot.data.data()['Adress']}',
+                                        "Ataşehir", //'${asyncSnapshot.data.data()['Adress']}',
                                         style: GoogleFonts.lato(
                                             color: Colors.black,
                                             fontSize: 15,
@@ -951,7 +951,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   );
                 },
-                childCount: 1, /*** !!!!! ***/
+                //childCount: 1, /*** !!!!! ***/
               ),
             ),
           ],
