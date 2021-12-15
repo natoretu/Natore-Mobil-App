@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'contact_with_seller.dart';
-
 /*
 * sıkıntılar:
 * sıkıntı1
@@ -13,8 +11,20 @@ double saticiPuani =
 
 // satıcıyla iletişime geç butonuna basılınca bu sayfaya gelecek
 class SellerPage extends StatelessWidget {
-  const SellerPage({Key? key}) : super(key: key);
-
+  SellerPage({Key? key}) : super(key: key);
+  //sefadan alınan market ismi buraya alınır. burdan bu isim ile ahmedin
+  //ilgili fonksiyonu ile gerekli bilgiler çekilir:
+  /* ahmette bulunması gereken fonksiyonlar:
+  *   String getName(marketName); satıcının adı
+  *   String getAddress(marketName);
+  *   Image getProfilePhoto(marketName);
+  *   String getSellerName(marketName);
+  *   double
+  * */
+  String marketName = "empty";
+  SellerPage.withMarketName(String _name) {
+    marketName = _name;
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,7 +50,7 @@ class SellerPage extends StatelessWidget {
                     //width: Size.fromWidth(),
 
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(6, 219, 162, 10),
+                      //color: Color.fromRGBO(6, 219, 162, 10),
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                     child: Padding(
@@ -202,21 +212,6 @@ class SellerPage extends StatelessWidget {
                     ),
                   ),
                   //comments
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SecondRoute()),
-                      );
-                    },
-                    child: Container(
-                      //buraya yorumlar butonu koyacam inşaAllah
-
-                      height: 50,
-                      child: Text("buraya comments gelecek"),
-                    ),
-                  )
                 ],
               ),
             ],
@@ -321,7 +316,7 @@ class EnCokTercihEdilenUrunler extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: Color.fromRGBO(6, 219, 162, 10),
+        //color: Color.fromRGBO(6, 219, 162, 10),
         borderRadius: BorderRadius.all(Radius.circular(8.0)),
       ),
       child: Row(

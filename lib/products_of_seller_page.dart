@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:natore_project/page/product_detail.dart';
+import 'package:natore_project/services/product_services.dart';
 
-import 'contact_with_seller.dart';
 import 'seller_page.dart';
 
 final String Ali_imran_148 =
@@ -12,14 +14,22 @@ final String Ali_imran_148_tr =
     "Bu yüzden Allah onlara dünya nimetini ve âhiret nimetinin de güzelini verdi. Allah işini güzel yapanları sever.";
 // bunlar silinecek. bunların yerini direkt backendden alınacak getter fonksiyonları  alacak
 double fiyat = 20;
-String urunAdi = "Doğal Keçi Sütü";
-String MarketName = "Doğadan Sofraya";
+String urunAdi = "";
+String MarketName = "";
 String resimUrl =
     'https://d2uiaykj5yb3c0.cloudfront.net/tahtakale/img/p/39006c70-bd82-42c0-929d-3c6cacaa31d7.jpg';
 double saticiPuani = 3.8;
+String eMail = "";
 
 class ProductsOfSellerPage extends StatelessWidget {
-  // This widget is the root of your application.
+  ProductsOfSellerPage(String name) {
+    MarketName = name;
+  }
+  //bu gereksiz olabilir
+  ProductsOfSellerPage.withEmailAndName(String name, String e_mail) {
+    MarketName = name;
+    eMail = e_mail;
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,6 +52,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
+  /*prduct serevice*/
+  ProductServices _productServices = ProductServices();
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -52,7 +65,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff06D6A0),
         toolbarHeight: 120,
+
         // leading: IconButton(
         //   icon: Icon(Icons.arrow_back, color: Colors.black),
         //   onPressed: () => Navigator.of(context)
@@ -61,48 +76,64 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           Container(
             width: 350,
-            margin: EdgeInsets.all(4.0),
+            margin: const EdgeInsets.all(16.0),
             child: InkWell(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    //backgroundColor: Colors.white,
-                    child: Image(
-                      image: NetworkImage(
-                          'https://d1hzl1rkxaqvcd.cloudfront.net/contest_entries/1321793/_600px/33f9689616d2c31873e72e65ce2019d1.jpg'), //buraya backenddeki getImage() methodu gelecek
-                      fit: BoxFit.fill,
+                  Container(
+                    //buraya image gelecek
+                    height: 80,
+                    width: 100,
+
+                    decoration: const BoxDecoration(
+                      color: Colors.white70,
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    ),
+                    child: Container(
+                      //width: 120,
+                      //height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(8),
+                        image: const DecorationImage(
+                          //bura ahmetten alınacak
+                          image: NetworkImage(
+                              'https://d1hzl1rkxaqvcd.cloudfront.net/contest_entries/1321793/_600px/33f9689616d2c31873e72e65ce2019d1.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
+                  //puan kısmı
                   Container(
                     height: 25,
                     width: 45,
-                    decoration: new BoxDecoration(
-                      borderRadius: new BorderRadius.circular(5.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
                       color: Colors.amber,
-                      boxShadow: [
-                        new BoxShadow(
-                            color: Colors.grey,
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black12,
                             blurRadius: 1.0,
-                            offset: new Offset(5.0, 5.0))
+                            offset: Offset(5.0, 5.0))
                       ],
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.star_rate,
                           size: 17,
                           color: Colors.white,
                         ),
                         Text(
                           saticiPuani.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -110,15 +141,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20.0,
                   ),
+                  //marketin ismi
                   Expanded(
+                    //bura const olmayacak!!!
                     child: Text(
-                      'Sütçü Dede Süt Ürünleri', //getter ile satıcının adı alınacak
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      MarketName, //getter ile satıcının adı alınacak
+                      style: const TextStyle(
+                          //fontFamily: "Zen Antique Soft",
+                          color: Colors.white,
+                          fontSize: 20,
+                          letterSpacing: 0.5,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
@@ -134,54 +170,75 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size.infinite,
-          child: InkWell(
-            onTap: () {
-              //burda basılınca mesajlajma açılacak
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const SecondRoute()), //burası arama butonu
-              );
-            },
-            child: SearchBar(),
+      ),
+      body: Center(
+        child: Container(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 40,
+              ),
+              StreamBuilder(
+                  stream: _productServices
+                      .getProductsOfSellerStreamMarket(MarketName),
+                  builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+                    if (asyncSnapshot.hasError) {
+                      return const Center(
+                        child: Text("Bir hata olustu"),
+                      );
+                    } else {
+                      if (asyncSnapshot.hasData) {
+                        List<DocumentSnapshot> list = asyncSnapshot.data.docs;
+
+                        return Flexible(
+                          child: ListView.builder(
+                            //itemCount: list.length,
+                            itemCount: list.length % 2 == 0
+                                ? list.length ~/ 2
+                                : list.length ~/ 2 + 1,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    // BlueBox(
+                                    //     list[index].get('image'),
+                                    //     list[index].get('name'),
+                                    //     list[index].get(
+                                    //         'price') /*,
+                                    //     list[index].get('id')*/
+                                    //     ),
+                                    BlueBox(
+                                        list[index * 2].get('image'),
+                                        list[index * 2].get('name'),
+                                        list[index * 2].get('price')),
+
+                                    if (index * 2 + 1 < list.length)
+                                      BlueBox(
+                                          list[index * 2 + 1].get('image'),
+                                          list[index * 2 + 1].get('name'),
+                                          list[index * 2 + 1].get('price')),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }
+                  })
+            ],
           ),
         ),
       ),
-      body: SafeArea(
-        child: ListView.builder(
-          //shrinkWrap: true,
-          //physics: NeverScrollableScrollPhysics(),
-          itemCount: 6, //buraya ürün sayısı gelecek backendden
-          padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              //margin: const EdgeInsets.all(10.0),
-              //padding: const EdgeInsets.all(20.0),
-              child: Column(
-                // mainAxisSize: MainAxisSize.min,
-                children: [
-                  // SizedBox(
-                  //   height: 0,
-                  // ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      BlueBox(resimUrl, urunAdi,
-                          fiyat), //burdaki argümanların yerine backendin getterleri gelecek
-                      BlueBox(resimUrl, urunAdi, fiyat),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home_sharp),
             label: 'Ev',
@@ -193,56 +250,50 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person_sharp),
             label: 'Profilim',
-            /*
-            ImageIcon(
-              AssetImage("assets/hoopoe.png"),
-              color: Colors.blueGrey.withOpacity(0.8),
-              size: 32,
-            ),
-            activeIcon: ImageIcon(
-              AssetImage("assets/hoopoe.png"),
-              color: Color(0xff00ADB5),
-              size: 32,
-            ),*/
           ),
         ],
         backgroundColor: Colors.white,
         iconSize: 22,
         type: BottomNavigationBarType.fixed,
         unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
-        selectedItemColor: Color(0xff34A0A4), //Color(0xff00ADB5),
+        selectedItemColor: const Color(0xff34A0A4), //Color(0xff00ADB5),
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         elevation: 4,
         unselectedFontSize: 14,
         selectedFontSize: 14,
-        //showUnselectedLabels: false,
-        //showSelectedLabels: false,
       ),
     );
   }
 }
+/*___________________________________________________________*/
+/*_____________________ BLUEBOX CLASS ______________________*/
 
 class BlueBox extends StatelessWidget {
   /*burdaki url daha sonra direkt Image'e dönecek*/
-  BlueBox(String _url, String productName, double price) {
+  BlueBox(String _url, String productName, double price /*, String id*/) {
     //unnamed constructor
     this._url = _url;
     this.productName = productName;
     this.price = price;
+    /*this.productID = id;*/
   }
   //ikinci constructor
   //bu daha sonra databaseden image döndüren fonksiyonu yazdığımızda kullanılacak olan constructor.
   // BlueBox.ImageConstructor(...) şeklinde kullanılır
-  BlueBox.ImageConstructor(Image img, String productName, double price) {
+  BlueBox.ImageConstructor(
+      Image img, String productName, double price, String id) {
     this.img = img;
     this.productName = productName;
     this.price = price;
+    this.productID = id;
   }
   //final String title = '';
   String _url = 'BOŞ.ABi';
   String productName = 'BOŞ.ABi';
   double price = 0.0;
+  double rate = 0.0;
+  String productID = "";
   Image img = Image.network("burası geçici");
   //final String message = '';
   @override
@@ -250,123 +301,121 @@ class BlueBox extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
-      child: Row(
+      child: Column(
         children: [
-          Column(
+          Stack(
+            //alignment: AlignmentDirectional.center,
             children: [
-              Container(
-                //  margin: EdgeInsets.all(0.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Container(
-                  margin: EdgeInsets.all(1.0),
-                  width: width / 3,
-                  height: width / 2.5,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(//bu resim databaseden alıncak
-                          _url),
-                      fit: BoxFit.cover,
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: InkWell(
+                    child: Container(
+                      //margin: EdgeInsets.all(width / 20),
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.all(1.0),
+                        width: width / 3, //1.5
+                        height: width / 2.5, //1.9
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(//bu resim databaseden alıncak
+                                _url),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white,
+                          border: Border.all(
+                              color: Colors.white,
+                              style: BorderStyle.solid,
+                              width: 0.3),
+                        ),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                    border: Border.all(
-                        color: Colors.white,
-                        style: BorderStyle.solid,
-                        width: 0.3),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ProductDetail()), //burası arama butonu
+                      );
+                    }),
+              ),
+              Positioned(
+                top: 0.0,
+                right: 0.0,
+                child: InkWell(
+                  child: const Icon(
+                    Icons.add_circle_outline,
+                    size: 40,
                   ),
+                  onTap: () {
+                    //burdan databaseİ dolduracağım inşaAllah
+
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        'Ürün Sepete eklendi: ' + productName,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      duration: Duration(seconds: 1),
+                      backgroundColor: Colors.white,
+                    ));
+                  },
                 ),
               ),
-              Container(
-                width: width / 3,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  price.toString() +
-                      " TL\n" +
-                      productName
-                          .toString(), //burdaki product name ve price will come from database
-                  textScaleFactor: 0.9,
-                ),
-              ),
-              SizedBox(
-                height: 50,
-              )
             ],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-// class SellerProducts {
-//   SellerProducts(int productNum) {
-//     this.productNum = productNum;
-//     this.f();
-//   }
-//   int productNum = -1;
-//   void f() {
-//     for (int i = 0; i < productNum; ++i) {
-//       @override
-//       Widget build(BuildContext context) {
-//         return SafeArea(
-//           child: Row(
-//             children: [
-//               BlueBox(resimUrl, urunAdi, fiyat),
-//             ],
-//           ),
-//         );
-//       }
-//     }
-//   }
-// }
-class SearchBar extends StatefulWidget {
-  const SearchBar({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<SearchBar> createState() => _SearchBarState();
-}
-
-class _SearchBarState extends State<SearchBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
-      child: Material(
-        elevation: 0.8,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Color(0xff34A0A4), width: 0.5),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 20, 0),
-                  child: Icon(
-                    Icons.search,
-                    color: Color(0xff34A0A4),
+          //text
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    productName,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                ),
-                Text(
-                  'Satıcıda Ara',
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
+                  Text(
+                    price.toString() + ' TL',
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+              //const SizedBox(width: 5),
+
+              //star icon and rate
+              Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5.0),
+                    child: Icon(
+                      Icons.star,
+                      color: Color(0xff52B69A),
+                      size: 18,
+                    ),
+                  ),
+                  //rate
+                  Padding(
+                    padding: EdgeInsets.only(top: 2.0),
+                    child: Text(
+                      rate.toString(),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ),
+          const SizedBox(
+            height: 30,
+          )
+        ],
       ),
     );
   }
