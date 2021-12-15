@@ -241,32 +241,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_sharp),
-            label: 'Ev',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Mesajlar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_sharp),
-            label: 'Profilim',
-          ),
-        ],
-        backgroundColor: Colors.white,
-        iconSize: 22,
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
-        selectedItemColor: const Color(0xff34A0A4), //Color(0xff00ADB5),
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        elevation: 4,
-        unselectedFontSize: 14,
-        selectedFontSize: 14,
-      ),
     );
   }
 }

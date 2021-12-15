@@ -333,7 +333,7 @@ class _MainPageState extends State<MainPage> {
                                     builder: (BuildContext context,
                                         AsyncSnapshot asyncSnapshot) {
                                       return Text(
-                                        "Ataşehir", //'${asyncSnapshot.data.data()['Adress']}',
+                                        "Artvin Hopa", //'${asyncSnapshot.data.data()['Adress']}',
                                         style: GoogleFonts.lato(
                                             color: Colors.black,
                                             fontSize: 15,
@@ -951,7 +951,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   );
                 },
-                //childCount: 1, /*** !!!!! ***/
+                childCount: 1, /*** !!!!! ***/
               ),
             ),
           ],
