@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:natore_project/Anasayfa.dart';
@@ -310,9 +311,287 @@ class _NewWidgetState extends State<NewWidget> {
                 Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Form(
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: widget.nameController,
+                          cursorColor: Color(0xffE76F51),
+                          inputFormatters: [
+                            new LengthLimitingTextInputFormatter(24),
+                          ],
+                          decoration: InputDecoration(
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xffE76F51), width: 2),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              borderSide: BorderSide(color: Color(0xffE76F51)),
+                            ),
+                            fillColor: Colors.white.withOpacity(0.97),
+                            filled: true, // dont forget this line
+                            hintText: "İsim",
+                          ),
+                          textCapitalization: TextCapitalization.sentences,
+                        ),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        TextFormField(
+                          controller: widget.surnameController,
+                          cursorColor: Color(0xffE76F51),
+                          inputFormatters: [
+                            new LengthLimitingTextInputFormatter(24),
+                          ],
+                          decoration: InputDecoration(
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xffE76F51), width: 2),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Color(0xffE76F51)),
+                            ),
+                            fillColor: Colors.white.withOpacity(0.97),
+                            filled: true, // dont forget this line
+                            hintText: "Soy isim",
+                          ),
+                          textCapitalization: TextCapitalization.sentences,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 1,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                primary: Colors.white,
+                                onPrimary: Color(0xffE76F51),
+                              ),
+                              onPressed: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LocationPicker()),
+                                );
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Adres',
+                                    style: GoogleFonts.lemon(
+                                        color: Color(0xffE76F51), fontSize: 16),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 4.0),
+                                    child: Icon(Icons.location_on_sharp),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          child: imagefile != null
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                    image: FileImage(imagefile),
+                                  )),
+                                )
+                              : Container(
+                                  height: 200,
+                                  width: 200,
+                                  decoration: BoxDecoration(color: Colors.grey),
+                                ),
+                        ),
+                        Container(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // ignore: deprecated_member_use
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    chooseImage(ImageSource.camera);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    primary: Colors.white,
+                                    onPrimary: Colors.cyan,
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    size: 29,
+                                    color: Color(0xff264653),
+                                  ),
+                                ),
+                              ),
+                              // ignore: deprecated_member_use
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    chooseImage(ImageSource.gallery);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    primary: Colors.white,
+                                    onPrimary: Colors.cyan,
+                                  ),
+                                  child: Icon(
+                                    Icons.image,
+                                    size: 29,
+                                    color: Color(0xff264653),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24)),
+                            primary: Colors.white,
+                            onPrimary: Color(0xff06D6A0),
+                          ),
+                          onPressed: () async {
+                            String a = await uploadMedia(imagefile);
+                            Map<String, dynamic> UsersData = {
+                              'Name': widget.nameController.text,
+                              'Surname': widget.surnameController.text,
+                              'Email': user.email!,
+                              'Adress':
+                                  Ugurunkoddandonenadress, // TODO:ADRESSSSSSSSSSSSSSSSSSSS
+                              'Image': a,
+                              'saticiMi': false
+                            };
+                            await UsersRef.doc(user.email!).set(UsersData);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MyApp1()),
+                            );
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Bitir',
+                                style: GoogleFonts.lemon(
+                                    color: Color(0xff06D6A0), fontSize: 18),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Icon(Icons.done_all),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        /*ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Geri Dön'),
+                      ),*/
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NewWidget1 extends StatefulWidget {
+  NewWidget1({
+    Key? key,
+    required this.nameController,
+    required this.surnameController,
+    required this.mailController,
+    required this.MarketNameController,
+    required this.TimeController,
+  }) : super(key: key);
+  final TextEditingController nameController;
+  final TextEditingController surnameController;
+  final TextEditingController mailController;
+  final TextEditingController MarketNameController;
+  final TextEditingController TimeController;
+  @override
+  State<NewWidget1> createState() => _NewWidget1State();
+}
+
+class _NewWidget1State extends State<NewWidget1> {
+  final user = FirebaseAuth.instance.currentUser!;
+
+  final _firestore = FirebaseFirestore.instance;
+
+  TextEditingController TelNoController = TextEditingController();
+
+  TextEditingController AdressController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference UsersRef = _firestore.collection('Users');
+    String Filename = user.photoURL!;
+    File imagefile = File(user.photoURL!);
+    final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+    final picker = ImagePicker();
+
+    chooseImage(ImageSource source) async {
+      final PickedFile = await picker.getImage(source: source);
+      imagefile = await File(PickedFile!.path);
+    }
+
+    Future<String> uploadMedia(File file) async {
+      var uploadTask = _firebaseStorage
+          .ref()
+          .child(
+              "${DateTime.now().millisecondsSinceEpoch}.${file.path.split(".").last}")
+          .putFile(file);
+
+      uploadTask.snapshotEvents.listen((event) {});
+      var storageRef = await uploadTask;
+      return await storageRef.ref.getDownloadURL();
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: [0.3, 0.8],
+              colors: [Color(0xff06D6A0), Colors.cyan])),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Form(
                       child: Column(
                     children: [
                       TextFormField(
+                        textInputAction: TextInputAction.next,
                         controller: widget.nameController,
                         cursorColor: Color(0xffE76F51),
                         inputFormatters: [
@@ -337,6 +616,7 @@ class _NewWidgetState extends State<NewWidget> {
                         height: 14,
                       ),
                       TextFormField(
+                        textInputAction: TextInputAction.next,
                         controller: widget.surnameController,
                         cursorColor: Color(0xffE76F51),
                         inputFormatters: [
@@ -354,6 +634,95 @@ class _NewWidgetState extends State<NewWidget> {
                           fillColor: Colors.white.withOpacity(0.97),
                           filled: true, // dont forget this line
                           hintText: "Soy isim",
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      SizedBox(
+                        height: 14,
+                      ),
+                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        controller: widget.MarketNameController,
+                        cursorColor: Color(0xffE76F51),
+                        inputFormatters: [
+                          new LengthLimitingTextInputFormatter(41),
+                        ],
+                        decoration: InputDecoration(
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Icon(Icons.store,
+                                  color: Colors.cyan, size: 26),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xffE76F51), width: 2),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Color(0xffE76F51)),
+                            ),
+                            fillColor: Colors.white.withOpacity(0.97),
+                            filled: true, // dont forget this line
+                            hintText: "Market adı"),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      SizedBox(
+                        height: 14,
+                      ),
+                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        controller: widget.TimeController,
+                        cursorColor: Color(0xffE76F51),
+                        inputFormatters: [
+                          new LengthLimitingTextInputFormatter(13),
+                        ],
+                        decoration: InputDecoration(
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.only(bottom: 4.0),
+                            child: Icon(Icons.schedule,
+                                color: Colors.cyan, size: 26),
+                          ),
+                          suffixText: "09.00-18.00",
+                          suffixStyle: TextStyle(color: Colors.grey),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xffE76F51), width: 2),
+                          ),
+                          border: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Color(0xffE76F51)),
+                          ),
+                          fillColor: Colors.white.withOpacity(0.97),
+                          filled: true, // dont forget this line
+                          hintText: "Market çalışma saati",
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      SizedBox(
+                        height: 14,
+                      ),
+                      TextFormField(
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.phone,
+                        controller: TelNoController,
+                        cursorColor: Color(0xffE76F51),
+                        inputFormatters: [
+                          new LengthLimitingTextInputFormatter(11),
+                        ],
+                        decoration: InputDecoration(
+                          prefixIcon:
+                              Icon(Icons.phone, color: Colors.cyan, size: 24),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xffE76F51), width: 2),
+                          ),
+                          border: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Color(0xffE76F51)),
+                          ),
+                          fillColor: Colors.white.withOpacity(0.97),
+                          filled: true, // dont forget this line
+                          hintText: "Telefon numarası (Zorunlu değil)",
                         ),
                         textCapitalization: TextCapitalization.sentences,
                       ),
@@ -469,11 +838,14 @@ class _NewWidgetState extends State<NewWidget> {
                           Map<String, dynamic> UsersData = {
                             'Name': widget.nameController.text,
                             'Surname': widget.surnameController.text,
+                            'TelNo': TelNoController.text,
                             'Email': user.email!,
                             'Adress':
                                 Ugurunkoddandonenadress, // TODO:ADRESSSSSSSSSSSSSSSSSSSS
                             'Image': a,
-                            'saticiMi': false
+                            'saticiMi': true,
+                            'MarketName': widget.MarketNameController.text,
+                            'TimeCont': widget.TimeController.text
                           };
                           await UsersRef.doc(user.email!).set(UsersData);
                           Navigator.push(
@@ -496,215 +868,11 @@ class _NewWidgetState extends State<NewWidget> {
                           ],
                         ),
                       ),
-
-                      /*ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Geri Dön'),
-                      ),*/
                     ],
                   )),
                 )
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class NewWidget1 extends StatefulWidget {
-  NewWidget1({
-    Key? key,
-    required this.nameController,
-    required this.surnameController,
-    required this.mailController,
-    required this.MarketNameController,
-    required this.TimeController,
-  }) : super(key: key);
-  final TextEditingController nameController;
-  final TextEditingController surnameController;
-  final TextEditingController mailController;
-  final TextEditingController MarketNameController;
-  final TextEditingController TimeController;
-  @override
-  State<NewWidget1> createState() => _NewWidget1State();
-}
-
-class _NewWidget1State extends State<NewWidget1> {
-  final user = FirebaseAuth.instance.currentUser!;
-
-  final _firestore = FirebaseFirestore.instance;
-
-  TextEditingController TelNoController = TextEditingController();
-
-  TextEditingController AdressController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    CollectionReference UsersRef = _firestore.collection('Users');
-    String Filename = user.photoURL!;
-    File imagefile = File(user.photoURL!);
-    final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-    final picker = ImagePicker();
-
-    chooseImage(ImageSource source) async {
-      final PickedFile = await picker.getImage(source: source);
-      imagefile = await File(PickedFile!.path);
-    }
-
-    Future<String> uploadMedia(File file) async {
-      var uploadTask = _firebaseStorage
-          .ref()
-          .child(
-              "${DateTime.now().millisecondsSinceEpoch}.${file.path.split(".").last}")
-          .putFile(file);
-
-      uploadTask.snapshotEvents.listen((event) {});
-      var storageRef = await uploadTask;
-      return await storageRef.ref.getDownloadURL();
-    }
-
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(
-                width: 150,
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Form(
-                    child: Column(
-                  children: [
-                    TextFormField(
-                      controller: widget.nameController,
-                      decoration: InputDecoration(hintText: "Adınızı Giriniz"),
-                    ),
-                    TextFormField(
-                      controller: widget.surnameController,
-                      decoration:
-                          InputDecoration(hintText: "Soyadınızı Giriniz"),
-                    ),
-                    TextFormField(
-                      controller: widget.MarketNameController,
-                      decoration:
-                          InputDecoration(hintText: "Market Adını Giriniz"),
-                    ),
-                    TextFormField(
-                      controller: widget.TimeController,
-                      decoration: InputDecoration(
-                          hintText:
-                              "Marketin Açılış Kapanış Saatlerini Giriniz"),
-                    ),
-                    TextFormField(
-                      controller: TelNoController,
-                      decoration: InputDecoration(
-                          hintText:
-                              "Telefon numaranızı Giriniz(Zorunlu Değil)"),
-                    ),
-                    TextFormField(
-                      controller: AdressController,
-                      decoration:
-                          InputDecoration(hintText: "Adresinizi Giriniz"),
-                    ),
-                    Container(
-                      child: imagefile != null
-                          ? Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                image: FileImage(imagefile),
-                              )),
-                            )
-                          : Container(
-                              height: 200,
-                              width: 200,
-                              decoration: BoxDecoration(color: Colors.grey),
-                            ),
-                    ),
-                    Container(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // ignore: deprecated_member_use
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FlatButton(
-                              onPressed: () {
-                                chooseImage(ImageSource.camera);
-                              },
-                              color: Colors.redAccent,
-                              child: Text("Camera",
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                          ),
-                          // ignore: deprecated_member_use
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FlatButton(
-                              onPressed: () {
-                                chooseImage(ImageSource.gallery);
-                              },
-                              color: Colors.redAccent,
-                              child: Text("Galerry",
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    TextButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
-                        overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.hovered))
-                              return Colors.blue.withOpacity(0.04);
-                            if (states.contains(MaterialState.focused) ||
-                                states.contains(MaterialState.pressed))
-                              return Colors.blue.withOpacity(0.12);
-                            return null; // Defer to the widget's default.
-                          },
-                        ),
-                      ),
-                      onPressed: () async {
-                        String a = await uploadMedia(imagefile);
-                        Map<String, dynamic> UsersData = {
-                          'Name': widget.nameController.text,
-                          'Surname': widget.surnameController.text,
-                          'TelNo': TelNoController.text,
-                          'Adress': AdressController.text,
-                          'Email': user.email!,
-                          'Image': a,
-                          'saticiMi': true,
-                          'MarketName': widget.MarketNameController.text,
-                          'TimeCont': widget.TimeController.text
-                        };
-                        await UsersRef.doc(user.email!).set(UsersData);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MyApp1()),
-                        );
-                      },
-                      child: Text('Gönder'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Go back!'),
-                    ),
-                  ],
-                )),
-              )
-            ],
           ),
         ),
       ),
