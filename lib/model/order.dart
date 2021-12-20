@@ -4,8 +4,8 @@ class Order {
   String id;
   String buyerMail;
   String sellerMail;
-  List<dynamic> productsId;
-  List<dynamic> quantities;
+  String productsId;
+  int quantities;
   List<dynamic> prices;
 
   Order({
