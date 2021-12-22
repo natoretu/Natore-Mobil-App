@@ -68,4 +68,24 @@ class Product {
       "responses": responses,
     };
   }
+
+  static fromMap(Object? data) {
+    if (data is Map<String, dynamic>) {
+      return Product(
+        id: data["id"],
+        name: data["name"],
+        price: data["price"],
+        rate: data["rate"],
+        category: data["category"],
+        market: data["market"],
+        quantity: data["quantity"],
+        properties: data["properties"],
+        image: data["image"],
+        mail: data["mail"],
+        commments: data["commments"],
+        responses: data["responses"],
+      );
+    }
+    return null;
+  }
 }

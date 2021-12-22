@@ -327,7 +327,8 @@ class AddProductPageState extends State<AddProductPage> {
   void _onImageButtonPressed(ImageSource source,
       {required BuildContext context}) async {
     try {
-      final pickedFile = await _imagePicker.pickImage(source: source);
+      final pickedFile =
+          await _imagePicker.pickImage(source: source, imageQuality: 50);
       setState(() {
         image = File(pickedFile!.path);
         print("dosyaya geldim: ${image}");
