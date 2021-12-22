@@ -6,7 +6,7 @@ class Order {
   String sellerMail;
   String productsId;
   int quantities;
-  List<dynamic> prices;
+  double prices;
 
   Order({
     required this.id,
@@ -42,5 +42,19 @@ class Order {
       'quantities': quantities,
       'prices': prices,
     };
+  }
+
+  static fromMap(Object? data) {
+    if (data is Map<String, dynamic>) {
+      return Order(
+        id: data['id'],
+        buyerMail: data['buyerMail'],
+        sellerMail: data['sellerMail'],
+        productsId: data['productsId'],
+        quantities: data['quantities'],
+        prices: data['prices'],
+      );
+    }
+    return null;
   }
 }
