@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/page/sohbet.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import 'home_page.dart';
 
@@ -36,6 +37,9 @@ class ProductDetail extends StatefulWidget {
 class _ProductDetailState extends State<ProductDetail> {
   // Color(0xff52B69A),
   // Color(0xff168AAD),
+
+  int yildizsayisi = 5;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,107 +86,295 @@ class _ProductDetailState extends State<ProductDetail> {
                 (BuildContext context, int index) {
                   return Padding(
                     padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        /*** Product Image ***/
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Material(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            elevation: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 16.0),
-                                      child: Image(
-                                        image: AssetImage("assets/milk128.png"),
-                                        //fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                    Column(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 24.0),
-                                          child: Text(
-                                            prName,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(bottom: 8.0),
-                                          child: Text(
-                                            prPrice.toString(),
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        /*** Contact With Seller ***/
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    child: (yildizsayisi != 0)
+                        ? Column(
                             children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    elevation: 2,
-                                    primary: Colors.white,
-                                    onPrimary:
-                                        Colors.teal, // basinca olusan renk
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    )),
-                                onPressed: () {
-                                  mesajGondermeEkraniniAc(prEmail, context);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                              /*** Product Image ***/
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Material(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  elevation: 1,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(
-                                        Icons.phone,
-                                        color: Color(0xff52B69A),
-                                        size: 28,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
-                                        child: Text(
-                                          'Satıcıyla İletişime Geç',
-                                          style: TextStyle(
-                                              fontFamily: "Zen Antique Soft",
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+                                    children: [
+                                      Column(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(top: 16.0),
+                                            child: Image(
+                                              image: AssetImage(
+                                                  "assets/milk128.png"),
+                                              //fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          Column(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 24.0),
+                                                child: Text(
+                                                  prName,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 8.0),
+                                                child: Text(
+                                                  prPrice.toString(),
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
+                              /*** Contact With Seller ***/
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 2,
+                                          primary: Colors.white,
+                                          onPrimary: Colors
+                                              .teal, // basinca olusan renk
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          )),
+                                      onPressed: () {
+                                        mesajGondermeEkraniniAc(
+                                            prEmail, context);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              Icons.phone,
+                                              color: Color(0xff52B69A),
+                                              size: 28,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 8.0),
+                                              child: Text(
+                                                'Satıcıyla İletişime Geç',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        "Zen Antique Soft",
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Text(
+                                  "Bu ürüne puan verin:",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SmoothStarRating(
+                                      onRated: (value) {
+                                        print(
+                                            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                                      },
+                                      allowHalfRating: false,
+                                      isReadOnly: false,
+                                      starCount: yildizsayisi,
+                                      rating: 0.0,
+                                      spacing: 0.0,
+                                      size: 32.0,
+                                      defaultIconData: Icons.star_border,
+                                      filledIconData: Icons.star,
+                                      //filledIconData: Icons.blur_off,
+                                      //halfFilledIconData: Icons.blur_on,
+                                      color: Colors.teal,
+                                      borderColor: Colors.teal,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 6.0),
+                                      child: FloatingActionButton(
+                                        mini: true,
+                                        elevation: 2,
+                                        onPressed: () async {
+                                          setState(() {
+                                            yildizsayisi = 0;
+                                          });
+                                          final snackBar = SnackBar(
+                                            duration: Duration(seconds: 3),
+                                            backgroundColor: Colors.teal,
+                                            content: const Text(
+                                              'Puanınız alındı!',
+                                              style: TextStyle(fontSize: 16),
+                                            ),
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                        },
+                                        backgroundColor: Colors.teal,
+                                        splashColor: Colors.white,
+                                        tooltip: 'Puanı gönder!',
+                                        child: const Icon(
+                                          Icons.check,
+                                          size: 24,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Yorumlar(),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              /*** Product Image ***/
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Material(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  elevation: 1,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(top: 16.0),
+                                            child: Image(
+                                              image: AssetImage(
+                                                  "assets/milk128.png"),
+                                              //fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          Column(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 24.0),
+                                                child: Text(
+                                                  prName,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 8.0),
+                                                child: Text(
+                                                  prPrice.toString(),
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              /*** Contact With Seller ***/
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 2,
+                                          primary: Colors.white,
+                                          onPrimary: Colors
+                                              .teal, // basinca olusan renk
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          )),
+                                      onPressed: () {
+                                        mesajGondermeEkraniniAc(
+                                            prEmail, context);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              Icons.phone,
+                                              color: Color(0xff52B69A),
+                                              size: 28,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 8.0),
+                                              child: Text(
+                                                'Satıcıyla İletişime Geç',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        "Zen Antique Soft",
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Yorumlar(),
+                              ),
                             ],
                           ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Yorumlar(),
-                        ),
-                      ],
-                    ),
                   );
                 },
                 childCount: 1, /*** !!!!! ***/
@@ -447,7 +639,7 @@ class _Yorumlar extends State<Yorumlar> {
       },
       backgroundColor: Colors.cyan,
       splashColor: Colors.white,
-      tooltip: 'Show me the value!',
+      tooltip: 'Yorumu gönder!',
       child: const Icon(
         Icons.send,
         size: 24,

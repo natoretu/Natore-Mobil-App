@@ -1377,6 +1377,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                           element.get('saticiMi');
                                     });
                                   });
+                                  Navigator.pop(context);
                                 },
                                 child: StreamBuilder<DocumentSnapshot>(
                                   stream: babaRef.snapshots(),
@@ -1423,6 +1424,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                           element.get('saticiMi');
                                     });
                                   });
+                                  Navigator.pop(context);
                                 },
                                 child: StreamBuilder<DocumentSnapshot>(
                                   stream: babaRef.snapshots(),
@@ -1649,7 +1651,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Padding(
-                                  padding: EdgeInsets.only(right: 120.0),
+                                  padding: EdgeInsets.only(right: 8.0),
                                   child: Icon(
                                     Icons.edit_location_outlined,
                                     color: Colors.cyan,
@@ -1658,7 +1660,8 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                 ),
                                 Text(
                                   '${asyncSnapshot.data.data()['Adress']}',
-                                  style: TextStyle(fontSize: 18),
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.cyan),
                                 ),
                               ],
                             );
@@ -1749,6 +1752,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                         element.get('saticiMi');
                                   });
                                 });
+                                Navigator.pop(context);
                               },
                               child: StreamBuilder<DocumentSnapshot>(
                                 stream: babaRef.snapshots(),
@@ -1795,6 +1799,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                         print(checksaticioralici);
                                       });
                                     });
+                                    Navigator.pop(context);
                                   },
                                   child: StreamBuilder<DocumentSnapshot>(
                                     stream: babaRef.snapshots(),

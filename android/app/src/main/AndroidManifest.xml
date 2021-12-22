@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
    <application
-        android:label="natore_project"
+        android:label="Natore"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

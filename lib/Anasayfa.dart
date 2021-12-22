@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'dart:ui';
+
 import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +17,7 @@ import 'package:natore_project/products_of_seller_page.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 /// Zen fontu 6 mb !
 
@@ -79,7 +82,8 @@ class MyApp1 extends StatelessWidget {
         AboutheApp.routeName: (context) => AboutheApp(),
         PreviousOrders.routeName: (context) => PreviousOrders(),
         MyAdress.routeName: (context) => MyAdress(),
-        Notifications.routeName: (context) => Notifications(),
+        SellerNotifications.routeName: (context) => SellerNotifications(),
+        BuyerNotifications.routeName: (context) => BuyerNotifications(),
         //Location.routeName: (context) => Location(),
       },
       // home: MyHomePage(),  initialRoute var, kullanma!
@@ -258,7 +262,7 @@ class _MainPageState extends State<MainPage> {
               onPressed: () {
                 Navigator.pushNamed(
                   context,
-                  Notifications.routeName,
+                  SellerNotifications.routeName,
                 );
               },
             ),
@@ -451,7 +455,7 @@ class _MainPageState extends State<MainPage> {
                 ],
               );
             },
-            childCount: 20, /*** !!!!! ***/
+            childCount: 1, /*** !!!!! ***/
           ),
         ),
       ],
@@ -459,25 +463,34 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class Notifications extends StatefulWidget {
-  const Notifications({
+class BuyerNotifications extends StatefulWidget {
+  const BuyerNotifications({
     Key? key,
   }) : super(key: key);
 
-  static String routeName = '/Notifications';
+  static String routeName = '/BuyerNotifications';
 
   @override
-  State<Notifications> createState() => _NotificationsState();
+  State<BuyerNotifications> createState() => _BuyerNotificationsState();
 }
 
-class _NotificationsState extends State<Notifications> {
-  final List<String> Notifics = [
-    "Uygulamamzı paylaşarak bizi onurlandırdınız. Çok teşekkürler. Bu güzel hareketi karşılıksız bırakamayız, +200 puan kazandınız! ",
-    "Siparişiniz sayesinde 25 puan kazandınız. Tebrikler!",
-    "Satıcıdan alma seçeneği ile alışveriş yaptığınız için 50 puan kazandınız. Her satıcıdan alma işlemi +50 puan kazandırır!",
-    "Siparişiniz sayesinde 25 puan kazandınız. Tebrikler!",
-    "Natore'den ilk siparişiniz! Siparişlerinizde kullanmak üzere 100 puan kazandınız. Tebrikler!",
-    "Satıcılarımızla iletişime geçtiniz! 10 puan kazandınız. Tebrikler!",
+class _BuyerNotificationsState extends State<BuyerNotifications> {
+  final List<String> ProductNameList = [
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+  ];
+
+  final List<String> ProductSellerList = [
+    "~Sütçü Dede",
+    "~Sütçü Dede",
+    "~Sütçü Dede",
+    "~Sütçü Dede",
+    "~Sütçü Dede",
+    "~Sütçü Dede",
   ];
 
   final List<String> Date = [
@@ -511,11 +524,7 @@ class _NotificationsState extends State<Notifications> {
     CircleAvatar(
       backgroundColor: Colors.cyan,
       radius: 35,
-      child: Text(
-        "+50",
-        style: GoogleFonts.lemon(
-            color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
-      ),
+      child: Image(image: AssetImage("assets/homepageImages/real_milk.png")),
     ),
     CircleAvatar(
       backgroundColor: Colors.orangeAccent,
@@ -596,21 +605,106 @@ class _NotificationsState extends State<Notifications> {
                                     hoverColor: Colors.greenAccent[700],
                                     tileColor: Colors.white30,
                                     //minLeadingWidth: 30,
-                                    leading: Avatar_list[index],
-                                    title: Text(
-                                      Notifics[index],
-                                      style: GoogleFonts.lato(
-                                        color: Colors.black,
-                                        fontSize: 18,
+                                    leading: ClipRRect(
+                                      borderRadius: BorderRadius.circular(0),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image(
+                                          image: AssetImage(
+                                              "assets/homepageImages/real_milk.png"),
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            "Siparisiniz onaylandı! ",
+                                            maxLines: 1,
+                                            style: GoogleFonts.lato(
+                                              fontWeight: FontWeight.bold,
+                                              //decorationThickness: 3,
+                                              color: Colors.white,
+                                              /* backgroundColor:
+                                                  Colors.deepOrangeAccent,*/
+                                              fontSize: 17,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.horizontal(
+                                                      right:
+                                                          Radius.circular(18),
+                                                      left: Radius.circular(4)),
+                                              color: Colors.deepOrangeAccent),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 6, 0, 3),
+                                          child: Text(
+                                            ProductNameList[index],
+                                            style: GoogleFonts.lato(
+                                              color:
+                                                  Colors.black.withOpacity(0.6),
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 0, 0, 6),
+                                          child: Text(
+                                            ProductSellerList[index],
+                                            style: GoogleFonts.lato(
+                                              color:
+                                                  Colors.black.withOpacity(0.6),
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "Bu ürüne puan verin:",
+                                          style: GoogleFonts.lato(
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                     subtitle: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Column(
+                                        children: [
+                                          SmoothStarRating(
+                                              onRated: (value) {},
+                                              allowHalfRating: false,
+                                              isReadOnly: false,
+                                              starCount: 5,
+                                              rating: 0.0,
+                                              spacing: 0.0,
+                                              size: 32.0,
+                                              defaultIconData:
+                                                  Icons.star_border,
+                                              filledIconData: Icons.star,
+                                              //filledIconData: Icons.blur_off,
+                                              //halfFilledIconData: Icons.blur_on,
+                                              color: Colors.teal,
+                                              borderColor: Colors.teal),
+                                        ],
+                                      ),
+                                    ),
+                                    trailing: Padding(
                                       padding: const EdgeInsets.only(top: 4.0),
                                       child: Text(
                                         Date[index],
                                         style: GoogleFonts.lato(
                                           color: Colors.grey,
-                                          fontSize: 18,
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ),
@@ -618,6 +712,386 @@ class _NotificationsState extends State<Notifications> {
                                   Divider(
                                     color: Colors.black12,
                                     thickness: 0.85,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                childCount: 1, /*** !!!!! ***/
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SellerNotifications extends StatefulWidget {
+  const SellerNotifications({
+    Key? key,
+  }) : super(key: key);
+
+  static String routeName = '/SellerNotifications';
+
+  @override
+  State<SellerNotifications> createState() => _SellerNotificationsState();
+}
+
+class _SellerNotificationsState extends State<SellerNotifications> {
+  final List<String> ProductnameList = [
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+    "Doğal Keçi Sütü",
+  ];
+
+  final List<String> ProductBuyerList = [
+    "~Manzum Nesir",
+    "~Manzum Nesir",
+    "~Manzum Nesir",
+    "~Manzum Nesir",
+    "~Manzum Nesir",
+    "~Manzum Nesir",
+  ];
+
+  final List<String> Date = [
+    "1 hafta",
+    "3 hafta",
+    "1 ay",
+    "1 ay",
+    "2 ay",
+    "3 ay",
+  ];
+
+  bool tapped_icon = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Color(0xff06D6A0),
+              centerTitle: true,
+              elevation: 2,
+              floating: true,
+              //pinned: false,
+              snap: true,
+              flexibleSpace: FlexibleSpaceBar(
+                //centerTitle: true,
+                title: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(
+                    "Bildirimler",
+                    style: TextStyle(
+                        fontFamily: 'Zen Antique Soft',
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                        letterSpacing: 0.5,
+                        fontSize: 22),
+                  ),
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: Date.length, //TODO!!!!!!!!!
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Dismissible(
+                                    key: UniqueKey(),
+                                    /*
+                                    onDismissed: (direction) {
+                                      setState(() {
+                                        Date.removeAt(index);
+                                        ProductnameList.removeAt(index);
+                                        ProductBuyerList.removeAt(index);
+                                      });
+                                    },*/
+                                    background: Container(
+                                      color: Colors.redAccent,
+                                      child: Align(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: const [
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              "Sil",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                              textAlign: TextAlign.left,
+                                            ),
+                                          ],
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                      ),
+                                    ),
+                                    secondaryBackground: Container(
+                                      color: Colors.redAccent,
+                                      child: Align(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              "Sil",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                              textAlign: TextAlign.right,
+                                            ),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                          ],
+                                        ),
+                                        alignment: Alignment.centerRight,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          //onTap: () {},
+                                          hoverColor: Colors.greenAccent[700],
+                                          tileColor: Colors.white30,
+                                          //minLeadingWidth: 30,
+                                          leading: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(0),
+                                            child: AspectRatio(
+                                              aspectRatio: 1,
+                                              child: Image(
+                                                image: AssetImage(
+                                                    "assets/homepageImages/real_milk.png"),
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
+                                          title: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                child: Text(
+                                                  "Siparis onayınız bekleniyor! ",
+                                                  style: GoogleFonts.lato(
+                                                    fontWeight: FontWeight.bold,
+                                                    //decorationThickness: 3,
+                                                    color: Colors.white,
+                                                    /* backgroundColor:
+                                                        Colors.deepOrangeAccent,*/
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                padding: EdgeInsets.all(3),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.horizontal(
+                                                            right:
+                                                                Radius.circular(
+                                                                    18),
+                                                            left:
+                                                                Radius.circular(
+                                                                    4)),
+                                                    color: Colors
+                                                        .deepOrangeAccent),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 6, 0, 3),
+                                                child: Text(
+                                                  ProductnameList[index],
+                                                  style: GoogleFonts.lato(
+                                                    color: Colors.black
+                                                        .withOpacity(0.6),
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 0, 0, 4),
+                                                child: Text(
+                                                  ProductBuyerList[index],
+                                                  style: GoogleFonts.lato(
+                                                    color: Colors.black
+                                                        .withOpacity(0.6),
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          subtitle: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Column(
+                                                    children: [
+                                                      tapped_icon
+                                                          ? IconButton(
+                                                              icon: Icon(Icons
+                                                                  .hide_source),
+                                                              onPressed: () {},
+                                                            )
+                                                          : IconButton(
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .check_circle,
+                                                                color:
+                                                                    Colors.teal,
+                                                                size: 28,
+                                                              ),
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  tapped_icon =
+                                                                      true;
+                                                                });
+                                                                final snackBar =
+                                                                    SnackBar(
+                                                                  duration: Duration(
+                                                                      milliseconds:
+                                                                          1500),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .teal,
+                                                                  content:
+                                                                      const Text(
+                                                                    'Sipariş onaylandı :)',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            16),
+                                                                  ),
+                                                                );
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                        snackBar);
+                                                              },
+                                                            ),
+                                                      Text(
+                                                        "Onayla",
+                                                        style: GoogleFonts.lato(
+                                                          color: Colors.black
+                                                              .withOpacity(1),
+                                                          fontSize: 15,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      tapped_icon
+                                                          ? IconButton(
+                                                              icon: Icon(Icons
+                                                                  .hide_source),
+                                                              onPressed: () {},
+                                                            )
+                                                          : IconButton(
+                                                              icon: const Icon(
+                                                                Icons.cancel,
+                                                                color: Colors
+                                                                    .redAccent,
+                                                                size: 28,
+                                                              ),
+                                                              onPressed: () {
+                                                                setState(() {
+                                                                  tapped_icon =
+                                                                      true;
+                                                                });
+                                                                final snackBar =
+                                                                    SnackBar(
+                                                                  duration: Duration(
+                                                                      milliseconds:
+                                                                          1500),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .redAccent,
+                                                                  content:
+                                                                      const Text(
+                                                                    "Sipariş onaylanmadı :(",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            16),
+                                                                  ),
+                                                                );
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                        snackBar);
+                                                              },
+                                                            ),
+                                                      Text(
+                                                        "Reddet",
+                                                        style: GoogleFonts.lato(
+                                                          color: Colors.black
+                                                              .withOpacity(1),
+                                                          fontSize: 15,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          trailing: Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 4.0),
+                                            child: Text(
+                                              Date[index],
+                                              style: GoogleFonts.lato(
+                                                color: Colors.grey,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Divider(
+                                          color: Colors.black12,
+                                          thickness: 0.85,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               );
@@ -678,7 +1152,7 @@ class _UserProfileState extends State<UserProfile> {
   // Color(0xff168AAD),
 
   final List<String> TextList = [
-    "Adreslerim",
+    "Adresim",
     "Önceki Siparişlerim",
     "Uygulamayı Değerlendirin",
     "Uygulama Hakkında",
@@ -976,8 +1450,6 @@ class _MyAdressState extends State<MyAdress> {
   // Color(0xff52B69A),
   // Color(0xff168AAD),
 
-  List<IconData> IconList = [Icons.home, Icons.store_sharp];
-
   List<String> AdressList = [
     "Ev\nKadıköy (Erenköy Mah.)\n",
     "Market\nKadıköy (Erenköy Mah.)\n",
@@ -999,7 +1471,7 @@ class _MyAdressState extends State<MyAdress> {
         child: CustomScrollView(
           slivers: [
             /***----------***/
-            /*** Adreslerim ***/
+            /*** Adresim ***/
             SliverAppBar(
               backgroundColor: Color(0xff06D6A0),
               centerTitle: true,
@@ -1012,7 +1484,7 @@ class _MyAdressState extends State<MyAdress> {
                 title: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Text(
-                    "Adreslerim",
+                    "Adresim",
                     style: TextStyle(
                         fontFamily: 'Zen Antique Soft',
                         fontWeight: FontWeight.w600,
@@ -1032,7 +1504,7 @@ class _MyAdressState extends State<MyAdress> {
                     padding: const EdgeInsets.all(8),
                     child: Column(
                       children: [
-                        /*** Mevcut Adreslerim ***/
+                        /*** Mevcut Adresim ***/
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Material(
@@ -1042,7 +1514,7 @@ class _MyAdressState extends State<MyAdress> {
                             child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: 2,
+                              itemCount: 1,
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   onTap: () {},
@@ -1052,7 +1524,7 @@ class _MyAdressState extends State<MyAdress> {
                                   ),
                                   tileColor: Colors.white,
                                   leading: Icon(
-                                    IconList[index],
+                                    Icons.home,
                                     color: Color(0xff52B69A), // cyan.shade600
                                     size: 26,
                                   ),
@@ -1079,7 +1551,7 @@ class _MyAdressState extends State<MyAdress> {
                                       fontSize: 14,
                                     ),
                                   ),*/
-                                  trailing: ElevatedButton(
+                                  /*trailing: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                         primary: Colors.white,
                                         onPrimary:
@@ -1095,7 +1567,7 @@ class _MyAdressState extends State<MyAdress> {
                                       color: Colors.pinkAccent,
                                       size: 24,
                                     ),
-                                  ),
+                                  ),*/
                                 );
                               },
                             ),
@@ -1111,41 +1583,37 @@ class _MyAdressState extends State<MyAdress> {
                                 style: ElevatedButton.styleFrom(
                                     elevation: 2,
                                     primary: Colors.white,
-                                    onPrimary:
-                                        Colors.teal, // basinca olusan renk
+                                    onPrimary: Colors.pinkAccent,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     )),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FavoriteWidget()),
+                                  );
+                                },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(1.0),
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.add_circle_outline,
-                                          color: Colors.pinkAccent,
-                                          size: 28,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            AboutheApp
-                                                .routeName, //Location.routeName,
-                                          );
-                                        },
+                                      Icon(
+                                        Icons.edit_location_outlined,
+                                        color: Colors.pinkAccent,
+                                        size: 22,
                                       ),
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 8.0),
                                         child: Text(
-                                          'Yeni Adres Ekle',
+                                          'Adres Değiştir',
                                           style: TextStyle(
-                                              fontFamily: "Zen Antique Soft",
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
+                                            fontFamily: "Zen Antique Soft",
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -1909,7 +2377,7 @@ class _StoreState extends State<Store> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.goudyBookletter1911(
                                       fontWeight: FontWeight.w800,
-                                      color: Color(0xff091624),
+                                      color: Colors.white,
                                       letterSpacing: 1.1,
                                       //wordSpacing: 2,
                                       fontSize: 20),
