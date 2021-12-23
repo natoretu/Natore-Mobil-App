@@ -118,7 +118,21 @@ class Sohbet extends StatelessWidget {
           ),
         ));
   }
+  String timeEdit(DateTime time) {
+    String hour, min;
+    if (time.hour < 10) {
+      hour = '0' + '${time.hour}';
+    } else {
+      hour = '${time.hour}';
+    }
 
+    if (time.minute < 10) {
+      min = '0' + '${time.minute}';
+    } else {
+      min = '${time.minute}';
+    }
+    return hour + ':' + min;
+  }
   // !!arayüz gecmıs sohbetler ıcın son mesaj zamanını son mesajını ve son konusulan kısıyı gosterıyor
   SafeArea kisiButonu(
       String mail, DateTime time, String message, BuildContext context) {
@@ -163,7 +177,7 @@ class Sohbet extends StatelessWidget {
             Container(
               height: 30,
               child: Text(
-                "${time.hour}:${time.minute}",
+                timeEdit(time),
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w400,
