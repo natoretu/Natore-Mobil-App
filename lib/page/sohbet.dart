@@ -204,15 +204,18 @@ class _SohbetState extends State<Sohbet> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    mail,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 14),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      mail,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 14),
+                    ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       message,
                       style: TextStyle(
