@@ -16,7 +16,8 @@ void mesajGondermeEkraniniAc(String mail, BuildContext context) {
   );
 }
 
-Future<void> ImageProcess(List<dynamic> userMessagesList) async {
+Future<void> ImageProcess(
+    List<dynamic> userMessagesList, List<dynamic> userNameList) async {
   for (int i = 0; i < userMessagesList.length;) {
     String mail = userMessagesList[i].get(
         ((userMessagesList[i].get('Receiver') != user!.email.toString())
@@ -29,7 +30,7 @@ Future<void> ImageProcess(List<dynamic> userMessagesList) async {
         .then((value) {
       value.docs.forEach((element) {
         String imageString = element.get('Image');
-
+        userNameList.add(element.get('Name'));
         imageList.add(imageString);
       });
     }).whenComplete(() => i++);
@@ -46,7 +47,7 @@ class _SohbetState extends State<Sohbet> {
       FirebaseFirestore.instance.collection('mesajlar').snapshots();
 
   List<dynamic> userMessagesList = <dynamic>[];
-
+  List<dynamic> userNameList = <dynamic>[];
   @override
   Widget build(BuildContext context) {
     TextField textField;
@@ -99,7 +100,8 @@ class _SohbetState extends State<Sohbet> {
                                       'Messages')[b.get('Messages').length - 1]
                                   ['Time']));
                           return FutureBuilder(
-                              future: ImageProcess(userMessagesList),
+                              future:
+                                  ImageProcess(userMessagesList, userNameList),
                               builder: (_, snap) {
                                 switch (snap.connectionState) {
                                   case ConnectionState.waiting:
@@ -207,7 +209,7 @@ class _SohbetState extends State<Sohbet> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      mail,
+                      userNameList[index],
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
