@@ -7,6 +7,7 @@ import 'package:natore_project/page/home_page.dart';
 //import 'package:firebase_messaging/firebase_messaging.dart';
 String mesajlasilanKisi = ""; // mesaj atilacak kisinin maili buraya yazilir.
 //user = FirebaseAuth.instance.currentUser!;
+List<String> imageList = [];
 void mesajGondermeEkraniniAc(String mail, BuildContext context) {
   mesajlasilanKisi = mail;
   Navigator.push(
@@ -15,13 +16,41 @@ void mesajGondermeEkraniniAc(String mail, BuildContext context) {
   );
 }
 
-class Sohbet extends StatelessWidget {
+Future<void> ImageProcess(List<dynamic> userMessagesList) async {
+  for (int i = 0; i < userMessagesList.length;) {
+    String mail = userMessagesList[i].get(
+        ((userMessagesList[i].get('Receiver') != user!.email.toString())
+            ? 'Receiver'
+            : 'Sender'));
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .where('Email', isEqualTo: mail)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        String imageString = element.get('Image');
+
+        imageList.add(imageString);
+      });
+    }).whenComplete(() => i++);
+  }
+}
+
+class Sohbet extends StatefulWidget {
+  @override
+  State<Sohbet> createState() => _SohbetState();
+}
+
+class _SohbetState extends State<Sohbet> {
   final Stream<QuerySnapshot> allMessages =
       FirebaseFirestore.instance.collection('mesajlar').snapshots();
+
   List<dynamic> userMessagesList = <dynamic>[];
+
   @override
   Widget build(BuildContext context) {
     TextField textField;
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xff06D6A0),
@@ -69,38 +98,55 @@ class Sohbet extends StatelessWidget {
                               .compareTo(b.get(
                                       'Messages')[b.get('Messages').length - 1]
                                   ['Time']));
-                          return ListView.builder(
-                            itemCount: userMessagesList.length,
-                            itemBuilder: (context, index) {
-                              var sohbet = userMessagesList[index];
-                              var messagesWithSpecificUser =
-                                  sohbet.get('Messages');
-                              var messageList =
-                                  List.from(messagesWithSpecificUser);
-                              var lastMessage =
-                                  messageList[messageList.length - 1]
-                                      ['Message'];
-                              var lastMessageTime =
-                                  messageList[messageList.length - 1]['Time'];
+                          return FutureBuilder(
+                              future: ImageProcess(userMessagesList),
+                              builder: (_, snap) {
+                                switch (snap.connectionState) {
+                                  case ConnectionState.waiting:
+                                    return Text('Loading....');
+                                  default:
+                                    if (snap.hasError)
+                                      return Text('Error: ${snap.error}');
+                                    else {
+                                      return ListView.builder(
+                                        itemCount: userMessagesList.length,
+                                        itemBuilder: (context, index) {
+                                          var sohbet = userMessagesList[index];
+                                          var messagesWithSpecificUser =
+                                              sohbet.get('Messages');
+                                          var messageList = List.from(
+                                              messagesWithSpecificUser);
+                                          var lastMessage = messageList[
+                                                  messageList.length - 1]
+                                              ['Message'];
+                                          var lastMessageTime = messageList[
+                                              messageList.length - 1]['Time'];
 
-                              String konusulanKisi = userMessagesList[index]
-                                  .get(((userMessagesList[index]
-                                              .get('Receiver') !=
-                                          user!.email.toString())
-                                      ? 'Receiver'
-                                      : 'Sender'));
-                              //!!arayüz
-                              return Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: kisiButonu(
-                                    konusulanKisi,
-                                    lastMessageTime.toDate(),
-                                    mailiCikar(lastMessage, user!.email,
-                                        konusulanKisi),
-                                    context),
-                              );
-                            },
-                          );
+                                          String konusulanKisi =
+                                              userMessagesList[index].get(
+                                                  ((userMessagesList[index].get(
+                                                              'Receiver') !=
+                                                          user!.email
+                                                              .toString())
+                                                      ? 'Receiver'
+                                                      : 'Sender'));
+                                          //!!arayüz
+
+                                          return Padding(
+                                            padding: const EdgeInsets.all(6),
+                                            child: kisiButonu(
+                                                index,
+                                                konusulanKisi,
+                                                lastMessageTime.toDate(),
+                                                mailiCikar(lastMessage,
+                                                    user!.email, konusulanKisi),
+                                                context),
+                                          );
+                                        },
+                                      );
+                                    }
+                                }
+                              });
                         }
                         //!arayüz
                         return const Text(
@@ -118,6 +164,7 @@ class Sohbet extends StatelessWidget {
           ),
         ));
   }
+
   String timeEdit(DateTime time) {
     String hour, min;
     if (time.hour < 10) {
@@ -133,9 +180,10 @@ class Sohbet extends StatelessWidget {
     }
     return hour + ':' + min;
   }
-  // !!arayüz gecmıs sohbetler ıcın son mesaj zamanını son mesajını ve son konusulan kısıyı gosterıyor
-  SafeArea kisiButonu(
-      String mail, DateTime time, String message, BuildContext context) {
+
+  SafeArea kisiButonu(int index, String mail, DateTime time, String message,
+      BuildContext context) {
+    Widget returnWidget;
     return SafeArea(
       child: TextButton(
         style: TextButton.styleFrom(
@@ -148,7 +196,7 @@ class Sohbet extends StatelessWidget {
           children: <Widget>[
             CircleAvatar(
               radius: 24,
-              backgroundImage: AssetImage("assets/chatimages/pp.jfif"),
+              backgroundImage: NetworkImage(imageList[index]),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 2, 10, 2),
