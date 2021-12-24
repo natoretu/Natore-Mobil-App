@@ -259,14 +259,16 @@ class BlueBox extends StatelessWidget {
                     ),
                   ),
                   //rate
-                  Padding(
+                  UrunPuaniGoster(this.productID),
+                  /*Padding(
                     padding: EdgeInsets.only(top: 2.0),
                     child: Text(
-                      rate.toString(),
+
+                      //rate.toString(),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ],
