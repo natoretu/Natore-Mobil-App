@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/page/show_in_category.dart';
 
 class SearchAppBar extends StatefulWidget {
@@ -25,12 +26,13 @@ String giveFirebaseField(String text) {
 }
 
 class _SearchAppBarState extends State<SearchAppBar> {
+  bool edit_done = false;
   List<String> azalanArtan = ['Azalan', 'Artan'];
   String choice1 = 'Azalan';
   String choice2 = 'Ucret';
   //int selectedIndex = -1;
   bool search = false;
-  String searchedText = "";
+  String searchedText = "ZZZZZZZZZZZZZZ";
   TextEditingController _search = TextEditingController();
   @override
   void setState(VoidCallback fn) {
@@ -41,75 +43,116 @@ class _SearchAppBarState extends State<SearchAppBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        leading: Padding(
-          padding: const EdgeInsets.only(bottom: 2.0),
-          child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          leading: Padding(
+            padding: const EdgeInsets.only(bottom: 2.0),
+            child: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
-        ),
-        centerTitle: false,
-        leadingWidth: 28,
-        title: TextFormField(
-          controller: _search,
-          cursorColor: Colors.cyan,
-          autofocus: true,
-          inputFormatters: [
-            new LengthLimitingTextInputFormatter(42),
-          ],
-          textCapitalization: TextCapitalization
-              .sentences, // word yapilabilir, ürünlerin isimlendirmesine bagli
-          decoration: InputDecoration(
-            prefixIcon: Padding(
-              padding: const EdgeInsets.only(bottom: 2.0),
-              child: Icon(
-                Icons.search,
-                color: Color(0xff34A0A4),
+          centerTitle: false,
+          leadingWidth: 28,
+          title: TextFormField(
+            onChanged: (string) {
+              if (_search.text != "") edit_done = false;
+            },
+            onFieldSubmitted: (string) {
+              if (_search.text != "")
+                setState(() {
+                  edit_done = true;
+                });
+            },
+            textInputAction: TextInputAction.done,
+            controller: _search,
+            cursorColor: Colors.cyan,
+            autofocus: true,
+            inputFormatters: [
+              new LengthLimitingTextInputFormatter(42),
+            ],
+            textCapitalization: TextCapitalization
+                .sentences, // word yapilabilir, ürünlerin isimlendirmesine bagli
+            decoration: InputDecoration(
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(bottom: 2.0),
+                child: Icon(
+                  Icons.search,
+                  color: Color(0xff34A0A4),
+                ),
+              ),
+              hintText: "Arama yapınız",
+              hintStyle: TextStyle(color: Colors.black54),
+              disabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(width: 0.2, color: Colors.white),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(width: 0.2, color: Colors.white),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(width: 0.2, color: Colors.white),
               ),
             ),
-            hintText: "Arama yapınız",
-            hintStyle: TextStyle(color: Colors.black54),
-            disabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(width: 0.2, color: Colors.white),
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(width: 0.2, color: Colors.white),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(width: 0.2, color: Colors.white),
-            ),
-          ),
 
-          onEditingComplete: () {
-            setState(() {
-              print("onEditingComplete" + _search.text);
-              searchedText = _search.text;
-              search = true;
-            });
-          },
-          /*{
+            onEditingComplete: () {
+              if (_search.text != "")
+                setState(() {
+                  print("onEditingComplete" + _search.text);
+                  searchedText = _search.text;
+                  search = true;
+                });
+            },
+
+            /*{
             print("onEditingComplete" + _search.text);
             searchedText = _search.text;
             search = true;
 
             //Text("asd");
           },*/
+          ),
         ),
-      ),
-      body: Center(
-        child: Container(
+        body: Center(
+            child: Container(
           child: Column(
             children: [
-              const SizedBox(
+              /*const SizedBox(
                 height: 40,
-              ),
-              /*ListView.builder(
+              ),*/
+              (edit_done
+                  ? SafeArea(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16)),
+                                side:
+                                    BorderSide(width: 0.7, color: Colors.white),
+                                primary: Colors.white,
+                                elevation: 1,
+                                onPrimary: Colors.white,
+                              ),
+                              onPressed: () => _onButtonPressed(),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.import_export_outlined,
+                                    color: Colors.black54,
+                                  ),
+                                  Text("Sırala",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black54)),
+                                ],
+                              ),
+                            ),
+                            /*ListView.builder(
                 itemCount: 10,
                 itemBuilder: (context, index) {
                   return ListTile(
@@ -124,37 +167,42 @@ class _SearchAppBarState extends State<SearchAppBar> {
                 },
               ),*/
 
-              Column(
-                /*
+                            /*Column(
+                    /*
                     * var azalanArtan = {'Azalan','Artan'};
   var ozellik = {'Alfabetik','Puan','Ucret'};*/
-                children: <Widget>[
-                  ListTile(
-                    title: const Text('Azalan'),
-                    leading: Radio<String>(
-                      value: azalanArtan[0],
-                      groupValue: choice1,
-                      onChanged: (String? value) {
-                        setState(() {
-                          choice1 = value!;
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Artan'),
-                    leading: Radio<String>(
-                      value: azalanArtan[1],
-                      groupValue: choice1,
-                      onChanged: (String? value) {
-                        setState(() {
-                          choice1 = value!;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                    children: <Widget>[
+                      ListTile(
+                        title: const Text('Azalan'),
+                        leading: Radio<String>(
+                          value: azalanArtan[0],
+                          groupValue: choice1,
+                          onChanged: (String? value) {
+                            setState(() {
+                              choice1 = value!;
+                            });
+                          },
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('Artan'),
+                        leading: Radio<String>(
+                          value: azalanArtan[1],
+                          groupValue: choice1,
+                          onChanged: (String? value) {
+                            setState(() {
+                              choice1 = value!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),*/
+                          ]),
+                    )
+                  : SizedBox(
+                      height: 1,
+                    )),
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('Products')
@@ -204,8 +252,8 @@ class _SearchAppBarState extends State<SearchAppBar> {
                                         list[index * 2 + 1].get('image'),
                                         list[index * 2 + 1].get('name'),
                                         list[index * 2 + 1].get('price'),
-                                        list[index * 2].get('id'),
-                                        list[index * 2].get('mail'),
+                                        list[index * 2 + 1].get('id'),
+                                        list[index * 2 + 1].get('mail'),
                                       ),
                                   ],
                                 ),
@@ -222,9 +270,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
                   })
             ],
           ),
-        ),
-      ),
-    );
+        )));
   }
 
   searchProducts(String text) {
@@ -235,6 +281,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
 
     return ref.snapshots();
   }
+
 /*
   void showSearchedProducts(searchProducts) {
     Center(
@@ -314,4 +361,106 @@ class _SearchAppBarState extends State<SearchAppBar> {
     return ref.snapshots();
   }
   */
+  void _onButtonPressed() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            color: Color(0xFF737373),
+            // height: 180,
+            child: Container(
+              child: _buildBottomNavigationMenu(),
+              decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(10),
+                  topRight: const Radius.circular(10),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  Column _buildBottomNavigationMenu() {
+    return Column(
+      //mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          leading: FaIcon(
+            FontAwesomeIcons.moneyBillWave,
+            size: 18,
+            color: Colors.green,
+          ),
+          title: Text('Artan Fiyat'),
+          onTap: () {
+            setState(() {
+              Navigator.pop(context);
+              choice1 = azalanArtan[1];
+              choice2 = ozellik[2];
+            });
+
+            //return ToProjecter(1);
+          },
+        ),
+        Divider(
+          height: 0.1,
+        ),
+        ListTile(
+          leading: FaIcon(
+            FontAwesomeIcons.moneyBillWave,
+            size: 18,
+            color: Colors.redAccent,
+          ),
+          title: Text('Azalan Fiyat'),
+          onTap: () {
+            setState(() {
+              Navigator.pop(context);
+              choice1 = azalanArtan[0];
+              choice2 = ozellik[2];
+            });
+
+            // return ToProjecter(2);
+          },
+        ),
+        Divider(
+          height: 0.1,
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.sort_by_alpha,
+          ),
+          title: Text('Alfabetik Sıralama'),
+          onTap: () {
+            setState(() {
+              Navigator.pop(context);
+              //return ToProjecter(3);
+              choice1 = azalanArtan[1];
+              choice2 = ozellik[0];
+            });
+          },
+        ),
+        Divider(
+          height: 0.1,
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.star,
+            size: 24,
+            color: Colors.amber.shade700,
+          ),
+          title: Text('Ürün Puanı'),
+          onTap: () {
+            setState(() {
+              Navigator.pop(context);
+              // return ToProjecter(4);
+              choice1 = azalanArtan[0];
+              choice2 = ozellik[1];
+            });
+          },
+        ),
+      ],
+    );
+  }
 }
