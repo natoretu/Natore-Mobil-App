@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:natore_project/Search_Bar.dart';
 import 'package:natore_project/UserEntrance.dart';
 import 'package:natore_project/page/Order/my_orders.dart';
 import 'package:natore_project/page/sohbet.dart';
@@ -80,7 +81,6 @@ class MyApp1 extends StatelessWidget {
         MyHomePage.routeName: (context) => MyHomePage(),
         UserProfile.routeName: (context) => UserProfile(),
         AboutheApp.routeName: (context) => AboutheApp(),
-        PreviousOrders.routeName: (context) => PreviousOrders(),
         MyAdress.routeName: (context) => MyAdress(),
         SellerNotifications.routeName: (context) => SellerNotifications(),
         BuyerNotifications.routeName: (context) => BuyerNotifications(),
@@ -101,14 +101,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  /*static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);*/
-
   List<Widget> tabs = [
     MainPage(),
     Sohbet(), //chat gelecek
     MyOrders("Sütçü Dede"), //MyStatefulWidget(),
     UserProfile(),
+    checksaticioralici == true ? UserProfile() : SizedBox.shrink() // TODO:ugur
   ];
 
   int _selectedIndex = 0;
@@ -119,55 +117,91 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  final user = FirebaseAuth.instance.currentUser!;
-  final _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     print("dsadasdasdasdsadsadasdasdasdassdasdsa546565465");
+    final user = FirebaseAuth.instance.currentUser!;
+    final _firestore = FirebaseFirestore.instance;
 
+    CollectionReference updateRef = _firestore.collection('Users');
+    var babaRef = updateRef.doc(user.email!);
+    FirebaseFirestore.instance
+        .collection('Users')
+        .where('Email', isEqualTo: user.email!)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        checksaticioralici = element.get('saticiMi');
+      });
+    });
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_sharp),
-            label: 'Ev',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Mesajlar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_basket),
-            label: 'Sepetim',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_sharp),
-            label: 'Profilim',
-            /*
-            ImageIcon(
-              AssetImage("assets/hoopoe.png"),
-              color: Colors.blueGrey.withOpacity(0.8),
-              size: 32,
+      bottomNavigationBar: checksaticioralici == true
+          ? BottomNavigationBar(
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_sharp),
+                  label: 'Ev',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.chat),
+                  label: 'Mesajlar',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_basket),
+                  label: 'Sepetim',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_sharp),
+                  label: 'Profilim',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.store),
+                  label: 'Mağazam',
+                ),
+              ],
+              backgroundColor: Colors.white,
+              iconSize: 22,
+              type: BottomNavigationBarType.fixed,
+              unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
+              selectedItemColor: Color(0xff34A0A4), //Color(0xff00ADB5),
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
+              unselectedFontSize: 14,
+              selectedFontSize: 14,
+              //showUnselectedLabels: false,
+              //showSelectedLabels: false,
+            )
+          : BottomNavigationBar(
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_sharp),
+                  label: 'Ev',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.chat),
+                  label: 'Mesajlar',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_basket),
+                  label: 'Sepetim',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_sharp),
+                  label: 'Profilim',
+                ),
+              ],
+              backgroundColor: Colors.white,
+              iconSize: 22,
+              type: BottomNavigationBarType.fixed,
+              unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
+              selectedItemColor: Color(0xff34A0A4), //Color(0xff00ADB5),
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
+              unselectedFontSize: 14,
+              selectedFontSize: 14,
+              //showUnselectedLabels: false,
+              //showSelectedLabels: false,
             ),
-            activeIcon: ImageIcon(
-              AssetImage("assets/hoopoe.png"),
-              color: Color(0xff00ADB5),
-              size: 32,
-            ),*/
-          ),
-        ],
-        backgroundColor: Colors.white,
-        iconSize: 22,
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
-        selectedItemColor: Color(0xff34A0A4), //Color(0xff00ADB5),
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        unselectedFontSize: 14,
-        selectedFontSize: 14,
-        //showUnselectedLabels: false,
-        //showSelectedLabels: false,
-      ),
       body: SafeArea(
         child: tabs[_selectedIndex],
       ),
@@ -1153,18 +1187,16 @@ class _UserProfileState extends State<UserProfile> {
 
   final List<String> TextList = [
     "Adresim",
-    "Önceki Siparişlerim",
     "Uygulamayı Değerlendirin",
     "Uygulama Hakkında",
     "Uygulamayı Paylaş",
   ];
 
   final List<EdgeInsetsGeometry> PaddingList = [
-    EdgeInsets.fromLTRB(8, 8, 90, 4),
-    EdgeInsets.fromLTRB(8, 8, 55, 4),
-    EdgeInsets.fromLTRB(8, 8, 20, 4),
-    EdgeInsets.fromLTRB(8, 8, 55, 4),
-    EdgeInsets.fromLTRB(8, 8, 90, 8),
+    EdgeInsets.fromLTRB(8, 8, 8, 4),
+    EdgeInsets.fromLTRB(8, 8, 8, 4),
+    EdgeInsets.fromLTRB(8, 8, 8, 4),
+    EdgeInsets.fromLTRB(8, 8, 8, 8),
   ];
 
   final user = FirebaseAuth.instance.currentUser!;
@@ -1307,7 +1339,7 @@ class _UserProfileState extends State<UserProfile> {
                             child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: 5,
+                              itemCount: 4,
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: PaddingList[index],
@@ -1325,22 +1357,17 @@ class _UserProfileState extends State<UserProfile> {
                                               MyAdress.routeName,
                                             );
                                             break;
+
                                           case 1:
-                                            Navigator.pushNamed(
-                                              context,
-                                              PreviousOrders.routeName,
-                                            );
-                                            break;
-                                          case 2:
                                             _launchURLApp(rateApp_link);
                                             break;
-                                          case 3:
+                                          case 2:
                                             Navigator.pushNamed(
                                               context,
                                               AboutheApp.routeName,
                                             );
                                             break;
-                                          case 4:
+                                          case 3:
                                             Share.share(rateApp_link);
                                             break;
                                         }
@@ -1832,118 +1859,6 @@ class _AboutheAppState extends State<AboutheApp> {
   }
 }
 
-class PreviousOrders extends StatefulWidget {
-  const PreviousOrders({
-    Key? key,
-  }) : super(key: key);
-
-  static String routeName = '/PreviousOrders';
-
-  @override
-  State<PreviousOrders> createState() => _PreviousOrdersState();
-}
-
-class _PreviousOrdersState extends State<PreviousOrders> {
-  final List<String> Details = [
-    "Milat Peynir\n500 gr Süzme Peynir",
-    "Değirmen Yağ\n3 kg Tuzsuz Yağ",
-    "Sütçü Dede Süt Ürünleri\n5 lt Keçi Sütü",
-  ];
-
-  final List<ImageProvider> Image_list = [
-    AssetImage("assets/homepageImages/cheese.png"),
-    AssetImage("assets/homepageImages/butter-toast.png"),
-    AssetImage("assets/homepageImages/real_milk.png"),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              backgroundColor: Color(0xff06D6A0),
-              centerTitle: true,
-              elevation: 1,
-              floating: true,
-              //pinned: false,
-              snap: true,
-              flexibleSpace: FlexibleSpaceBar(
-                //centerTitle: true,
-                title: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Text(
-                    "Önceki Siparislerim",
-                    style: TextStyle(
-                        fontFamily: 'Zen Antique Soft',
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        letterSpacing: 0.5,
-                        fontSize: 22),
-                  ),
-                ),
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Material(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 2,
-                                child: ListTile(
-                                  onTap: () {},
-                                  hoverColor: Colors.greenAccent[700],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  tileColor: Colors.white,
-                                  leading: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Image(
-                                      image: Image_list[index],
-                                    ),
-                                  ),
-                                  title: Text(
-                                    Details[index],
-                                    style: GoogleFonts.lato(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                childCount: 1, /*** !!!!! ***/
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class SearchBar extends StatefulWidget {
   const SearchBar({
     Key? key,
@@ -1961,29 +1876,37 @@ class _SearchBarState extends State<SearchBar> {
       child: Material(
         elevation: 0.8,
         borderRadius: BorderRadius.circular(8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Color(0xff34A0A4), width: 0.5),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 20, 0),
-                  child: Icon(
-                    Icons.search,
-                    color: Color(0xff34A0A4),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchAppBar()),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Color(0xff34A0A4), width: 0.5),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 20, 0),
+                    child: Icon(
+                      Icons.search,
+                      color: Color(0xff34A0A4),
+                    ),
                   ),
-                ),
-                Text('Yakınındaki Satıcılarda Ara',
-                    style: GoogleFonts.lato(
-                        color: Colors.grey,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600)),
-              ],
+                  Text('Yakınındaki Satıcılarda Ara',
+                      style: GoogleFonts.lato(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600)),
+                ],
+              ),
             ),
           ),
         ),
