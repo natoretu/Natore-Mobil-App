@@ -24,7 +24,7 @@ String image_pr = "";
 
 class ProductsOfSellerPage extends StatelessWidget {
   ProductsOfSellerPage(String name) {
-    //print(name);
+    print(name);
     MarketName = name;
   }
   //bu gereksiz olabilir
@@ -168,7 +168,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
-        //bottom: PreferredSizeWidget(),
       ),
       body: Center(
         child: Container(
@@ -202,6 +201,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
+                                    // BlueBox(
+                                    //     list[index].get('image'),
+                                    //     list[index].get('name'),
+                                    //     list[index].get(
+                                    //         'price') /*,
+                                    //     list[index].get('id')*/
+                                    //     ),
                                     BlueBox(
                                       list[index * 2].get('image'),
                                       list[index * 2].get('name'),
@@ -209,6 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       list[index * 2].get('id'),
                                       list[index * 2].get('mail'),
                                     ),
+
                                     if (index * 2 + 1 < list.length)
                                       BlueBox(
                                         list[index * 2 + 1].get('image'),
@@ -242,7 +249,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class BlueBox extends StatelessWidget {
   /*burdaki url daha sonra direkt Image'e dönecek*/
-
   BlueBox(
       String _url, String productName, double price, String id, String mail) {
     //unnamed constructor
@@ -261,15 +267,12 @@ class BlueBox extends StatelessWidget {
     this.productName = productName;
     this.price = price;
     this.productID = id;
-
     //this.productID = mail;
   }
-
+  //final String title = '';
   String id = 'ID';
   String mail = 'MAIL';
-  IconData bosGalp = const IconData(0xe25c, fontFamily: 'MaterialIcons');
-  IconData doluGalp = const IconData(0xe25b, fontFamily: 'MaterialIcons');
-  IconData galp = const IconData(0xe25c, fontFamily: 'MaterialIcons');
+
   String _url = 'BOŞ.ABi';
   String productName = 'BOŞ.ABi';
   double price = 0.0;
@@ -301,7 +304,7 @@ class BlueBox extends StatelessWidget {
                         width: width / 3, //1.5
                         height: width / 2.5, //1.9
                         decoration: BoxDecoration(
-                          image: const DecorationImage(
+                          image: DecorationImage(
                             image: AssetImage(//bu resim databaseden alıncak
                                 "assets/milk128.png"),
                             fit: BoxFit.cover,
@@ -324,7 +327,7 @@ class BlueBox extends StatelessWidget {
                                 productName,
                                 _url,
                                 price,
-                                productID,
+                                this.productID,
                                 mail)), //burası arama butonu
                       );
                     }),
@@ -333,17 +336,17 @@ class BlueBox extends StatelessWidget {
                 top: 0.0,
                 right: 0.0,
                 child: InkWell(
-                  child: Icon(
-                    doluGalp,
+                  child: const Icon(
+                    Icons.add_circle_outline,
                     size: 40,
-                    color: Colors.grey[300],
+                    color: Color(0xffE76F51),
                   ),
                   onTap: () {
                     //burdan databaseİ dolduracağım inşaAllah
 
                     Scaffold.of(context).showSnackBar(SnackBar(
                       content: Text(
-                        'Ürün favorilere eklendi: ' + productName,
+                        'Ürün Sepete eklendi: ' + productName,
                         style: TextStyle(color: Colors.black),
                       ),
                       duration: Duration(seconds: 1),
@@ -387,14 +390,16 @@ class BlueBox extends StatelessWidget {
                     ),
                   ),
                   //rate
-                  Padding(
+                  /*Padding(
                     padding: EdgeInsets.only(top: 2.0),
                     child: Text(
-                      rate.toString(),
+                      //rate.toString(),
+                      UrunPuaniDondur(this.productID),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
-                  ),
+                  ),*/
+                  UrunPuaniGoster(this.productID),
                 ],
               ),
             ],
