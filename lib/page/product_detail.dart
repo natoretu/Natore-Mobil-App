@@ -29,6 +29,7 @@ Future<DocumentSnapshot> getDocumentRates(String productId) async {
 }
 
 Future<DocumentSnapshot> getDocumentProduct(String productId) async {
+  print("111111" + productId);
   return FirebaseFirestore.instance.collection('Products').doc(productId).get();
 }
 
@@ -501,12 +502,13 @@ Padding UrunPuaniGoster(String productId) {
     padding: EdgeInsets.symmetric(vertical: 4),
     child: Container(
         child: FutureBuilder(
-      future: getDocumentProduct(prId),
+      future: getDocumentProduct(productId),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          //var a = getDocumentRates(prId);
           print("has no data");
+          print("33333333");
           rate = snapshot.data!.get('rate');
+          print("2222222");
           return RichText(
             text: TextSpan(
               text: rate.toStringAsFixed(1).toString(),
@@ -582,6 +584,7 @@ String UrunPuaniDondur(String productId) {
         //var a = getDocumentRates(prId);
         print("has no data");
         doubleRate = snapshot.data!.get('rate');
+        print("AAAAAAAAAAAAAAAAAAAAAAA rate ALındı" + doubleRate.toString());
         rate = doubleRate.toStringAsFixed(1);
         //print("It is not Exist");
 
