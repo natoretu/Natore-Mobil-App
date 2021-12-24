@@ -188,7 +188,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     } else {
                       if (asyncSnapshot.hasData) {
                         List<DocumentSnapshot> list = asyncSnapshot.data.docs;
-
+                        for (int i = 0; i < list.length; i++) {
+                          print(list[i].get('id') +
+                              " name:" +
+                              list[i].get('name'));
+                        }
                         return Flexible(
                           child: ListView.builder(
                             //itemCount: list.length,
@@ -196,6 +200,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ? list.length ~/ 2
                                 : list.length ~/ 2 + 1,
                             itemBuilder: (context, index) {
+                              print(list[index].get('id') +
+                                  " name:" +
+                                  list[index].get('name'));
                               return Padding(
                                 padding: const EdgeInsets.all(0.0),
                                 child: Row(
@@ -214,8 +221,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         list[index * 2 + 1].get('image'),
                                         list[index * 2 + 1].get('name'),
                                         list[index * 2 + 1].get('price'),
-                                        list[index * 2].get('id'),
-                                        list[index * 2].get('mail'),
+                                        list[index * 2 + 1].get('id'),
+                                        list[index * 2 + 1].get('mail'),
                                       ),
                                   ],
                                 ),
@@ -316,7 +323,7 @@ class BlueBox extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      print(productName + _url + mail);
+                      print(productName + _url + mail + " IDDDD" + productID);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -387,14 +394,15 @@ class BlueBox extends StatelessWidget {
                     ),
                   ),
                   //rate
-                  Padding(
+                  UrunPuaniGoster(productID),
+                  /*Padding(
                     padding: EdgeInsets.only(top: 2.0),
                     child: Text(
                       rate.toString(),
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ],
