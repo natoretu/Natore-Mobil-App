@@ -8,6 +8,9 @@ import 'package:natore_project/page/home_page.dart';
 String mesajlasilanKisi = ""; // mesaj atilacak kisinin maili buraya yazilir.
 //user = FirebaseAuth.instance.currentUser!;
 List<String> imageList = [];
+String otomatikMesaj = "";
+String otomatikMesaj2 = "";
+String otomatikMesaj3 = "";
 void mesajGondermeEkraniniAc(String mail, BuildContext context) {
   mesajlasilanKisi = mail;
   Navigator.push(
@@ -375,7 +378,14 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
   @override
   Widget build(BuildContext context) {
     //firebaseVeriAl();
-
+    if (otomatikMesaj != "") {
+      sendMessage(otomatikMesaj);
+      /* sendMessage(otomatikMesaj2);
+      sendMessage(otomatikMesaj3);*/
+      otomatikMesaj = "";
+      otomatikMesaj2 = "";
+      otomatikMesaj3 = "";
+    }
     return Scaffold(
         resizeToAvoidBottomInset: false,
         //!!arayüz
