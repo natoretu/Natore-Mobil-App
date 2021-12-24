@@ -50,6 +50,7 @@ class ProductDetail extends StatefulWidget {
     prId = id;
     prEmail = emailX;
     print(prEmail + "sadasdnakdjnasdnasdasda");
+    print(prName + " " + prPrice.toString() + " " + prId);
   }
 
   @override
@@ -179,6 +180,17 @@ class _ProductDetailState extends State<ProductDetail> {
                                       )),
                                   onPressed: () {
                                     mesajGondermeEkraniniAc(prEmail, context);
+                                    print(prName + " " + prPrice.toString());
+                                    otomatikMesaj =
+                                        "Bu ürün ile ilgileniyorum:\nÜrün adı:" +
+                                            prName +
+                                            "\nÜrün fiyatı:" +
+                                            prPrice.toString();
+                                    /*otomatikMesaj2 = "Ürün adı:" + prName;
+                                    otomatikMesaj3 =
+                                        "Ürün fiyatı:" + prPrice.toString();*/
+
+                                    //sendMessage(otomatikMesaj);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -523,6 +535,7 @@ Padding UrunPuaniGoster(String productId) {
 
 Padding saticiPuaniGoster(String userId) {
   double rate = 0;
+  print(userId + "ASD");
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 4),
     child: Container(
