@@ -35,7 +35,7 @@ class ProductServices {
       'properties': properties,
       'image': mediaUrl,
       'mail': mail,
-      'commments': <dynamic>[],
+      'comments': <dynamic>[],
       'responses': <dynamic>[],
     });
 
