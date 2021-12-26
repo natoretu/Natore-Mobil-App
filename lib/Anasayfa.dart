@@ -12,15 +12,16 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:natore_project/Search_Bar.dart';
 import 'package:natore_project/UserEntrance.dart';
+import 'package:natore_project/magazam.dart';
 import 'package:natore_project/page/Order/my_orders.dart';
+import 'package:natore_project/page/show_in_category.dart';
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/products_of_seller_page.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
-import 'package:natore_project/magazam.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:natore_project/page/show_in_category.dart';
+
 /// Zen fontu 6 mb !
 
 /**
@@ -136,6 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: checksaticioralici == true
           ? BottomNavigationBar(
               items: <BottomNavigationBarItem>[

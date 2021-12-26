@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:natore_project/page/Product/product_add.dart';
 import 'package:natore_project/services/product_services.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 class Magazam extends StatefulWidget {
   const Magazam({Key? key}) : super(key: key);
@@ -62,14 +62,28 @@ class _MagazamState extends State<Magazam> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
-            title: Text("Mağazam"),
+            title: Text(
+              "Mağazam",
+              style: TextStyle(
+                  fontFamily: 'Zen Antique Soft',
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  letterSpacing: 0.3,
+                  fontSize: 22),
+            ),
             centerTitle: true,
-            bottom: TabBar(tabs: [
-              Tab(text: "Ürün Ekle"),
-              Tab(text: "Ürünlerim"),
-              Tab(text: "Kampanyalarım")
-            ]),
+            backgroundColor: Color(0xff2A9D8F),
+            elevation: 2,
+            bottom: TabBar(
+              tabs: [
+                Tab(text: "Ürün Ekle"),
+                Tab(text: "Ürünlerim"),
+                Tab(text: "Tanıtımlarım")
+              ],
+              indicatorColor: Colors.white,
+            ),
           ),
           body: TabBarView(
             children: [
@@ -78,8 +92,8 @@ class _MagazamState extends State<Magazam> {
                 child: Container(
                   child: Column(
                     children: [
-                      const SizedBox(
-                        height: 40,
+                      SizedBox(
+                        height: 15,
                       ),
                       StreamBuilder(
                           stream: _productServices
@@ -101,36 +115,46 @@ class _MagazamState extends State<Magazam> {
                                     itemCount: list.length,
                                     itemBuilder: (context, index) {
                                       return Padding(
-                                        padding: const EdgeInsets.all(0.0),
+                                        padding: const EdgeInsets.all(4.0),
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.stretch,
                                           children: [
-                                            Card(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
+                                            ListTile(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              tileColor: Colors.white,
+                                              leading: CircleAvatar(
+                                                radius: 24,
+                                                backgroundImage: NetworkImage(
+                                                    list[index].get('image')),
+                                              ),
+                                              title: Text(
+                                                list[index].get('name'),
+                                              ),
+                                              subtitle: Text(
+                                                "Adet: " +
+                                                    list[index]
+                                                        .get('quantity')
+                                                        .toString(),
+                                              ),
+                                              trailing: Row(
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  CircleAvatar(
-                                                    radius: 24,
-                                                    backgroundImage:
-                                                        NetworkImage(list[index]
-                                                            .get('image')),
-                                                  ),
-                                                  Text(list[index].get('name')),
-                                                  Text("Adet: " +
-                                                      list[index]
-                                                          .get('quantity')
-                                                          .toString()),
                                                   IconButton(
-                                                    icon: Icon(Icons.add),
+                                                    icon: Icon(Icons.add,
+                                                        color:
+                                                            Color(0xff2A9D8F)),
                                                     onPressed: () {},
                                                   ),
                                                   IconButton(
-                                                    icon: Icon(Icons.remove),
+                                                    icon: Icon(Icons.remove,
+                                                        color:
+                                                            Color(0xff2A9D8F)),
                                                     onPressed: () {},
                                                   ),
                                                 ],
@@ -155,8 +179,8 @@ class _MagazamState extends State<Magazam> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.cyan, width: 2)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
                   child: Column(
@@ -170,7 +194,7 @@ class _MagazamState extends State<Magazam> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
+                                  padding: const EdgeInsets.only(right: 0.0),
                                   child: InkWell(
                                     onTap: () => _onImageButtonPressed(
                                       ImageSource.camera,
@@ -179,7 +203,7 @@ class _MagazamState extends State<Magazam> {
                                     child: const Icon(
                                       Icons.camera_alt,
                                       size: 30,
-                                      color: Colors.black54,
+                                      color: Color(0xff264653),
                                     ),
                                   ),
                                 ),
@@ -190,25 +214,32 @@ class _MagazamState extends State<Magazam> {
                                   child: const Icon(
                                     Icons.image,
                                     size: 28,
-                                    color: Colors.black54,
+                                    color: Color(0xff264653),
                                   ),
                                 ),
                                 TextButton(
                                   style: TextButton.styleFrom(
                                     textStyle: const TextStyle(fontSize: 20),
                                     primary: Colors.white,
-                                    backgroundColor: Colors.cyan,
+                                    backgroundColor: Color(0xff2A9D8F),
                                   ),
                                   onPressed: () {},
-                                  child: const Text('Kampanya Ekle'),
+                                  child: const Text(
+                                    'Tanıtım Ekle',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          Divider(
-                            color: Colors.black,
-                          ),
-                          Text("Aktif Kampanyalarım: "),
+                          Divider(),
+                          Text("Aktif Tanıtımlarım: ",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff2A9D8F))),
                         ],
                       ),
                     ],

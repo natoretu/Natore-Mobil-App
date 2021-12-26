@@ -155,7 +155,7 @@ class _SohbetState extends State<Sohbet> {
                         }
                         //!arayüz
                         return const Text(
-                            'Gorusmeye Basla'); // daha once konusulmus kımse yoksa bu basiliyor
+                            ''); // daha once konusulmus kımse yoksa bu basiliyor
                       })),
               // !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
               /*textField = TextField(
