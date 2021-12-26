@@ -20,7 +20,7 @@ import 'package:natore_project/magazam.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-
+import 'package:natore_project/page/show_in_category.dart';
 /// Zen fontu 6 mb !
 
 /**
