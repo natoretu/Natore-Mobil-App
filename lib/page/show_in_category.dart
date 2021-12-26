@@ -19,7 +19,7 @@ String eMail = "";
 String siralanacakUrunAdi = "";
 
 class ShowInCategory extends StatelessWidget {
-  ShowInCategory(String urun) {
+  ShowInCategory({required String urun}) {
     siralanacakUrunAdi = urun;
   }
   //bu gereksiz olabilir
@@ -65,8 +65,13 @@ class _MyHomePageState extends State<MyHomePage> {
               StreamBuilder(
                   //Burda:
                   stream: _productServices
-                      .getProductsOfSellerStreamMarket(siralanacakUrunAdi),
+                      .getProductsOfSellerStreamCategory(siralanacakUrunAdi),
                   builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
+                    print(siralanacakUrunAdi);
+                    _productServices
+                        .getProductsOfSellerStreamCategory(siralanacakUrunAdi)
+                        .first
+                        .then((value) => print(value.docs));
                     if (asyncSnapshot.hasError) {
                       return const Center(
                         child: Text("Bir hata olustu"),
@@ -74,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     } else {
                       if (asyncSnapshot.hasData) {
                         List<DocumentSnapshot> list = asyncSnapshot.data.docs;
-
+                        print(list);
                         return Flexible(
                           child: ListView.builder(
                             //itemCount: list.length,
@@ -100,8 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         list[index * 2 + 1].get('image'),
                                         list[index * 2 + 1].get('name'),
                                         list[index * 2 + 1].get('price'),
-                                        list[index * 2].get('id'),
-                                        list[index * 2].get('mail'),
+                                        list[index * 2 + 1].get('id'),
+                                        list[index * 2 + 1].get('mail'),
                                       ),
                                   ],
                                 ),

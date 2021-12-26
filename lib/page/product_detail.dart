@@ -497,7 +497,6 @@ class _ProductDetailState extends State<ProductDetail> {
 }
 
 Padding UrunPuaniGoster(String productId) {
-  double rate = 0;
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 4),
     child: Container(
@@ -506,9 +505,7 @@ Padding UrunPuaniGoster(String productId) {
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           print("has no data");
-          print("33333333");
-          rate = snapshot.data!.get('rate');
-          print("2222222");
+          var rate = snapshot.data!.get('rate');
           return RichText(
             text: TextSpan(
               text: rate.toStringAsFixed(1).toString(),

@@ -113,6 +113,66 @@ class ProductServices {
     return ref.snapshots();
   }
 
+  Future<int> getRate(String id) async {
+    DocumentSnapshot snapshot =
+        await _firestore.collection(collection).doc(id).get();
+    return snapshot['rate'];
+  }
+
+  Future<int> getQuantity(String id) async {
+    DocumentSnapshot snapshot =
+        await _firestore.collection(collection).doc(id).get();
+    return snapshot['quantity'];
+  }
+
+  Future<void> increaseQuantity(String id) async {
+    DocumentSnapshot snapshot =
+        await _firestore.collection(collection).doc(id).get();
+    int quantity = snapshot['quantity'];
+    quantity++;
+    await _firestore.collection(collection).doc(id).update({
+      'quantity': quantity,
+    });
+  }
+
+  Future<void> decraseQuantity(String id) async {
+    DocumentSnapshot snapshot =
+        await _firestore.collection(collection).doc(id).get();
+    int quantity = snapshot['quantity'];
+    quantity--;
+    await _firestore.collection(collection).doc(id).update({
+      'quantity': quantity,
+    });
+  }
+
+  Future<void> updateRate(String id, int rate) async {
+    await _firestore.collection(collection).doc(id).update({
+      'rate': rate,
+    });
+  }
+
+  Future<void> updateQuantity(String id, int quantity) async {
+    await _firestore.collection(collection).doc(id).update({
+      'quantity': quantity,
+    });
+  }
+
+  Future<void> updateProduct2(String id, Product p) async {
+    await _firestore.collection(collection).doc(id).update({
+      'name': p.name,
+      'price': p.price,
+      'rate': p.rate,
+      'category': p.category,
+      'market': p.market,
+      'quantity': p.quantity,
+      'properties': p.properties,
+      'image': p.image,
+      'mail': p.mail,
+      'commments': p.commments,
+      'responses': p.responses,
+    });
+  }
+
   Future<List<dynamic>> getProducts2() async {
     CollectionReference ref = _firestore.collection(collection);
     List<Product> productsArray = [];

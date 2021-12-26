@@ -45,4 +45,11 @@ class FavoritesServices {
 
     return products;
   }
+
+  Future<bool> isFavorite(String userId, String productId) async {
+    DocumentSnapshot<Map<String, dynamic>> stream =
+        await _firestore.collection(collection).doc(userId).get();
+
+    return false;
+  }
 }

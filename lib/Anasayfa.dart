@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:natore_project/Search_Bar.dart';
 import 'package:natore_project/UserEntrance.dart';
 import 'package:natore_project/page/Order/my_orders.dart';
+import 'package:natore_project/page/show_in_category.dart';
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/products_of_seller_page.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
@@ -2070,7 +2071,19 @@ class _ProductCategoriesState extends State<ProductCategories> {
             alignment: WrapAlignment.spaceAround,
             children: [
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) =>
+                  //         ShowInCategory(urun: ProductName_list[index])));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ShowInCategory(urun: ProductName_list[index])),
+                    //   ),
+                  );
+                  print("index: $index");
+                },
                 style: ElevatedButton.styleFrom(
                   primary: Color_list[index],
                   elevation: 2,

@@ -59,7 +59,7 @@ class LoggedInWidget extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(100, 10, 23, 1),
-          title: const Text('Hosgeldin'),
+          title: const Text('Api Test Page'),
           centerTitle: true,
           actions: [
             TextButton(
@@ -75,16 +75,15 @@ class LoggedInWidget extends StatelessWidget {
           ],
         ),
         body: Container(
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           color: Colors.blueGrey.shade900,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Profil',
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 21, color: Colors.white),
               ),
-              SizedBox(height: 32),
+              SizedBox(height: 20),
               CircleAvatar(
                 radius: 40,
                 backgroundImage: NetworkImage(user!.photoURL!),
@@ -92,12 +91,16 @@ class LoggedInWidget extends StatelessWidget {
               SizedBox(height: 8),
               Text(
                 'Isim: ' + user!.displayName!,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(color: Colors.red, fontSize: 16),
               ),
               SizedBox(height: 8),
               Text(
                 'Email: ' + user!.email!,
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(color: Colors.red, fontSize: 16),
+              ),
+              Text(
+                'Api Test Buttons',
+                style: TextStyle(fontSize: 21, color: Colors.white),
               ),
               TextButton(
                 style: TextButton.styleFrom(
@@ -110,6 +113,7 @@ class LoggedInWidget extends StatelessWidget {
                 },
                 child: const Text('Add product'),
               ),
+              const SizedBox(height: 1),
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 20),
@@ -120,32 +124,13 @@ class LoggedInWidget extends StatelessWidget {
                 },
                 child: const Text('Products'),
               ),
-              const SizedBox(height: 30),
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 20),
-                ),
-                onPressed: () async {
-                  print("========entered");
-                  ProductServices _productServives = ProductServices();
-                  List plist =
-                      await _productServives.getProductsOfSeller("tavsan@");
-                  plist.forEach((value) {
-                    print("--");
-                    print(value);
-                  });
-                  print("========existed");
-                },
-                child: const Text('test api'),
-              ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 1),
               TextButton(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 20),
                 ),
                 onPressed: () async {
                   OrderServices _orderServices = OrderServices();
-
                   _orderServices.addOrder(Order(
                       id: "testOrder",
                       productsId: "testID",
@@ -153,11 +138,10 @@ class LoggedInWidget extends StatelessWidget {
                       buyerMail: "buyerMail",
                       quantities: 123,
                       prices: 123));
-                  print("asg");
                 },
                 child: const Text('Add Order'),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 1),
             ],
           ),
         ));
