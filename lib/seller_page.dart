@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
+import 'package:natore_project/products_of_seller_page.dart';
 /*
 * sıkıntılar:
 * sıkıntı1
@@ -21,12 +24,22 @@ class SellerPage extends StatelessWidget {
   *   String getSellerName(marketName);
   *   double
   * */
+  final user = FirebaseAuth.instance.currentUser!;
+  final _firestore = FirebaseFirestore.instance;
   String marketName = "empty";
   SellerPage.withMarketName(String _name) {
     marketName = _name;
   }
   @override
+  void initState() {
+    CollectionReference updateRef = _firestore.collection('Users');
+    var babaRef = updateRef.doc(eMail);
+  }
+  @override
   Widget build(BuildContext context) {
+    CollectionReference updateRef = _firestore.collection('Users');
+    var babaRef = updateRef.doc(eMail);
+    print(eMail);
     return MaterialApp(
       color: Colors.lightGreen[300],
       home: Scaffold(
@@ -34,7 +47,19 @@ class SellerPage extends StatelessWidget {
           toolbarHeight: 75,
           backgroundColor: Color.fromRGBO(6, 219, 162, 10),
           //leading: CircleAvatar(),
-          title: const Text('Sütçü Dede Süt Ürünleri'),
+          title: StreamBuilder<DocumentSnapshot>(
+                                  stream: babaRef.snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot asyncSnapshot) {
+                                    return Text(
+                                      '${asyncSnapshot.data.data()['MarketName']}',
+                                      style: GoogleFonts.lato(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
+                                    );
+                                  },
+                                ),
         ),
         body: SafeArea(
           child: ListView(

@@ -14,7 +14,11 @@ import 'package:natore_project/Search_Bar.dart';
 import 'package:natore_project/UserEntrance.dart';
 import 'package:natore_project/magazam.dart';
 import 'package:natore_project/page/Order/my_orders.dart';
+<<<<<<< HEAD
 import 'package:natore_project/page/show_in_category.dart';
+=======
+import 'package:natore_project/page/locpicker.dart';
+>>>>>>> 9138b03 (Profil Güncelleme market gösterme)
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/products_of_seller_page.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
@@ -335,7 +339,13 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyAdress()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
@@ -370,11 +380,14 @@ class _MainPageState extends State<MainPage> {
                                 stream: null,
                                 builder: (context, snapshot) {
                                   return StreamBuilder<DocumentSnapshot>(
+                                    
                                     stream: babaRef.snapshots(),
                                     builder: (BuildContext context,
                                         AsyncSnapshot asyncSnapshot) {
+                                          String a =asyncSnapshot.data.data()['Adress'];
+                                          String b =  a.split(" ").first;
                                       return Text(
-                                        "Artvin Hopa", //'${asyncSnapshot.data.data()['Adress']}',
+                                        b,
                                         style: GoogleFonts.lato(
                                             color: Colors.black,
                                             fontSize: 15,
@@ -1274,7 +1287,7 @@ class _UserProfileState extends State<UserProfile> {
                                   return CircleAvatar(
                                     radius: 40,
                                     backgroundColor: Colors.white,
-                                    //'${asyncSnapshot.data.data()['Image']}'
+                                   
                                     backgroundImage: NetworkImage(
                                         '${asyncSnapshot.data.data()['Image']}'),
                                   );
@@ -1932,8 +1945,29 @@ class CampaignSwiper extends StatefulWidget {
 }
 
 class _CampaignSwiperState extends State<CampaignSwiper> {
+  
+  final user = FirebaseAuth.instance.currentUser!;
+  final _firestore = FirebaseFirestore.instance;
+
+  final Stream<QuerySnapshot> allMessages =
+      FirebaseFirestore.instance.collection('Users').snapshots();
   @override
   Widget build(BuildContext context) {
+     return StreamBuilder<QuerySnapshot>(
+                              stream:allMessages,
+                              builder:(BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.waiting:
+                                    return Text('Loading....');
+                                  default:
+                                    if (snapshot.hasError)
+                                      return Text('Error: ${snapshot.error}');
+                                    else {
+                                      final data = snapshot.requireData;
+                                      var temp =data.docs.where((element) => (element.get('Adress')==Adress1 && element.get('saticiMi')==true));
+                                      var MarketInfo = List.from(temp);
+                                    
     return Column(
       children: [
         Padding(
@@ -1942,11 +1976,12 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
             borderRadius: BorderRadius.circular(6),
             child: AspectRatio(
               aspectRatio: 2,
+              
               child: Swiper(
                 //physics: NeverScrollableScrollPhysics(),
                 //layout: SwiperLayout.TINDER,
                 onTap: (int index) {},
-                itemCount: widget._campaign_num,
+                itemCount: MarketInfo.length,
                 indicatorLayout: PageIndicatorLayout.SCALE,
                 pagination: SwiperPagination(
                   alignment: Alignment.bottomCenter,
@@ -1964,58 +1999,29 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
                 //viewportFraction: 0.8, -> genislik
                 //scale: 0.82, -> aradaki bosluk
                 itemBuilder: (BuildContext context, int index) {
-                  if (index == 0) {
+                  var sohbet = MarketInfo[index];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: Image.network(
-                          "https://cekkazan.com.tr/wp-content/uploads/2021/05/bardak-bardak-icilecek-sutas-sutler-sut-bardagi-hediyeli.jpg",
+                          sohbet.get('SaticiTanitimImage'),
                           fit: BoxFit.fill,
                         ),
                       ),
                     );
-                  } else if (index == 1) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
-                          "https://www.sivilsayfalar.org/wp-content/uploads/2019/04/1554272813_kampanya_4.png",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    );
-                  } else if (index == 2) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
-                          "https://cdn.bumudur.com/cmp/img/s/full/6eef73465326c51cdbe23073e86c7e49.jpg",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
-                          "https://d3vkdqr0qjxhag.cloudfront.net/AE_Milgo_2lt_Sut_Tikla_Gelsin_800x800px_d0446d5e44.jpg",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    );
-                  }
+                   
                 },
               ),
+              
             ),
           ),
         ),
       ],
     );
+    }
+                                }
+                              });
   }
 }
 
@@ -2202,9 +2208,13 @@ class _StoreState extends State<Store> {
   final user = FirebaseAuth.instance.currentUser!;
   final _firestore = FirebaseFirestore.instance;
 
+  final Stream<QuerySnapshot> allMessages =
+      FirebaseFirestore.instance.collection('Users').snapshots();
+  
   @override
   Widget build(BuildContext context) {
     CollectionReference updateRef = _firestore.collection('Users');
+<<<<<<< HEAD
 
     return ListView.builder(
       shrinkWrap: true,
@@ -2436,8 +2446,283 @@ class _StoreState extends State<Store> {
               ),
             ],
           ),
+=======
+     
+                   return FutureBuilder<DocumentSnapshot>(
+                      future:  updateRef.doc(user.email!).get(),
+                      builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError)
+                          return Text('Something went wrong.');
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Text('Loading');
+
+                          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                          Adress1 =data['Adress'];
+                          checksaticioralici = data['saticiMi'];
+                         
+
+                          return StreamBuilder<QuerySnapshot>(
+                              stream:allMessages,
+                              builder:(BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.waiting:
+                                    return Text('Loading....');
+                                  default:
+                                    if (snapshot.hasError)
+                                      return Text('Error: ${snapshot.error}');
+                                    else {
+                                      final data = snapshot.requireData;
+                                      var temp =data.docs.where((element) => (element.get('Adress')==Adress1 && element.get('saticiMi')==true));
+                                      var MarketInfo = List.from(temp);
+                                     
+                                     return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: MarketInfo.length,
+                                      padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                      itemBuilder: (BuildContext context, int index) {
+                                        var sohbet = MarketInfo[index];
+                                          
+                                              
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            // mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              /***--------***/
+                                              /*** Tabela ***/
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Container(
+                                                      //margin: EdgeInsets.all(6),
+                                                      //padding: EdgeInsets.only(top: 8),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(6),
+                                                          border:
+                                                              Border.all(color: Colors.grey.withOpacity(0.2))),
+                                                      child: Material(
+                                                        color: Color(0xff06EFB1),
+                                                        elevation: 4,
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(4)),
+                                                        child: Text(
+                                                          sohbet.get('MarketName'),
+                                                          //overflow: TextOverflow.fade,
+                                                          //maxLines: 2,
+                                                          textAlign: TextAlign.center,
+                                                          style: GoogleFonts.goudyBookletter1911(
+                                                              fontWeight: FontWeight.w800,
+                                                              color: Color(0xff091624),
+                                                              letterSpacing: 1.1,
+                                                              //wordSpacing: 2,
+                                                              fontSize: 20),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              /***------***/
+                                              /*** Çatı ***/
+                                              Opacity(
+                                                  opacity: 1,
+                                                  child: Image.asset(
+                                                    "assets/homepageImages/k2_c.png",
+                                                    /** !!!  **/
+                                                    fit: BoxFit.fill,
+                                                    color: Color(0xff264653),
+                                                    alignment: Alignment.topCenter,
+                                                    //filterQuality: FilterQuality.high,
+                                                  )),
+                                              /***----------------***/
+                                              /*** Mağaza Gövdesi ***/
+                                              Padding(
+                                                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                                child: Material(
+                                                  shape: Border(
+                                                    left: BorderSide(color: Color(0xff264653), width: 2),
+                                                    right: BorderSide(color: Color(0xff264653), width: 2),
+                                                    bottom: BorderSide(color: Color(0xff264653), width: 2),
+                                                  ),
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ProductsOfSellerPage(sohbet.get('MarketName'),sohbet.get('Email'))),
+                                                      );
+                                                      //ProductsOfSellerPage("hacia");
+                                                    }, // TODO: HACI
+                                                    style: ElevatedButton.styleFrom(
+                                                      primary: Colors.white,
+                                                      onPrimary: Color(0xff06EFB1),
+                                                      elevation: 2,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.vertical(
+                                                          top: Radius.circular(0),
+                                                          bottom: Radius.circular(0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    //autofocus: true,
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                      children: [
+                                                        /*** Clock and Door ***/
+                                                        Column(
+                                                          children: [
+                                                            /*** Clock ***/
+                                                            Padding(
+                                                              padding: const EdgeInsets.fromLTRB(0, 34, 0, 2),
+                                                              child: Material(
+                                                                elevation: 2,
+                                                                borderRadius: BorderRadius.circular(8),
+                                                                color: Colors.cyan,
+                                                                child: Text(
+                                                                 sohbet.get('TimeCont'),
+                                                                  //overflow: TextOverflow.fade,
+                                                                  //maxLines: 2,
+                                                                  textAlign: TextAlign.center,
+                                                                  style: GoogleFonts.goudyBookletter1911(
+                                                                      fontWeight: FontWeight.w800,
+                                                                      color: Color(0xff091624),
+                                                                      letterSpacing: 1.1,
+                                                                      //wordSpacing: 2,
+                                                                      fontSize: 20),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            /*** Door ***/
+                                                            Padding(
+                                                              padding: const EdgeInsets.fromLTRB(0, 4, 0, 3),
+                                                              child: Stack(
+                                                                children: [
+                                                                  Material(
+                                                                    elevation: 2,
+                                                                    child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                        border: Border.all(
+                                                                            width: 1.2,
+                                                                            color: Color(0xff073B4C)),
+                                                                        color: Colors.white,
+                                                                      ),
+                                                                      width: 45,
+                                                                      height: 80,
+                                                                      alignment: Alignment.topCenter,
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.fromLTRB(34, 32, 0, 0),
+                                                                    child: Material(
+                                                                      borderRadius: BorderRadius.circular(2),
+                                                                      elevation: 2.5,
+                                                                      child: Container(
+                                                                        alignment: Alignment.centerRight,
+                                                                        width: 5,
+                                                                        height: 13,
+                                                                        decoration: BoxDecoration(
+                                                                          color: Colors.white,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(2),
+                                                                          border: Border.all(
+                                                                              color: Color(0xff073B4C),
+                                                                              width: 1),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        /*** Rate ***/
+                                                        Padding(
+                                                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 92),
+                                                          child: Material(
+                                                            color: RateColor(RateList[index]),
+                                                            elevation: 2,
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius.circular(8)),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(4.0),
+                                                              child: Wrap(
+                                                                spacing: 4,
+                                                                crossAxisAlignment: WrapCrossAlignment.center,
+                                                                children: [
+                                                                  Icon(Icons.star_outlined,
+                                                                      color: Colors.white, size: 20),
+                                                                  Text(
+                                                                    RateList[index].toString(),
+                                                                    style: TextStyle(
+                                                                        color: Colors.white,
+                                                                        fontSize: 18,
+                                                                        fontWeight: FontWeight.w500),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        /*** Store logo ***/
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(bottom: 24),
+                                                          child: Row(
+                                                            children: [
+                                                              Material(
+                                                                borderRadius: BorderRadius.circular(8),
+                                                                color: Colors.white,
+                                                                elevation: 2,
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(8),
+                                                                    border: Border.all(
+                                                                        color: Colors.cyan.shade800, width: 2),
+                                                                  ),
+                                                                  child: (index == 0)
+                                                                      ? Image.asset(
+                                                                          "assets/homepageImages/sutcu_dede_f.png",
+
+                                                                          /** !!!  **/
+                                                                          fit: BoxFit.fill,
+                                                                          //color: Color(0xff264653),
+                                                                          //alignment: Alignment.topCenter,
+                                                                          //filterQuality: FilterQuality.high,
+                                                                        )
+                                                                      : Image.asset(
+                                                                          "assets/homepageImages/yogurt.png",
+                                                                          fit: BoxFit.fill,
+                                                                        ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                    }
+                                }
+                              });//
+                        }
+                   
+                      
+
+            
+          
+>>>>>>> 9138b03 (Profil Güncelleme market gösterme)
         );
-      },
-    );
+    
   }
 }

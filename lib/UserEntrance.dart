@@ -17,91 +17,66 @@ import 'package:natore_project/page/locpicker.dart';
 import 'main.dart';
 
 // ignore_for_file: file_names
+
 SingingCharacter? character;
 bool checksaticioralici = false;
-
 String Ugurunkoddandonenadress = "boş"; //TODO
 bool check21 = false; //TODO
-
 String Adress1 = "boş";
 
-class googleLoginPage2 extends StatelessWidget {
+class googleLoginPage2 extends StatefulWidget {
+  @override
+  State<googleLoginPage2> createState() => _googleLoginPage2State();
+}
+
+class _googleLoginPage2State extends State<googleLoginPage2> {
   bool check = false;
+
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            user = FirebaseAuth.instance.currentUser!;
-            FirebaseFirestore.instance
-                .collection('Users')
-                .doc(user!.email)
-                .get()
-                .then((DocumentSnapshot documentSnapshot) {
-              if (documentSnapshot.exists) {
-                check = false;
-              } else {
-                check = true;
-              }
-            });
-            if (check) {
-              return MainPage2();
-            } else {
-              check21 = true;
-              function();
-              return MyApp1();
-            }
-
-            // giris yapılmış
-          } else if (snapshot.hasError) {
+    body: StreamBuilder(
+    stream: FirebaseAuth.instance.authStateChanges(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasData) {
+        user = FirebaseAuth.instance.currentUser!;
+        FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user!.email)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            check = false;
+          } else {
+            check = true;
+          }
+        });
+        if (check) {
+          return MainPage2();
+        } else {
+          check21 = true;
+          
+         
+           return MyApp1();
+        }
+        // giris yapılmış
+        } else if (snapshot.hasError) {
             return Center(child: Text('Something went wrong!'));
-          } else
+        } else
             return MainPage1(); //MainPage1();
-        },
-      )
-          //body: MainPage(),
-          );
-  //body: MainPage(),
+          },
+        )
+        //body: MainPage(),
+        );
 }
 
-Future function() async {
-  await getProductsOfSeller1();
-}
 
-Future getProductsOfSeller1() async {
-  final user = FirebaseAuth.instance.currentUser!;
-  final _firestore = FirebaseFirestore.instance;
-  await FirebaseFirestore.instance
-      .collection('Users')
-      .where('Email', isEqualTo: user.email!)
-      .get()
-      .then((value) {
-    value.docs.forEach((element) async {
-      Adress1 = element.get('Adress');
-      checksaticioralici = element.get('saticiMi');
-    });
-  });
 
-  saticilar = List.of([]);
 
-  String temp;
-  await FirebaseFirestore.instance
-      .collection('Users')
-      .where('Adress', isEqualTo: Adress1)
-      .where('saticiMi', isEqualTo: true)
-      .get()
-      .then((value) {
-    value.docs.forEach((element) {
-      saticilar.add(element.get('MarketName'));
-      saticilar1.add(element.get('TimeCont'));
-      saticilar2.add(element.get('Image'));
-    });
-  });
-  saticilength = saticilar.length;
-}
+
+
+
 
 enum SingingCharacter { Alici, Satici }
 
@@ -278,7 +253,7 @@ class _NewWidgetState extends State<NewWidget> {
     final picker = ImagePicker();
 
     chooseImage(ImageSource source) async {
-      final PickedFile = await picker.getImage(source: source);
+      final PickedFile = await picker.getImage(source: source,imageQuality: 25);
       imagefile = await File(PickedFile!.path);
     }
 
@@ -555,7 +530,7 @@ class _NewWidget1State extends State<NewWidget1> {
     final picker = ImagePicker();
 
     chooseImage(ImageSource source) async {
-      final PickedFile = await picker.getImage(source: source);
+      final PickedFile = await picker.getImage(source: source,imageQuality: 25);
       imagefile = await File(PickedFile!.path);
     }
 
@@ -845,7 +820,8 @@ class _NewWidget1State extends State<NewWidget1> {
                             'Image': a,
                             'saticiMi': true,
                             'MarketName': widget.MarketNameController.text,
-                            'TimeCont': widget.TimeController.text
+                            'TimeCont': widget.TimeController.text,
+                            'SaticiTanitimImage':""
                           };
                           await UsersRef.doc(user.email!).set(UsersData);
                           Navigator.push(
@@ -1113,7 +1089,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   late File imagefile;
   final picker = ImagePicker();
   chooseImage(ImageSource source) async {
-    final PickedFile = await picker.getImage(source: source);
+    final PickedFile = await picker.getImage(source: source,imageQuality: 25);
     imagefile = File(PickedFile!.path);
   }
 

@@ -53,6 +53,7 @@ class _SohbetState extends State<Sohbet> {
   List<dynamic> userNameList = <dynamic>[];
   @override
   Widget build(BuildContext context) {
+    imageList =List.of([]);
     TextField textField;
 
     return Scaffold(
@@ -191,15 +192,18 @@ class _SohbetState extends State<Sohbet> {
     Widget returnWidget;
     return SafeArea(
       child: TextButton(
+        
         style: TextButton.styleFrom(
           elevation: 2,
           backgroundColor: Colors.white,
         ),
         child: Row(
+          
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             CircleAvatar(
+              
               radius: 24,
               backgroundImage: NetworkImage(imageList[index]),
             ),
@@ -244,8 +248,9 @@ class _SohbetState extends State<Sohbet> {
         ),
         onPressed: () {
           mesajlasilanKisi = mail;
-
+         
           Navigator.push(
+            
             context,
             MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
           );

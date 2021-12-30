@@ -6,7 +6,7 @@ import 'package:flutter/services.dart'
 import 'package:google_fonts/google_fonts.dart';
 
 import '../UserEntrance.dart';
-
+String temp="";
 class Selected extends StatelessWidget {
   final int check;
   final int i;
@@ -261,7 +261,8 @@ class _CountiesSelectorState extends State<CountiesSelector> {
                         if (check21 == true) {
                           updateRef //TODO
                               .doc(user.email!)
-                              .update({'Adress': cityName + counties[check]});
+                              .update({'Adress':counties[check]+" "+cityName});
+                             
                         }
                         Ugurunkoddandonenadress =
                             cityName + counties[check]; //TODO

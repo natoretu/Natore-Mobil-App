@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -23,9 +24,17 @@ String eMail = "";
 String image_pr = "";
 
 class ProductsOfSellerPage extends StatelessWidget {
+<<<<<<< HEAD
   ProductsOfSellerPage(String name) {
     //print(name);
+=======
+  ProductsOfSellerPage(String name,String Email) {
+    print(name);
+>>>>>>> 9138b03 (Profil Güncelleme market gösterme)
     MarketName = name;
+    eMail =Email;
+    print(MarketName);
+    print(eMail);
   }
   //bu gereksiz olabilir
   ProductsOfSellerPage.withEmailAndName(String name, String e_mail) {
@@ -58,9 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
       _selectedIndex = index;
     });
   }
-
+   final user = FirebaseAuth.instance.currentUser!;
+  final _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
+    CollectionReference updateRef = _firestore.collection('Users');
+    var babaRef = updateRef.doc(eMail);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff06D6A0),
