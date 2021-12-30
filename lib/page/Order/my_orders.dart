@@ -27,7 +27,7 @@ class MyOrders extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return MyHomePage(title: 'Sepetim');
+    return MyHomePage(title: 'Favoriler');
   }
 }
 
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xff06D6A0),
         //toolbarHeight: 120,
         title: Text(
-          "Sepetim",
+          "Favoriler",
           style: TextStyle(
               fontFamily: 'Zen Antique Soft',
               fontWeight: FontWeight.w600,

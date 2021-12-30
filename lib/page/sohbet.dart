@@ -53,7 +53,7 @@ class _SohbetState extends State<Sohbet> {
   List<dynamic> userNameList = <dynamic>[];
   @override
   Widget build(BuildContext context) {
-    imageList =List.of([]);
+    imageList = List.of([]);
     TextField textField;
 
     return Scaffold(
@@ -75,89 +75,93 @@ class _SohbetState extends State<Sohbet> {
           child: Column(
             //  mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                  //!! arayüz daha once konusulan kısıler,
-                  height:
-                      300, // bu deger gecmıs sohbetlerın kac piksel asagıya kadar gosterılecegını belırlıyor
-                  //padding: const EdgeInsets.symmetric(vertical: 20),
-                  padding: const EdgeInsets.all(8),
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: allMessages,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError)
-                          return Text('Something went wrong.');
-                        if (snapshot.connectionState == ConnectionState.waiting)
-                          return Text('Loading');
-                        final data = snapshot.requireData;
-                        var currentMessages = (data.docs.where((element) =>
-                            (element.get('Sender') == user!.email.toString()) ||
-                            (element.get('Receiver') ==
-                                user!.email.toString())));
+              Expanded(
+                child: Container(
+                    //!! arayüz daha once konusulan kısıler,
+                    //padding: const EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.all(8),
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: allMessages,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError)
+                            return Text('Bir seyler ters gitti!');
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting)
+                            return Text('Yükleniyor');
+                          final data = snapshot.requireData;
+                          var currentMessages = (data.docs.where((element) =>
+                              (element.get('Sender') ==
+                                  user!.email.toString()) ||
+                              (element.get('Receiver') ==
+                                  user!.email.toString())));
 
-                        if (currentMessages.isNotEmpty) {
-                          userMessagesList = List.from(currentMessages);
-                          userMessagesList.sort((b, a) => a
-                              .get('Messages')[a.get('Messages').length - 1]
-                                  ['Time']
-                              .compareTo(b.get(
-                                      'Messages')[b.get('Messages').length - 1]
-                                  ['Time']));
-                          return FutureBuilder(
-                              future:
-                                  ImageProcess(userMessagesList, userNameList),
-                              builder: (_, snap) {
-                                switch (snap.connectionState) {
-                                  case ConnectionState.waiting:
-                                    return Text('Loading....');
-                                  default:
-                                    if (snap.hasError)
-                                      return Text('Error: ${snap.error}');
-                                    else {
-                                      return ListView.builder(
-                                        itemCount: userMessagesList.length,
-                                        itemBuilder: (context, index) {
-                                          var sohbet = userMessagesList[index];
-                                          var messagesWithSpecificUser =
-                                              sohbet.get('Messages');
-                                          var messageList = List.from(
-                                              messagesWithSpecificUser);
-                                          var lastMessage = messageList[
-                                                  messageList.length - 1]
-                                              ['Message'];
-                                          var lastMessageTime = messageList[
-                                              messageList.length - 1]['Time'];
+                          if (currentMessages.isNotEmpty) {
+                            userMessagesList = List.from(currentMessages);
+                            userMessagesList.sort((b, a) => a
+                                .get('Messages')[a.get('Messages').length - 1]
+                                    ['Time']
+                                .compareTo(b.get('Messages')[
+                                    b.get('Messages').length - 1]['Time']));
+                            return FutureBuilder(
+                                future: ImageProcess(
+                                    userMessagesList, userNameList),
+                                builder: (_, snap) {
+                                  switch (snap.connectionState) {
+                                    case ConnectionState.waiting:
+                                      return Text('Yükleniyor....');
+                                    default:
+                                      if (snap.hasError)
+                                        return Text('Error: ${snap.error}');
+                                      else {
+                                        return ListView.builder(
+                                          itemCount: userMessagesList.length,
+                                          itemBuilder: (context, index) {
+                                            var sohbet =
+                                                userMessagesList[index];
+                                            var messagesWithSpecificUser =
+                                                sohbet.get('Messages');
+                                            var messageList = List.from(
+                                                messagesWithSpecificUser);
+                                            var lastMessage = messageList[
+                                                    messageList.length - 1]
+                                                ['Message'];
+                                            var lastMessageTime = messageList[
+                                                messageList.length - 1]['Time'];
 
-                                          String konusulanKisi =
-                                              userMessagesList[index].get(
-                                                  ((userMessagesList[index].get(
-                                                              'Receiver') !=
-                                                          user!.email
-                                                              .toString())
-                                                      ? 'Receiver'
-                                                      : 'Sender'));
-                                          //!!arayüz
+                                            String konusulanKisi =
+                                                userMessagesList[index].get(
+                                                    ((userMessagesList[index].get(
+                                                                'Receiver') !=
+                                                            user!.email
+                                                                .toString())
+                                                        ? 'Receiver'
+                                                        : 'Sender'));
+                                            //!!arayüz
 
-                                          return Padding(
-                                            padding: const EdgeInsets.all(6),
-                                            child: kisiButonu(
-                                                index,
-                                                konusulanKisi,
-                                                lastMessageTime.toDate(),
-                                                mailiCikar(lastMessage,
-                                                    user!.email, konusulanKisi),
-                                                context),
-                                          );
-                                        },
-                                      );
-                                    }
-                                }
-                              });
-                        }
-                        //!arayüz
-                        return const Text(
-                            ''); // daha once konusulmus kımse yoksa bu basiliyor
-                      })),
+                                            return Padding(
+                                              padding: const EdgeInsets.all(6),
+                                              child: kisiButonu(
+                                                  index,
+                                                  konusulanKisi,
+                                                  lastMessageTime.toDate(),
+                                                  mailiCikar(
+                                                      lastMessage,
+                                                      user!.email,
+                                                      konusulanKisi),
+                                                  context),
+                                            );
+                                          },
+                                        );
+                                      }
+                                  }
+                                });
+                          }
+                          //!arayüz
+                          return const Text(
+                              ''); // daha once konusulmus kımse yoksa bu basiliyor
+                        })),
+              ),
               // !!arayüz yeni mail girilen yer. burası orijinal programda olmayabilir. sonucta normalde satıcıyı program uzerınden bulcaklar ıletısıme geccekler
               /*textField = TextField(
                 decoration: new InputDecoration.collapsed(
@@ -192,65 +196,52 @@ class _SohbetState extends State<Sohbet> {
     Widget returnWidget;
     return SafeArea(
       child: TextButton(
-        
         style: TextButton.styleFrom(
           elevation: 2,
           backgroundColor: Colors.white,
         ),
-        child: Row(
-          
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            CircleAvatar(
-              
-              radius: 24,
-              backgroundImage: NetworkImage(imageList[index]),
+        child: ListTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          tileColor: Colors.white,
+          leading: CircleAvatar(
+            radius: 24,
+            backgroundImage: NetworkImage(imageList[index]),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(
+              userNameList[index],
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 14),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 2, 10, 2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      userNameList[index],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 14),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      message,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w300, color: Colors.black),
-                    ),
-                  ),
-                ],
+          ),
+          subtitle: Text(
+            message,
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 30,
+                child: Text(
+                  timeEdit(time),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12),
+                ),
               ),
-            ),
-            Container(
-              height: 30,
-              child: Text(
-                timeEdit(time),
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
         onPressed: () {
           mesajlasilanKisi = mail;
-         
+
           Navigator.push(
-            
             context,
             MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
           );
@@ -415,7 +406,7 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
                         return Text('Something went wrong.');
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text('Loading');
+                        return Text('Yükleniyor');
                       }
                       final data = snapshot.requireData;
                       //data.docs.where()
@@ -457,71 +448,63 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
                       }
                       //!! arayüz
                       return const Text(
-                          'Gorusmeye Basla2'); // eğer daha önce hiç bu kisiyle konusulmamışsa bu yazıyor
+                          'Görüşmeye Başla'); // eğer daha önce hiç bu kisiyle konusulmamışsa bu yazıyor
                     }),
               ),
               //!! arayüz mesajın yazıldıgı textFormField
 
-              Container(
-                alignment: Alignment.bottomCenter,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  height: 50,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Color(0xffeceff1)),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: myController,
-                          //style: simpleTextStyle(),
-                          decoration: const InputDecoration(
-                              hintText: "Message ",
-                              hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                              border: InputBorder.none),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      // keyboardType: TextInputType.multiline,
+                      // maxLines: null,
+                      // textInputAction: TextInputAction.newline,
+                      cursorColor: Colors.cyan,
+                      textCapitalization: TextCapitalization.sentences,
+                      controller: myController,
+                      //style: simpleTextStyle(),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.teal,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
+                        fillColor: Colors.white.withOpacity(0.97),
+                        filled: true, // dont forget this line
+                        hintText: "Mesaj ",
+                        hintStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        suffix: IconButton(
+                          icon: Icon(
+                            Icons.send,
+                            size: 25,
+                            color: Color(0xff264653),
+                          ),
+                          onPressed: () {
+                            String message = myController.text;
+                            if (message.isNotEmpty) {
+                              sendMessage(message);
+                            }
+                            myController.clear();
+                            _scrollController.animateTo(
+                              _scrollController.position.maxScrollExtent,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 300),
+                            );
+                          },
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          String message = myController.text;
-                          if (message.isNotEmpty) {
-                            sendMessage(message);
-                          }
-                          myController.clear();
-                          _scrollController.animateTo(
-                            _scrollController.position.maxScrollExtent,
-                            curve: Curves.easeOut,
-                            duration: const Duration(milliseconds: 300),
-                          );
-                        },
-                        child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0x36FFFFFF),
-                                      Color(0x0FFFFFFF)
-                                    ],
-                                    begin: FractionalOffset.topLeft,
-                                    end: FractionalOffset.bottomRight),
-                                borderRadius: BorderRadius.circular(40)),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 12),
-                            child: const Icon(
-                              Icons.send,
-                              size: 25,
-                              color: Color(0xff264653),
-                            )),
-                      )
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],

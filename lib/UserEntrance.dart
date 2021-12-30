@@ -34,49 +34,41 @@ class _googleLoginPage2State extends State<googleLoginPage2> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: StreamBuilder(
-    stream: FirebaseAuth.instance.authStateChanges(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
-      } else if (snapshot.hasData) {
-        user = FirebaseAuth.instance.currentUser!;
-        FirebaseFirestore.instance
-          .collection('Users')
-          .doc(user!.email)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            check = false;
-          } else {
-            check = true;
-          }
-        });
-        if (check) {
-          return MainPage2();
-        } else {
-          check21 = true;
-          
-         
-           return MyApp1();
-        }
-        // giris yapılmış
-        } else if (snapshot.hasError) {
+          body: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            user = FirebaseAuth.instance.currentUser!;
+            FirebaseFirestore.instance
+                .collection('Users')
+                .doc(user!.email)
+                .get()
+                .then((DocumentSnapshot documentSnapshot) {
+              if (documentSnapshot.exists) {
+                check = false;
+              } else {
+                check = true;
+              }
+            });
+            if (check) {
+              return MainPage2();
+            } else {
+              check21 = true;
+
+              return MyApp1();
+            }
+            // giris yapılmış
+          } else if (snapshot.hasError) {
             return Center(child: Text('Something went wrong!'));
-        } else
+          } else
             return MainPage1(); //MainPage1();
-          },
-        )
-        //body: MainPage(),
-        );
+        },
+      )
+          //body: MainPage(),
+          );
 }
-
-
-
-
-
-
-
 
 enum SingingCharacter { Alici, Satici }
 
@@ -253,7 +245,8 @@ class _NewWidgetState extends State<NewWidget> {
     final picker = ImagePicker();
 
     chooseImage(ImageSource source) async {
-      final PickedFile = await picker.getImage(source: source,imageQuality: 25);
+      final PickedFile =
+          await picker.getImage(source: source, imageQuality: 25);
       imagefile = await File(PickedFile!.path);
     }
 
@@ -530,7 +523,8 @@ class _NewWidget1State extends State<NewWidget1> {
     final picker = ImagePicker();
 
     chooseImage(ImageSource source) async {
-      final PickedFile = await picker.getImage(source: source,imageQuality: 25);
+      final PickedFile =
+          await picker.getImage(source: source, imageQuality: 25);
       imagefile = await File(PickedFile!.path);
     }
 
@@ -821,7 +815,7 @@ class _NewWidget1State extends State<NewWidget1> {
                             'saticiMi': true,
                             'MarketName': widget.MarketNameController.text,
                             'TimeCont': widget.TimeController.text,
-                            'SaticiTanitimImage':""
+                            'SaticiTanitimImage': ""
                           };
                           await UsersRef.doc(user.email!).set(UsersData);
                           Navigator.push(
@@ -1089,7 +1083,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   late File imagefile;
   final picker = ImagePicker();
   chooseImage(ImageSource source) async {
-    final PickedFile = await picker.getImage(source: source,imageQuality: 25);
+    final PickedFile = await picker.getImage(source: source, imageQuality: 25);
     imagefile = File(PickedFile!.path);
   }
 
@@ -1126,6 +1120,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
       return Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
+            centerTitle: true,
             backgroundColor: Color(0xff06D6A0),
             title: const Text(
               "Profil Bilgileri",

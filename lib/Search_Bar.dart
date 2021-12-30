@@ -26,6 +26,7 @@ String giveFirebaseField(String text) {
 }
 
 class _SearchAppBarState extends State<SearchAppBar> {
+  bool focus = true;
   bool edit_done = false;
   List<String> azalanArtan = ['Azalan', 'Artan'];
   String choice1 = 'Azalan';
@@ -38,6 +39,21 @@ class _SearchAppBarState extends State<SearchAppBar> {
   void setState(VoidCallback fn) {
     // TODO: implement setState
     super.setState(fn);
+  }
+
+  late FocusNode myFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    myFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    myFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,6 +75,8 @@ class _SearchAppBarState extends State<SearchAppBar> {
           centerTitle: false,
           leadingWidth: 28,
           title: TextFormField(
+            autofocus: focus,
+            focusNode: myFocusNode,
             onChanged: (string) {
               if (_search.text != "") edit_done = false;
             },
@@ -66,12 +84,12 @@ class _SearchAppBarState extends State<SearchAppBar> {
               if (_search.text != "")
                 setState(() {
                   edit_done = true;
+                  myFocusNode.unfocus();
                 });
             },
             textInputAction: TextInputAction.done,
             controller: _search,
             cursorColor: Colors.cyan,
-            autofocus: true,
             inputFormatters: [
               new LengthLimitingTextInputFormatter(42),
             ],
@@ -213,10 +231,10 @@ class _SearchAppBarState extends State<SearchAppBar> {
                   builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
                     print("BUILDER ICI");
                     if (asyncSnapshot.hasError)
-                      return Text('Something went wrong.');
+                      return Text('Bir şeyler ters gitti!');
                     if (asyncSnapshot.connectionState ==
                         ConnectionState.waiting)
-                      return Text('Loading');
+                      return Text('Yükleniyor');
                     else {
                       if (asyncSnapshot.hasData) {
                         List<DocumentSnapshot> list = asyncSnapshot.data.docs;

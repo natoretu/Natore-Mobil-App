@@ -105,10 +105,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Widget> tabs = [
     MainPage(),
-    Sohbet(), //chat gelecek
+    Sohbet(),
     MyOrders("Sütçü Dede"), //MyStatefulWidget(),
     UserProfile(),
-    checksaticioralici == true ? Magazam() : SizedBox.shrink() // TODO:ugur
+    checksaticioralici == true ? Magazam() : SizedBox.shrink()
   ];
 
   int _selectedIndex = 0;
@@ -150,8 +150,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   label: 'Mesajlar',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_basket),
-                  label: 'Sepetim',
+                  icon: Icon(Icons.favorite),
+                  label: 'Favoriler',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_sharp),
@@ -185,8 +185,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   label: 'Mesajlar',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_basket),
-                  label: 'Sepetim',
+                  icon: Icon(Icons.favorite),
+                  label: 'Favoriler',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_sharp),
@@ -268,7 +268,7 @@ class _MainPageState extends State<MainPage> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          actions: [
+          /* actions: [
             TextButton(
               child: Text(
                 'Logout',
@@ -279,7 +279,7 @@ class _MainPageState extends State<MainPage> {
                 provider.logout();
               },
             )
-          ],
+          ],*/
           backgroundColor: Color(0xff07cc99), // Color(0xff06D6A0),
           centerTitle: true,
           elevation: 1,
@@ -289,7 +289,7 @@ class _MainPageState extends State<MainPage> {
           /***-------------***/
           /*** USER AVATAR ***/
           toolbarHeight: 48,
-          leading: Padding(
+          /*leading: Padding(
             padding: const EdgeInsets.only(bottom: 2.0),
             child: IconButton(
               icon: Icon(
@@ -303,7 +303,7 @@ class _MainPageState extends State<MainPage> {
                 );
               },
             ),
-          ),
+          ),*/
           /***------------------***/
           /*** APP NAME Or LOGO ***/
           flexibleSpace: FlexibleSpaceBar(
@@ -338,14 +338,13 @@ class _MainPageState extends State<MainPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => MyAdress()),
+                      MaterialPageRoute(builder: (context) => MyAdress()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
-                    side: BorderSide(width: 0.7, color: Colors.grey),
+                    side: BorderSide(width: 0.5, color: Colors.cyan),
                     primary: Colors.white,
                     elevation: 1,
                     onPrimary: Colors.white,
@@ -376,12 +375,12 @@ class _MainPageState extends State<MainPage> {
                                 stream: null,
                                 builder: (context, snapshot) {
                                   return StreamBuilder<DocumentSnapshot>(
-                                    
                                     stream: babaRef.snapshots(),
                                     builder: (BuildContext context,
                                         AsyncSnapshot asyncSnapshot) {
-                                          String a =asyncSnapshot.data.data()['Adress'];
-                                          String b =  a.split(" ").first;
+                                      String a =
+                                          asyncSnapshot.data.data()['Adress'];
+                                      String b = a.split(" ").first;
                                       return Text(
                                         b,
                                         style: GoogleFonts.lato(
@@ -431,7 +430,7 @@ class _MainPageState extends State<MainPage> {
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 4, 2),
                             child: Text(
-                              'Tanıtımlar (${_campaign_num})',
+                              'Tanıtımlar', //'Tanıtımlar (${_campaign_num})',
                               style: TextStyle(
                                 fontFamily: 'Zen Antique Soft',
                                 color: Colors.black,
@@ -483,7 +482,7 @@ class _MainPageState extends State<MainPage> {
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 4, 2),
                             child: Text(
-                              'Satıcılar (${_seller_num})',
+                              'Satıcılar', //'Satıcılar (${_seller_num})',
                               style: TextStyle(
                                 fontFamily: 'Zen Antique Soft',
                                 color: Colors.black,
@@ -1283,7 +1282,6 @@ class _UserProfileState extends State<UserProfile> {
                                   return CircleAvatar(
                                     radius: 40,
                                     backgroundColor: Colors.white,
-                                   
                                     backgroundImage: NetworkImage(
                                         '${asyncSnapshot.data.data()['Image']}'),
                                   );
@@ -1519,7 +1517,7 @@ class _MyAdressState extends State<MyAdress> {
               //pinned: false,
               snap: true,
               flexibleSpace: FlexibleSpaceBar(
-                // centerTitle: true,
+                centerTitle: true,
                 title: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Text(
@@ -1722,7 +1720,7 @@ class _AboutheAppState extends State<AboutheApp> {
               //pinned: false,
               snap: true,
               flexibleSpace: FlexibleSpaceBar(
-                //centerTitle: true,
+                centerTitle: true,
                 title: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Text(
@@ -1941,7 +1939,6 @@ class CampaignSwiper extends StatefulWidget {
 }
 
 class _CampaignSwiperState extends State<CampaignSwiper> {
-  
   final user = FirebaseAuth.instance.currentUser!;
   final _firestore = FirebaseFirestore.instance;
 
@@ -1949,75 +1946,74 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
       FirebaseFirestore.instance.collection('Users').snapshots();
   @override
   Widget build(BuildContext context) {
-     return StreamBuilder<QuerySnapshot>(
-                              stream:allMessages,
-                              builder:(BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.waiting:
-                                    return Text('Loading....');
-                                  default:
-                                    if (snapshot.hasError)
-                                      return Text('Error: ${snapshot.error}');
-                                    else {
-                                      final data = snapshot.requireData;
-                                      var temp =data.docs.where((element) => (element.get('Adress')==Adress1 && element.get('saticiMi')==true));
-                                      var MarketInfo = List.from(temp);
-                                    
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: AspectRatio(
-              aspectRatio: 2,
-              
-              child: Swiper(
-                //physics: NeverScrollableScrollPhysics(),
-                //layout: SwiperLayout.TINDER,
-                onTap: (int index) {},
-                itemCount: MarketInfo.length,
-                indicatorLayout: PageIndicatorLayout.SCALE,
-                pagination: SwiperPagination(
-                  alignment: Alignment.bottomCenter,
-                  margin: EdgeInsets.only(top: 15),
-                  builder: DotSwiperPaginationBuilder(
-                    color: Colors.blueGrey,
-                    activeColor: Color(0xffef233c),
-                    space: 5,
-                  ),
-                ),
-                autoplay: true,
-                autoplayDisableOnInteraction: true,
-                autoplayDelay: 5000, // 3000 - default - kalma süresi
-                duration: 800, // 300 - default - gecis süresi
-                //viewportFraction: 0.8, -> genislik
-                //scale: 0.82, -> aradaki bosluk
-                itemBuilder: (BuildContext context, int index) {
-                  var sohbet = MarketInfo[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
+    return StreamBuilder<QuerySnapshot>(
+        stream: allMessages,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Text('Loading....');
+            default:
+              if (snapshot.hasError)
+                return Text('Error: ${snapshot.error}');
+              else {
+                final data = snapshot.requireData;
+                var temp = data.docs.where((element) =>
+                    (element.get('Adress') == Adress1 &&
+                        element.get('saticiMi') == true));
+                var MarketInfo = List.from(temp);
+
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
-                          sohbet.get('SaticiTanitimImage'),
-                          fit: BoxFit.fill,
+                        child: AspectRatio(
+                          aspectRatio: 2,
+                          child: Swiper(
+                            //physics: NeverScrollableScrollPhysics(),
+                            //layout: SwiperLayout.TINDER,
+                            onTap: (int index) {},
+                            itemCount: MarketInfo.length,
+                            indicatorLayout: PageIndicatorLayout.SCALE,
+                            pagination: SwiperPagination(
+                              alignment: Alignment.bottomCenter,
+                              margin: EdgeInsets.only(top: 15),
+                              builder: DotSwiperPaginationBuilder(
+                                color: Colors.blueGrey,
+                                activeColor: Color(0xffef233c),
+                                space: 5,
+                              ),
+                            ),
+                            autoplay: true,
+                            autoplayDisableOnInteraction: true,
+                            autoplayDelay:
+                                5000, // 3000 - default - kalma süresi
+                            duration: 800, // 300 - default - gecis süresi
+                            //viewportFraction: 0.8, -> genislik
+                            //scale: 0.82, -> aradaki bosluk
+                            itemBuilder: (BuildContext context, int index) {
+                              var sohbet = MarketInfo[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 20.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Image.network(
+                                    sohbet.get('SaticiTanitimImage'),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    );
-                   
-                },
-              ),
-              
-            ),
-          ),
-        ),
-      ],
-    );
-    }
-                                }
-                              });
+                    ),
+                  ],
+                );
+              }
+          }
+        });
   }
 }
 
@@ -2206,285 +2202,321 @@ class _StoreState extends State<Store> {
 
   final Stream<QuerySnapshot> allMessages =
       FirebaseFirestore.instance.collection('Users').snapshots();
-  
+
   @override
   Widget build(BuildContext context) {
     CollectionReference updateRef = _firestore.collection('Users');
-     
-                   return FutureBuilder<DocumentSnapshot>(
-                      future:  updateRef.doc(user.email!).get(),
-                      builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if (snapshot.hasError)
-                          return Text('Something went wrong.');
-                        if (snapshot.connectionState == ConnectionState.waiting)
-                          return Text('Loading');
 
-                          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-                          Adress1 =data['Adress'];
-                          checksaticioralici = data['saticiMi'];
-                         
+    return FutureBuilder<DocumentSnapshot>(
+        future: updateRef.doc(user.email!).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) return Text('Something went wrong.');
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Text('Loading');
 
-                          return StreamBuilder<QuerySnapshot>(
-                              stream:allMessages,
-                              builder:(BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.waiting:
-                                    return Text('Loading....');
-                                  default:
-                                    if (snapshot.hasError)
-                                      return Text('Error: ${snapshot.error}');
-                                    else {
-                                      final data = snapshot.requireData;
-                                      var temp =data.docs.where((element) => (element.get('Adress')==Adress1 && element.get('saticiMi')==true));
-                                      var MarketInfo = List.from(temp);
-                                     
-                                     return ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: MarketInfo.length,
-                                      padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
-                                      itemBuilder: (BuildContext context, int index) {
-                                        var sohbet = MarketInfo[index];
-                                          
-                                              
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            // mainAxisSize: MainAxisSize.min,
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          Adress1 = data['Adress'];
+          checksaticioralici = data['saticiMi'];
+
+          return StreamBuilder<QuerySnapshot>(
+              stream: allMessages,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Text('Loading....');
+                  default:
+                    if (snapshot.hasError)
+                      return Text('Error: ${snapshot.error}');
+                    else {
+                      final data = snapshot.requireData;
+                      var temp = data.docs.where((element) =>
+                          (element.get('Adress') == Adress1 &&
+                              element.get('saticiMi') == true));
+                      var MarketInfo = List.from(temp);
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: MarketInfo.length,
+                        padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                        itemBuilder: (BuildContext context, int index) {
+                          var sohbet = MarketInfo[index];
+
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              // mainAxisSize: MainAxisSize.min,
+                              children: [
+                                /***--------***/
+                                /*** Tabela ***/
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        //margin: EdgeInsets.all(6),
+                                        //padding: EdgeInsets.only(top: 8),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            border: Border.all(
+                                                color: Colors.grey
+                                                    .withOpacity(0.2))),
+                                        child: Material(
+                                          color: Color(0xff06EFB1),
+                                          elevation: 4,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          child: Text(
+                                            sohbet.get('MarketName'),
+                                            //overflow: TextOverflow.fade,
+                                            //maxLines: 2,
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                GoogleFonts.goudyBookletter1911(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Color(0xff091624),
+                                                    letterSpacing: 1.1,
+                                                    //wordSpacing: 2,
+                                                    fontSize: 20),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                /***------***/
+                                /*** Çatı ***/
+                                Opacity(
+                                    opacity: 1,
+                                    child: Image.asset(
+                                      "assets/homepageImages/k2_c.png",
+                                      /** !!!  **/
+                                      fit: BoxFit.fill,
+                                      color: Color(0xff264653),
+                                      alignment: Alignment.topCenter,
+                                      //filterQuality: FilterQuality.high,
+                                    )),
+                                /***----------------***/
+                                /*** Mağaza Gövdesi ***/
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                  child: Material(
+                                    shape: Border(
+                                      left: BorderSide(
+                                          color: Color(0xff264653), width: 2),
+                                      right: BorderSide(
+                                          color: Color(0xff264653), width: 2),
+                                      bottom: BorderSide(
+                                          color: Color(0xff264653), width: 2),
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProductsOfSellerPage(
+                                                      sohbet.get('MarketName'),
+                                                      sohbet.get('Email'))),
+                                        );
+                                        //ProductsOfSellerPage("hacia");
+                                      }, // TODO: HACI
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.white,
+                                        onPrimary: Color(0xff06EFB1),
+                                        elevation: 2,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(0),
+                                            bottom: Radius.circular(0),
+                                          ),
+                                        ),
+                                      ),
+                                      //autofocus: true,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          /*** Clock and Door ***/
+                                          Column(
                                             children: [
-                                              /***--------***/
-                                              /*** Tabela ***/
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Container(
-                                                      //margin: EdgeInsets.all(6),
-                                                      //padding: EdgeInsets.only(top: 8),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(6),
-                                                          border:
-                                                              Border.all(color: Colors.grey.withOpacity(0.2))),
-                                                      child: Material(
-                                                        color: Color(0xff06EFB1),
-                                                        elevation: 4,
-                                                        shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(4)),
-                                                        child: Text(
-                                                          sohbet.get('MarketName'),
-                                                          //overflow: TextOverflow.fade,
-                                                          //maxLines: 2,
-                                                          textAlign: TextAlign.center,
-                                                          style: GoogleFonts.goudyBookletter1911(
-                                                              fontWeight: FontWeight.w800,
-                                                              color: Color(0xff091624),
-                                                              letterSpacing: 1.1,
-                                                              //wordSpacing: 2,
-                                                              fontSize: 20),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              /***------***/
-                                              /*** Çatı ***/
-                                              Opacity(
-                                                  opacity: 1,
-                                                  child: Image.asset(
-                                                    "assets/homepageImages/k2_c.png",
-                                                    /** !!!  **/
-                                                    fit: BoxFit.fill,
-                                                    color: Color(0xff264653),
-                                                    alignment: Alignment.topCenter,
-                                                    //filterQuality: FilterQuality.high,
-                                                  )),
-                                              /***----------------***/
-                                              /*** Mağaza Gövdesi ***/
+                                              /*** Clock ***/
                                               Padding(
-                                                padding: const EdgeInsets.fromLTRB(18, 0, 18, 0),
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 34, 0, 2),
                                                 child: Material(
-                                                  shape: Border(
-                                                    left: BorderSide(color: Color(0xff264653), width: 2),
-                                                    right: BorderSide(color: Color(0xff264653), width: 2),
-                                                    bottom: BorderSide(color: Color(0xff264653), width: 2),
+                                                  elevation: 2,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: Colors.cyan,
+                                                  child: Text(
+                                                    sohbet.get('TimeCont'),
+                                                    //overflow: TextOverflow.fade,
+                                                    //maxLines: 2,
+                                                    textAlign: TextAlign.center,
+                                                    style: GoogleFonts
+                                                        .goudyBookletter1911(
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            color: Colors.white,
+                                                            letterSpacing: 1.1,
+                                                            //wordSpacing: 2,
+                                                            fontSize: 20),
                                                   ),
-                                                  child: ElevatedButton(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ProductsOfSellerPage(sohbet.get('MarketName'),sohbet.get('Email'))),
-                                                      );
-                                                      //ProductsOfSellerPage("hacia");
-                                                    }, // TODO: HACI
-                                                    style: ElevatedButton.styleFrom(
-                                                      primary: Colors.white,
-                                                      onPrimary: Color(0xff06EFB1),
+                                                ),
+                                              ),
+                                              /*** Door ***/
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 4, 0, 3),
+                                                child: Stack(
+                                                  children: [
+                                                    Material(
                                                       elevation: 2,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.vertical(
-                                                          top: Radius.circular(0),
-                                                          bottom: Radius.circular(0),
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 1.2,
+                                                              color: Color(
+                                                                  0xff073B4C)),
+                                                          color: Colors.white,
+                                                        ),
+                                                        width: 45,
+                                                        height: 80,
+                                                        alignment:
+                                                            Alignment.topCenter,
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .fromLTRB(
+                                                          34, 32, 0, 0),
+                                                      child: Material(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(2),
+                                                        elevation: 2.5,
+                                                        child: Container(
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          width: 5,
+                                                          height: 13,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        2),
+                                                            border: Border.all(
+                                                                color: Color(
+                                                                    0xff073B4C),
+                                                                width: 1),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                    //autofocus: true,
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                      children: [
-                                                        /*** Clock and Door ***/
-                                                        Column(
-                                                          children: [
-                                                            /*** Clock ***/
-                                                            Padding(
-                                                              padding: const EdgeInsets.fromLTRB(0, 34, 0, 2),
-                                                              child: Material(
-                                                                elevation: 2,
-                                                                borderRadius: BorderRadius.circular(8),
-                                                                color: Colors.cyan,
-                                                                child: Text(
-                                                                 sohbet.get('TimeCont'),
-                                                                  //overflow: TextOverflow.fade,
-                                                                  //maxLines: 2,
-                                                                  textAlign: TextAlign.center,
-                                                                  style: GoogleFonts.goudyBookletter1911(
-                                                                      fontWeight: FontWeight.w800,
-                                                                      color: Color(0xff091624),
-                                                                      letterSpacing: 1.1,
-                                                                      //wordSpacing: 2,
-                                                                      fontSize: 20),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            /*** Door ***/
-                                                            Padding(
-                                                              padding: const EdgeInsets.fromLTRB(0, 4, 0, 3),
-                                                              child: Stack(
-                                                                children: [
-                                                                  Material(
-                                                                    elevation: 2,
-                                                                    child: Container(
-                                                                      decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                            width: 1.2,
-                                                                            color: Color(0xff073B4C)),
-                                                                        color: Colors.white,
-                                                                      ),
-                                                                      width: 45,
-                                                                      height: 80,
-                                                                      alignment: Alignment.topCenter,
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets.fromLTRB(34, 32, 0, 0),
-                                                                    child: Material(
-                                                                      borderRadius: BorderRadius.circular(2),
-                                                                      elevation: 2.5,
-                                                                      child: Container(
-                                                                        alignment: Alignment.centerRight,
-                                                                        width: 5,
-                                                                        height: 13,
-                                                                        decoration: BoxDecoration(
-                                                                          color: Colors.white,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(2),
-                                                                          border: Border.all(
-                                                                              color: Color(0xff073B4C),
-                                                                              width: 1),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        /*** Rate ***/
-                                                        Padding(
-                                                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 92),
-                                                          child: Material(
-                                                            color: RateColor(RateList[index]),
-                                                            elevation: 2,
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius: BorderRadius.circular(8)),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Wrap(
-                                                                spacing: 4,
-                                                                crossAxisAlignment: WrapCrossAlignment.center,
-                                                                children: [
-                                                                  Icon(Icons.star_outlined,
-                                                                      color: Colors.white, size: 20),
-                                                                  Text(
-                                                                    RateList[index].toString(),
-                                                                    style: TextStyle(
-                                                                        color: Colors.white,
-                                                                        fontSize: 18,
-                                                                        fontWeight: FontWeight.w500),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        /*** Store logo ***/
-                                                        Padding(
-                                                          padding: const EdgeInsets.only(bottom: 24),
-                                                          child: Row(
-                                                            children: [
-                                                              Material(
-                                                                borderRadius: BorderRadius.circular(8),
-                                                                color: Colors.white,
-                                                                elevation: 2,
-                                                                child: Container(
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(8),
-                                                                    border: Border.all(
-                                                                        color: Colors.cyan.shade800, width: 2),
-                                                                  ),
-                                                                  child: (index == 0)
-                                                                      ? Image.asset(
-                                                                          "assets/homepageImages/sutcu_dede_f.png",
-
-                                                                          /** !!!  **/
-                                                                          fit: BoxFit.fill,
-                                                                          //color: Color(0xff264653),
-                                                                          //alignment: Alignment.topCenter,
-                                                                          //filterQuality: FilterQuality.high,
-                                                                        )
-                                                                      : Image.asset(
-                                                                          "assets/homepageImages/yogurt.png",
-                                                                          fit: BoxFit.fill,
-                                                                        ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                  ],
                                                 ),
                                               ),
                                             ],
                                           ),
-                                        );
-                                      },
-                                    );
-                                    }
-                                }
-                              });//
-                        }
-                   
-                      
+                                          /*** Rate ***/
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 0, 92),
+                                            child: Material(
+                                              color: RateColor(RateList[index]),
+                                              elevation: 2,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: Wrap(
+                                                  spacing: 4,
+                                                  crossAxisAlignment:
+                                                      WrapCrossAlignment.center,
+                                                  children: [
+                                                    Icon(Icons.star_outlined,
+                                                        color: Colors.white,
+                                                        size: 20),
+                                                    Text(
+                                                      RateList[index]
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          /*** Store logo ***/
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 24),
+                                            child: Row(
+                                              children: [
+                                                Material(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: Colors.white,
+                                                  elevation: 2,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      border: Border.all(
+                                                          color: Colors
+                                                              .cyan.shade800,
+                                                          width: 2),
+                                                    ),
+                                                    child: (index == 0)
+                                                        ? Image.asset(
+                                                            "assets/homepageImages/sutcu_dede_f.png",
 
-            
-          
-        );
-    
+                                                            /** !!!  **/
+                                                            fit: BoxFit.fill,
+                                                            //color: Color(0xff264653),
+                                                            //alignment: Alignment.topCenter,
+                                                            //filterQuality: FilterQuality.high,
+                                                          )
+                                                        : Image.asset(
+                                                            "assets/homepageImages/yogurt.png",
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                }
+              }); //
+        });
   }
 }

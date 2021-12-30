@@ -67,6 +67,7 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       /* persistentFooterButtons: <Widget>[
         Row(
           children: <Widget>[
@@ -157,13 +158,56 @@ class _ProductDetailState extends State<ProductDetail> {
                                             ),
                                           ),
                                         ],
-                                      )
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Ürün: ",
+                                              style: TextStyle(fontSize: 17),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 2),
+                                              child: Icon(
+                                                Icons.star,
+                                                color: Color(0xff52B69A),
+                                                size: 18,
+                                              ),
+                                            ),
+                                            UrunPuaniGoster(prId),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10.0),
+                                              child: Text(
+                                                "Satıcı: ",
+                                                style: TextStyle(fontSize: 17),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 2),
+                                              child: const Icon(
+                                                Icons.star,
+                                                color: Color(0xff52B69A),
+                                                size: 18,
+                                              ),
+                                            ),
+                                            saticiPuaniGoster(prEmail),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
                             ),
                           ),
+
                           /*** Contact With Seller ***/
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -222,30 +266,6 @@ class _ProductDetailState extends State<ProductDetail> {
                                 ),
                               ],
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Ürün Puanı:"),
-                              Icon(
-                                Icons.star,
-                                color: Color(0xff52B69A),
-                                size: 18,
-                              ),
-                              UrunPuaniGoster(prId),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Satıcı Puanı:"),
-                              Icon(
-                                Icons.star,
-                                color: Color(0xff52B69A),
-                                size: 18,
-                              ),
-                              saticiPuaniGoster(prEmail),
-                            ],
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -509,7 +529,7 @@ Padding UrunPuaniGoster(String productId) {
           return RichText(
             text: TextSpan(
               text: rate.toStringAsFixed(1).toString(),
-              style: DefaultTextStyle.of(context).style,
+              style: TextStyle(fontSize: 16, color: Colors.black),
               /*children: [
                 WidgetSpan(
                   child: Padding(
@@ -548,7 +568,7 @@ Padding saticiPuaniGoster(String userId) {
           return RichText(
             text: TextSpan(
               text: rate.toStringAsFixed(1).toString(),
-              style: DefaultTextStyle.of(context).style,
+              style: TextStyle(fontSize: 16, color: Colors.black),
               /*children: [
                 WidgetSpan(
                   child: Padding(
