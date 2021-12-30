@@ -24,13 +24,8 @@ String eMail = "";
 String image_pr = "";
 
 class ProductsOfSellerPage extends StatelessWidget {
-<<<<<<< HEAD
-  ProductsOfSellerPage(String name) {
-    //print(name);
-=======
   ProductsOfSellerPage(String name,String Email) {
     print(name);
->>>>>>> 9138b03 (Profil Güncelleme market gösterme)
     MarketName = name;
     eMail =Email;
     print(MarketName);
