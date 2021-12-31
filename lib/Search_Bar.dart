@@ -234,7 +234,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
                       return Text('Bir şeyler ters gitti!');
                     if (asyncSnapshot.connectionState ==
                         ConnectionState.waiting)
-                      return Text('Yükleniyor');
+                      return Text('');
                     else {
                       if (asyncSnapshot.hasData) {
                         List<DocumentSnapshot> list = asyncSnapshot.data.docs;

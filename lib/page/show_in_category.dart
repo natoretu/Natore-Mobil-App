@@ -51,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 1,
         backgroundColor: Color(0xff06D6A0),
         title: Text("Filtrele: " + siralanacakUrunAdi),
         centerTitle: true,
@@ -60,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               const SizedBox(
-                height: 40,
+                height: 20,
               ),
               StreamBuilder(
                   //Burda:
@@ -169,7 +170,7 @@ class BlueBox extends StatelessWidget {
                     child: Container(
                       //margin: EdgeInsets.all(width / 20),
                       decoration: BoxDecoration(
-                        color: Colors.grey,
+                        //color: Colors.grey,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Container(
@@ -184,9 +185,9 @@ class BlueBox extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(8),
-                          color: Colors.white,
+                          color: Colors.white10,
                           border: Border.all(
-                              color: Colors.white,
+                              color: Colors.white10,
                               style: BorderStyle.solid,
                               width: 0.3),
                         ),
@@ -209,23 +210,20 @@ class BlueBox extends StatelessWidget {
               Positioned(
                 top: 0.0,
                 right: 0.0,
-                child: InkWell(
-                  child: Icon(
-                    doluGalp,
-                    size: 40,
-                    color: Colors.grey,
-                  ),
-                  onTap: () {
+                child: IconButton(
+                  icon: Icon(doluGalp, size: 34, color: Colors.teal.shade100),
+                  onPressed: () {
                     //burdan databaseİ dolduracağım inşaAllah
 
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                        'Ürün favorilere eklendi: ' + productName,
-                        style: TextStyle(color: Colors.black),
-                      ),
+                    final snackBar = SnackBar(
                       duration: Duration(seconds: 1),
-                      backgroundColor: Colors.white,
-                    ));
+                      backgroundColor: Colors.redAccent.withOpacity(0.95),
+                      content: const Text(
+                        'Ürün favorilere eklendi!',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   },
                 ),
               ),
@@ -256,7 +254,7 @@ class BlueBox extends StatelessWidget {
               Row(
                 children: [
                   const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5.0),
+                    padding: EdgeInsets.fromLTRB(4, 0, 1, 0),
                     child: Icon(
                       Icons.star,
                       color: Color(0xff52B69A),

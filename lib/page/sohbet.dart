@@ -87,8 +87,7 @@ class _SohbetState extends State<Sohbet> {
                           if (snapshot.hasError)
                             return Text('Bir seyler ters gitti!');
                           if (snapshot.connectionState ==
-                              ConnectionState.waiting)
-                            return Text('Yükleniyor');
+                              ConnectionState.waiting) return Text('');
                           final data = snapshot.requireData;
                           var currentMessages = (data.docs.where((element) =>
                               (element.get('Sender') ==
@@ -109,7 +108,7 @@ class _SohbetState extends State<Sohbet> {
                                 builder: (_, snap) {
                                   switch (snap.connectionState) {
                                     case ConnectionState.waiting:
-                                      return Text('Yükleniyor....');
+                                      return Text('');
                                     default:
                                       if (snap.hasError)
                                         return Text('Error: ${snap.error}');
@@ -406,7 +405,7 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
                         return Text('Something went wrong.');
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text('Yükleniyor');
+                        return Text('');
                       }
                       final data = snapshot.requireData;
                       //data.docs.where()

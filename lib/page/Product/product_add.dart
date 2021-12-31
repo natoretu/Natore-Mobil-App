@@ -107,7 +107,7 @@ class AddProductPageState extends State<AddProductPage> {
                 cursorColor: Color(0xff2A9D8F),
                 expands: false,
                 inputFormatters: [
-                  new LengthLimitingTextInputFormatter(42),
+                  new LengthLimitingTextInputFormatter(20),
                 ],
                 decoration: InputDecoration(
                   labelText: "Ürün ismi",

@@ -151,7 +151,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                             padding:
                                                 EdgeInsets.only(bottom: 8.0),
                                             child: Text(
-                                              prPrice.toString(),
+                                              prPrice.toString() + ' ₺',
                                               style: TextStyle(
                                                 fontSize: 18,
                                               ),

@@ -344,127 +344,129 @@ class BlueBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-
     return SafeArea(
-      child: Column(
-        children: [
-          Stack(
-            //alignment: AlignmentDirectional.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: InkWell(
-                    child: Container(
-                      //margin: EdgeInsets.all(width / 20),
-                      decoration: BoxDecoration(
-                        //color: Colors.grey,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          children: [
+            Stack(
+              //alignment: AlignmentDirectional.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: InkWell(
                       child: Container(
-                        margin: EdgeInsets.all(1.0),
-                        width: width / 3, //1.5
-                        height: width / 2.5, //1.9
+                        //margin: EdgeInsets.all(width / 20),
                         decoration: BoxDecoration(
-                          image: const DecorationImage(
-                            image: AssetImage(//bu resim databaseden alıncak
-                                "assets/milk128.png"),
-                            fit: BoxFit.cover,
-                          ),
+                          //color: Colors.grey,
                           borderRadius: BorderRadius.circular(8),
-                          color: Colors.white10,
-                          border: Border.all(
-                              color: Colors.white10,
-                              style: BorderStyle.solid,
-                              width: 0.3),
+                        ),
+                        child: Container(
+                          margin: EdgeInsets.all(1.0),
+                          width: width / 3, //1.5
+                          height: width / 2.5, //1.9
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                              image: AssetImage(//bu resim databaseden alıncak
+                                  "assets/milk128.png"),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white10,
+                            border: Border.all(
+                                color: Colors.white10,
+                                style: BorderStyle.solid,
+                                width: 0.3),
+                          ),
                         ),
                       ),
-                    ),
-                    onTap: () {
-                      print(productName + _url + mail + " IDDDD" + productID);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProductDetail(
-                                productName,
-                                _url,
-                                price,
-                                productID,
-                                mail)), //burası arama butonu
-                      );
-                    }),
-              ),
-              Positioned(
-                top: 0.0,
-                right: 0.0,
-                child: IconButton(
-                  icon: Icon(doluGalp, size: 34, color: Colors.teal.shade100),
-                  onPressed: () {
-                    //burdan databaseİ dolduracağım inşaAllah
-
-                    final snackBar = SnackBar(
-                      duration: Duration(seconds: 1),
-                      backgroundColor: Colors.redAccent.withOpacity(0.95),
-                      content: const Text(
-                        'Ürün favorilere eklendi!',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
+                      onTap: () {
+                        print(productName + _url + mail + " IDDDD" + productID);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductDetail(
+                                  productName,
+                                  _url,
+                                  price,
+                                  productID,
+                                  mail)), //burası arama butonu
+                        );
+                      }),
                 ),
-              ),
-            ],
-          ),
-          //text
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    productName,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  Text(
-                    price.toString() + ' ₺',
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
-              //const SizedBox(width: 5),
+                Positioned(
+                  top: 0.0,
+                  right: 0.0,
+                  child: IconButton(
+                    icon: Icon(doluGalp, size: 34, color: Colors.teal.shade100),
+                    onPressed: () {
+                      //burdan databaseİ dolduracağım inşaAllah
 
-              //star icon and rate
-              Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(4, 0, 1, 0),
-                    child: Icon(
-                      Icons.star,
-                      color: Color(0xff52B69A),
-                      size: 18,
-                    ),
+                      final snackBar = SnackBar(
+                        duration: Duration(seconds: 1),
+                        backgroundColor: Colors.redAccent.withOpacity(0.95),
+                        content: const Text(
+                          'Ürün favorilere eklendi!',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    },
                   ),
-                  //rate
-                  UrunPuaniGoster(productID),
-                  /*Padding(
-                    padding: EdgeInsets.only(top: 2.0),
-                    child: Text(
-                      rate.toString(),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      productName,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
-                  ),*/
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 30,
-          )
-        ],
+                    Text(
+                      price.toString() + ' ₺',
+                      style: const TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                //const SizedBox(width: 5),
+
+                //star icon and rate
+                Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(4, 0, 1, 0),
+                      child: Icon(
+                        Icons.star,
+                        color: Color(0xff52B69A),
+                        size: 18,
+                      ),
+                    ),
+                    //rate
+                    UrunPuaniGoster(productID),
+                    /*Padding(
+                  padding: EdgeInsets.only(top: 2.0),
+                  child: Text(
+                    rate.toString(),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                ),*/
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 30,
+            )
+          ],
+        ),
       ),
     );
   }

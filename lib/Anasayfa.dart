@@ -344,7 +344,7 @@ class _MainPageState extends State<MainPage> {
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
-                    side: BorderSide(width: 0.5, color: Colors.cyan),
+                    side: BorderSide(width: 0.3, color: Colors.cyan),
                     primary: Colors.white,
                     elevation: 1,
                     onPrimary: Colors.white,
@@ -1280,28 +1280,25 @@ class _UserProfileState extends State<UserProfile> {
                                 builder: (BuildContext context,
                                     AsyncSnapshot asyncSnapshot) {
                                   return CircleAvatar(
-                                    radius: 40,
+                                    radius: 25,
                                     backgroundColor: Colors.white,
                                     backgroundImage: NetworkImage(
                                         '${asyncSnapshot.data.data()['Image']}'),
                                   );
                                 },
                               ),
-                              title: Padding(
-                                padding: const EdgeInsets.only(left: 0.0),
-                                child: StreamBuilder<DocumentSnapshot>(
-                                  stream: babaRef.snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot asyncSnapshot) {
-                                    return Text(
-                                      '${asyncSnapshot.data.data()['Name']} ${asyncSnapshot.data.data()['Surname']}',
-                                      style: GoogleFonts.lato(
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
-                                    );
-                                  },
-                                ),
+                              title: StreamBuilder<DocumentSnapshot>(
+                                stream: babaRef.snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot asyncSnapshot) {
+                                  return Text(
+                                    '${asyncSnapshot.data.data()['Name']} ${asyncSnapshot.data.data()['Surname']}',
+                                    style: GoogleFonts.lato(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  );
+                                },
                               ),
                               subtitle: Padding(
                                 padding: const EdgeInsets.only(left: 0.0),
@@ -1897,7 +1894,7 @@ class _SearchBarState extends State<SearchBar> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Color(0xff34A0A4), width: 0.5),
+              border: Border.all(color: Color(0xff34A0A4), width: 0.4),
             ),
             child: Padding(
               padding: const EdgeInsets.all(6.0),
