@@ -301,6 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+//güncellendi
 /*___________________________________________________________*/
 /*_____________________ BLUEBOX CLASS ______________________*/
 
@@ -355,33 +356,94 @@ class BlueBox extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: InkWell(
-                      child: Container(
-                        //margin: EdgeInsets.all(width / 20),
-                        decoration: BoxDecoration(
-                          //color: Colors.grey,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Container(
-                          margin: EdgeInsets.all(1.0),
-                          width: width / 3, //1.5
-                          height: width / 2.5, //1.9
-                          decoration: BoxDecoration(
-                            image: const DecorationImage(
-                              image: AssetImage(//bu resim databaseden alıncak
-                                  "assets/milk128.png"),
-                              fit: BoxFit.cover,
+                      child: Column(
+                        children: [
+                          /*ÜRÜN RESMİ*/
+                          Container(
+                            margin: EdgeInsets.all(1.0),
+                            width: width / 3, //1.5
+                            height: width / 2.5, //1.9
+                            decoration: BoxDecoration(
+                              image: const DecorationImage(
+                                image: AssetImage(//bu resim databaseden alıncak
+                                    "assets/milk128.png"),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white10,
+                              border: Border.all(
+                                  color: Colors.white10,
+                                  style: BorderStyle.solid,
+                                  width: 0.3),
                             ),
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white10,
-                            border: Border.all(
-                                color: Colors.white10,
-                                style: BorderStyle.solid,
-                                width: 0.3),
                           ),
-                        ),
+                          /*ÜRÜN ADI - FİYATI - PUANI*/
+                          Column(
+                            children: [
+                              /*ürünün adı*/
+                              SizedBox(
+                                width: width / 3,
+                                child: FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: Text(
+                                    productName,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                ),
+                              ),
+                              /* ürünün fiyatı ve puanı */
+                              SizedBox(
+                                width: width / 3,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      price.toString() + ' ₺',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(4, 0, 1, 0),
+                                          child: Icon(
+                                            Icons.star,
+                                            color: Color(0xff52B69A),
+                                            size: 18,
+                                          ),
+                                        ),
+                                        //rate
+                                        UrunPuaniGoster(productID),
+                                        /*Padding(
+                      padding: EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        rate.toString(),
+                        style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                    ),*/
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       onTap: () {
-                        print(productName + _url + mail + " IDDDD" + productID);
+                        print(productName +
+                            " bu: " +
+                            _url +
+                            "  " +
+                            mail +
+                            " IDDDD" +
+                            productID);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -416,55 +478,6 @@ class BlueBox extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      productName,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    Text(
-                      price.toString() + ' ₺',
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-                //const SizedBox(width: 5),
-
-                //star icon and rate
-                Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(4, 0, 1, 0),
-                      child: Icon(
-                        Icons.star,
-                        color: Color(0xff52B69A),
-                        size: 18,
-                      ),
-                    ),
-                    //rate
-                    UrunPuaniGoster(productID),
-                    /*Padding(
-                  padding: EdgeInsets.only(top: 2.0),
-                  child: Text(
-                    rate.toString(),
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                ),*/
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 30,
-            )
           ],
         ),
       ),
