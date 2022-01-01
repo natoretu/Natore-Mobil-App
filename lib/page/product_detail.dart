@@ -66,6 +66,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   @override
   Widget build(BuildContext context) {
+    double screen_width = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       /* persistentFooterButtons: <Widget>[
@@ -128,12 +129,20 @@ class _ProductDetailState extends State<ProductDetail> {
                                 children: [
                                   Column(
                                     children: [
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(top: 16.0),
-                                        child: Image(
-                                          image:
-                                              AssetImage("assets/milk128.png"),
-                                          //fit: BoxFit.fill,
+                                        child: Container(
+                                          width: screen_width / 2.5,
+                                          height: screen_width / 2.5,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(prImage)),
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(8.0)),
+                                            color: Colors.redAccent,
+                                          ),
                                         ),
                                       ),
                                       Column(
@@ -166,11 +175,11 @@ class _ProductDetailState extends State<ProductDetail> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Text(
+                                            const Text(
                                               "Ürün: ",
                                               style: TextStyle(fontSize: 17),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding:
                                                   EdgeInsets.only(right: 2),
                                               child: Icon(
@@ -180,18 +189,18 @@ class _ProductDetailState extends State<ProductDetail> {
                                               ),
                                             ),
                                             UrunPuaniGoster(prId),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10.0),
+                                            const Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 10.0),
                                               child: Text(
                                                 "Satıcı: ",
                                                 style: TextStyle(fontSize: 17),
                                               ),
                                             ),
-                                            Padding(
+                                            const Padding(
                                               padding:
                                                   EdgeInsets.only(right: 2),
-                                              child: const Icon(
+                                              child: Icon(
                                                 Icons.star,
                                                 color: Color(0xff52B69A),
                                                 size: 18,
