@@ -192,9 +192,10 @@ class BlueBox extends StatelessWidget {
                             width: width / 3, //1.5
                             height: width / 2.5, //1.9
                             decoration: BoxDecoration(
-                              image: const DecorationImage(
-                                image: AssetImage(//bu resim databaseden alıncak
-                                    "assets/milk128.png"),
+                              image: DecorationImage(
+                                image: NetworkImage(_url),
+                                //AssetImage(//bu resim databaseden alıncak
+                                //  "assets/milk128.png"),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(8),
