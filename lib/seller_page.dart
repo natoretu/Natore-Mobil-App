@@ -89,7 +89,7 @@ class SellerPage extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                "Ahmet Bekir Sütsüz", // sıkıntı1: çok uzun olursa sıkıntı oluyor buna daha sonra bakacağım inşaAllah
+                                "Ahmet Bekir Sütsüz",
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.black,
@@ -107,6 +107,7 @@ class SellerPage extends StatelessWidget {
                   Divider(
                     thickness: 1.5,
                   ),
+                  //en çok sevilen ürünler
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -116,7 +117,7 @@ class SellerPage extends StatelessWidget {
                           Icons.volunteer_activism,
                         ),
                         const Text(
-                          "En Çok Tercih Edilen Ürünleri",
+                          "En Çok Sevilen Ürünleri",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -125,6 +126,7 @@ class SellerPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  //ürün 1
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
                     child: Row(
@@ -156,27 +158,28 @@ class SellerPage extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16),
                                   ),
-                                  Text(
-                                    "2000 ₺", // price.toString() + ' ₺',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(4, 0, 1, 0),
-                                    child: Icon(
-                                      Icons.star,
-                                      color: Color(0xff52B69A),
-                                      size: 18,
-                                    ),
-                                  ),
-                                  //rate
-                                  // UrunPuaniGoster(productID),
-                                  /*Padding(
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "2000 ₺", // price.toString() + ' ₺',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.fromLTRB(4, 0, 1, 0),
+                                            child: Icon(
+                                              Icons.star,
+                                              color: Color(0xff52B69A),
+                                              size: 18,
+                                            ),
+                                          ),
+                                          Text("3.4"),
+                                          // UrunPuaniGoster(productID), Paunı gösterirken direkt bunu çağır. product_of_seller_page'de kullanıldı bakabilirsin
+                                          /*Padding(
                     padding: EdgeInsets.only(top: 2.0),
                     child: Text(
                       rate.toString(),
@@ -184,6 +187,10 @@ class SellerPage extends StatelessWidget {
                             TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                   ),*/
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ],
@@ -192,6 +199,7 @@ class SellerPage extends StatelessWidget {
                       ],
                     ),
                   ),
+                  //ürün 2
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
                     child: Row(
@@ -216,34 +224,35 @@ class SellerPage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "asdsadsaddsadasdasd", //productName,
+                                    "bbbbbbbbbbbbbb", //productName,
                                     maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16),
                                   ),
-                                  Text(
-                                    "1000 ₺", // price.toString() + ' ₺',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(4, 0, 1, 0),
-                                    child: Icon(
-                                      Icons.star,
-                                      color: Color(0xff52B69A),
-                                      size: 18,
-                                    ),
-                                  ),
-                                  //rate
-                                  // UrunPuaniGoster(productID),
-                                  /*Padding(
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "2000 ₺", // price.toString() + ' ₺',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.fromLTRB(4, 0, 1, 0),
+                                            child: Icon(
+                                              Icons.star,
+                                              color: Color(0xff52B69A),
+                                              size: 18,
+                                            ),
+                                          ),
+                                          Text("3.4"),
+                                          // UrunPuaniGoster(productID), Paunı gösterirken direkt bunu çağır. product_of_seller_page'de kullanıldı bakabilirsin
+                                          /*Padding(
                     padding: EdgeInsets.only(top: 2.0),
                     child: Text(
                       rate.toString(),
@@ -251,6 +260,10 @@ class SellerPage extends StatelessWidget {
                             TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                   ),*/
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ],
