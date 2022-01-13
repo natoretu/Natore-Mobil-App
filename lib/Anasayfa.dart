@@ -21,6 +21,7 @@ import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Zen fontu 6 mb !
 
@@ -66,7 +67,6 @@ class MyApp1 extends StatelessWidget {
         systemNavigationBarColor: CupertinoColors.systemGrey6,
         systemNavigationBarContrastEnforced: true,
         systemNavigationBarIconBrightness: Brightness.dark,
-        //systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
 
@@ -226,6 +226,19 @@ class _MainPageState extends State<MainPage> {
   int _seller_num = 14;
   int _campaign_num = 4;
 
+  openEmail(
+      {String toEmail = "hsnvn71@gmail.com",
+      String subject = "Ürün Şikayeti"}) async {
+    final url =
+        'mailto:$toEmail?Subject=${Uri.encodeFull(subject)}'; //devamı : &body=${Uri.encodeFull(body)}
+    await _launchURLApp(url);
+  }
+
+  _launchURLApp(String url) async {
+    //const String url = 'https://flutterdevs.com/';
+    await launch(url);
+  }
+
   final user = FirebaseAuth.instance.currentUser!;
   final _firestore = FirebaseFirestore.instance;
 
@@ -289,21 +302,23 @@ class _MainPageState extends State<MainPage> {
           /***-------------***/
           /*** USER AVATAR ***/
           toolbarHeight: 48,
-          /*leading: Padding(
+          leading: Padding(
             padding: const EdgeInsets.only(bottom: 2.0),
             child: IconButton(
               icon: Icon(
-                Icons.notifications,
+                Icons.admin_panel_settings,
                 color: Colors.white,
+                size: 26,
               ),
               onPressed: () {
                 Navigator.pushNamed(
                   context,
-                  SellerNotifications.routeName,
+                  openEmail(
+                      toEmail: 'hsnsvn71@gmail.com', subject: 'Ürün Şikayeti'),
                 );
               },
             ),
-          ),*/
+          ),
           /***------------------***/
           /*** APP NAME Or LOGO ***/
           flexibleSpace: FlexibleSpaceBar(
@@ -1187,7 +1202,6 @@ class _UserProfileState extends State<UserProfile> {
 
   final List<IconData> IconList = [
     Icons.location_on_sharp,
-    Icons.shopping_bag_outlined,
     Icons.star_border_outlined,
     Icons.info_outlined,
     Icons.share_sharp,
