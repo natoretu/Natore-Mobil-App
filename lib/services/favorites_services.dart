@@ -25,31 +25,41 @@ class FavoritesServices {
     });
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getFavoritesAsDocumentSnapshot(
-      String userId) {
-    return _firestore.collection(collection).doc(userId).snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> getFavorites(String userId) {
+    return _firestore
+        .collection(collection)
+        .where("userId", isEqualTo: userId)
+        .snapshots();
   }
 
-  List<Stream<QuerySnapshot<Map<String, dynamic>>>> getProducts(String userId) {
+  Future<List<Stream<QuerySnapshot<Map<String, dynamic>>>>> getProducts(
+      String userId) async {
     ProductServices _productServices = ProductServices();
 
     List<Stream<QuerySnapshot<Map<String, dynamic>>>> products = [];
-
-    _firestore
+    await _firestore
         .collection(collection)
         .doc(userId)
-        .get()
-        .then((value) => value['productsIds'].forEach((element) {
-              products.add(_productServices.getProductStream(element));
-            }));
-
+        .snapshots()
+        .first
+        .then((element) {
+      List<dynamic> ll = element['productsIds'];
+      ll.forEach((prdct) {
+        products.add(_productServices.getProductStream(prdct));
+      });
+    });
     return products;
   }
 
   Future<bool> isFavorite(String userId, String productId) async {
-    DocumentSnapshot<Map<String, dynamic>> stream =
-        await _firestore.collection(collection).doc(userId).get();
-
-    return false;
+    Query<Map<String, dynamic>> stream = await _firestore
+        .collection(collection)
+        .where('userId', isEqualTo: userId)
+        .where('productsIds', arrayContains: productId);
+    // stream.snapshots().forEach((element) {
+    //   print(element.docs.first.data());
+    // });
+    return stream.snapshots().first.then((value) => value.size != 0);
+    // return  (await stream.snapshots().isEmpty);
   }
 }

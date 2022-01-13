@@ -1,20 +1,16 @@
 import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart'; // new
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:natore_project/main.dart';
 import 'package:natore_project/model/order.dart';
-import 'package:natore_project/page/home_page.dart';
-import 'package:natore_project/page/product_detail.dart';
 import 'package:natore_project/provider/google_sign_in.dart';
+import 'package:natore_project/services/favorites_services.dart';
 import 'package:natore_project/services/order_services.dart';
-import 'package:natore_project/services/product_services.dart';
 import 'package:provider/provider.dart';
-
 import 'Product/product_add.dart';
 import 'Product/product_list.dart';
+import 'favorites_list.dart';
 
 class Bedir_Api_Page extends StatelessWidget {
   @override
@@ -124,6 +120,16 @@ class LoggedInWidget extends StatelessWidget {
                 },
                 child: const Text('Products'),
               ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => FavoriteListPage()));
+                },
+                child: const Text('Favorites'),
+              ),
               const SizedBox(height: 1),
               TextButton(
                 style: TextButton.styleFrom(
@@ -142,6 +148,54 @@ class LoggedInWidget extends StatelessWidget {
                 child: const Text('Add Order'),
               ),
               const SizedBox(height: 1),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  FavoritesServices _favoriteServices = FavoritesServices();
+                  var a =
+                      _favoriteServices.addToFavorites("hsnsvn71@gmail.com");
+                  print(a);
+                },
+                child: const Text('add Favorite'),
+              ),
+              const SizedBox(height: 1),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  FavoritesServices _favoriteServices = FavoritesServices();
+                  var a = _favoriteServices.appendToFavorites(
+                      "hsnsvn71@gmail.com",
+                      "hsnsvn71@gmail.com-doğal tereyağı");
+                  print(a);
+                },
+                child: const Text('append Favorite'),
+              ),
+              const SizedBox(height: 1),
+              TextButton(
+                onPressed: () async {
+                  FavoritesServices _favoriteServices = FavoritesServices();
+                  var a = await _favoriteServices.isFavorite(
+                      "hsnsvn71@gmail.com",
+                      "hsnsvn71@gmail.com-doğal tereyağı");
+                  print("-----${a}");
+                },
+                child: const Text('is Favorite'),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () async {
+                  FavoritesServices _favoriteServices = FavoritesServices();
+                  List<Stream<QuerySnapshot<Map<String, dynamic>>>> a =
+                      await _favoriteServices.getProducts("hsnsvn71@gmail.com");
+                },
+                child: const Text('get Favorites'),
+              ),
             ],
           ),
         ));
