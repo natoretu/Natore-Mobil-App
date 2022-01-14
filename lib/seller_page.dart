@@ -286,6 +286,97 @@ class SellerPage extends StatelessWidget {
                                       list[i].get('name'));
                                 }
                                 return Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 16, 8, 8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          child: Image.network(
+                                            list[0].get('image'),
+                                            fit: BoxFit.fill,
+                                            height: 130,
+                                            width: 110,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    list[0].get(
+                                                        'name'), //productName,
+                                                    maxLines: 1,
+
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 16),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        list[0]
+                                                                .get('price')
+                                                                .toStringAsFixed(
+                                                                    2)
+                                                                .toString() +
+                                                            ' ₺', // price.toString() +
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          const Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(
+                                                                    4, 0, 1, 0),
+                                                            child: Icon(
+                                                              Icons.star,
+                                                              color: Color(
+                                                                  0xff52B69A),
+                                                              size: 18,
+                                                            ),
+                                                          ),
+
+                                                          Text(list[0]
+                                                              .get('rate')
+                                                              .toStringAsFixed(
+                                                                  1)
+                                                              .toString()),
+                                                          // Paunı gösterirken direkt bunu çağır. product_of_seller_page'de kullanıldı bakabilirsin
+                                                          /*Padding(
+                    padding: EdgeInsets.only(top: 2.0),
+                    child: Text(
+                      rate.toString(),
+                      style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  ),*/
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                                /*Padding(
                                   padding: const EdgeInsets.all(0.0),
                                   child: Row(
                                     mainAxisAlignment:
@@ -300,7 +391,7 @@ class SellerPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                );
+                                );*/
                               } else {
                                 return const Center(
                                   child: CircularProgressIndicator(),
