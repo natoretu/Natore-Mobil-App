@@ -20,21 +20,23 @@ double fiyat = 20;
 String urunAdi = "";
 String MarketName = "";
 String resimUrl =
-    'https://d2uiaykj5yb3c0.cloudfront.net/tahtakale/img/p/39006c70-bd82-42c0-929d-3c6cacaa31d7.jpg';
+    'https://d2uiaykj5yb3c0.cloudfront.SellerPagenet/tahtakale/img/p/39006c70-bd82-42c0-929d-3c6cacaa31d7.jpg';
 double saticiPuani = 3.8;
 String eMail = "";
 String image_pr = "";
 
 class ProductsOfSellerPage extends StatelessWidget {
   ProductsOfSellerPage(String name, String Email) {
-    print(name);
+    print("name :" + name + "---");
     MarketName = name;
+    print("--" + Email + "--");
     eMail = Email;
-    print(MarketName);
-    print(eMail);
+    print("Market Name:" + MarketName);
+    print("email: " + eMail);
   }
   //bu gereksiz olabilir
   ProductsOfSellerPage.withEmailAndName(String name, String e_mail) {
+    print("---" + name + "---");
     MarketName = name;
     eMail = e_mail;
   }
@@ -129,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           image: const DecorationImage(
                             //bura ahmetten alınacak
                             image: NetworkImage(
+                                // static
                                 'https://d1hzl1rkxaqvcd.cloudfront.net/contest_entries/1321793/_600px/33f9689616d2c31873e72e65ce2019d1.jpg'),
                             fit: BoxFit.cover,
                           ),
@@ -196,15 +199,43 @@ class _MyHomePageState extends State<MyHomePage> {
                               spacing: 4,
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
-                                Icon(Icons.star_outlined,
+                                Row(
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.fromLTRB(4, 0, 1, 0),
+                                      child: Icon(
+                                        Icons.star,
+                                        color: Color(0xff52B69A),
+                                        size: 18,
+                                      ),
+                                    ),
+                                    //rate
+                                    // e mail basında bosluk oldugundan boyle bır yola gıdıldı, email basındakı bosluk bazısında olur bazısında olmaz dıye kontrol eklendı
+                                    saticiPuaniGoster((eMail[0] == " ")
+                                        ? eMail.substring(1, eMail.length)
+                                        : eMail),
+                                    /*Padding(
+                      padding: EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        rate.toString(),
+                        style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                    ),*/
+                                  ],
+                                ),
+                                /*(Icons.star_outlined,
                                     color: Colors.white, size: 20),
+                                //saticiPuaniGoster(eMail),
                                 Text(
-                                  RateList[0].toString(),
+                                  saticiPuaniGosterString(eMail),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500),
                                 ),
+
+                                 */
                               ],
                             ),
                           ),
@@ -214,6 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
                 onTap: () {
+                  // gereken bilgiler burda satıcı sayfasına gonderılcek
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -259,7 +291,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             itemBuilder: (context, index) {
                               print(list[index].get('id') +
                                   " name:" +
-                                  list[index].get('name'));
+                                  list[index].get('name') +
+                                  "WWWW-" +
+                                  eMail +
+                                  "-");
                               return Padding(
                                 padding: const EdgeInsets.all(0.0),
                                 child: Row(
