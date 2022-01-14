@@ -577,7 +577,7 @@ Padding saticiPuaniGoster(String userId) {
           return RichText(
             text: TextSpan(
               text: rate.toStringAsFixed(1).toString(),
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: 14, color: Colors.black),
               /*children: [
                 WidgetSpan(
                   child: Padding(
