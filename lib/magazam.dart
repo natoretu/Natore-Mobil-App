@@ -149,13 +149,29 @@ class _MagazamState extends State<Magazam> {
                                                     icon: Icon(Icons.add,
                                                         color:
                                                             Color(0xff2A9D8F)),
-                                                    onPressed: () {},
+                                                    onPressed: () {
+                                                      _productServices
+                                                          .increaseQuantity(
+                                                              list[index]
+                                                                  .get('id'));
+                                                      print(list[index]
+                                                          .get('quantity')
+                                                          .toString());
+                                                    },
                                                   ),
                                                   IconButton(
                                                     icon: Icon(Icons.remove,
                                                         color:
                                                             Color(0xff2A9D8F)),
-                                                    onPressed: () {},
+                                                    onPressed: () {
+                                                      _productServices
+                                                          .decraseQuantity(
+                                                              list[index]
+                                                                  .get('id'));
+                                                      print(list[index]
+                                                          .get('quantity')
+                                                          .toString());
+                                                    },
                                                   ),
                                                 ],
                                               ),
