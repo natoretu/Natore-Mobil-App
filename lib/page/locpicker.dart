@@ -182,7 +182,7 @@ class _CountiesSelectorState extends State<CountiesSelector> {
     for (int i = 0; i < counties.length - 1; i++) {
       if (int.parse(counties[i].substring(counties[i].length - 3)) - 1 ==
           index) {
-        list.add(counties[i].substring(0, counties[i].length - 2));
+        list.add(counties[i]);
       }
     }
     return list;
