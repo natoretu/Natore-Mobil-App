@@ -1,7 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:natore_project/Anasayfa.dart';
+import 'package:natore_project/page/show_in_category.dart';
 import 'package:natore_project/services/favorites_services.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:natore_project/services/product_services.dart';
+
+String currentUser = currentUserId_forFavoriteList;
+ProductServices _productServices = ProductServices();
+final user = FirebaseAuth.instance.currentUser!;
 
 class FavoriteListPage extends StatefulWidget {
   @override
@@ -27,8 +35,7 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
                 child: null,
               ),
               StreamBuilder(
-                  stream:
-                  _favoriteServices.getFavorites("hsnsvn71@gmail.com"),
+                  stream: _favoriteServices.getFavorites(user.email.toString()),
                   builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
                     if (asyncSnapshot.hasError) {
                       return Center(
@@ -36,24 +43,34 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
                       );
                     } else {
                       if (asyncSnapshot.hasData) {
+                        print(
+                            "-----------Current USer:" + user.email.toString());
+                        var l = _favoriteServices.isFavorite(
+                            user.email.toString(),
+                            "hsnsvn71@gmail.com-doğal tereyağı");
+                        print(l);
                         List<DocumentSnapshot> list = asyncSnapshot.data.docs;
+                        List<dynamic> plist =
+                            list.elementAt(0).get('productsIds');
+                        //print(plist);
+
                         return Flexible(
                             child: ListView.builder(
-                                itemCount: list.length,
+                                itemCount: plist.length,
                                 itemBuilder: (context, index) {
-                                  return Card(
-                                      child: ListTile(
-                                          title: Text(
-                                              '${list.elementAt(index).data().toString()}'),
-                                          trailing: IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () async {
-                                              await list
-                                                  .elementAt(index)
-                                                  .reference
-                                                  .delete();
-                                            },
-                                          )));
+                                  return FutureBuilder(
+                                      future: _productServices
+                                          .getPr(plist.elementAt(index)),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot asyncSnapshot) {
+                                        return BlueBox(
+                                          asyncSnapshot.data.get('image'),
+                                          asyncSnapshot.data.get('name'),
+                                          asyncSnapshot.data.get('price'),
+                                          asyncSnapshot.data.get('id'),
+                                          asyncSnapshot.data.get('mail'),
+                                        );
+                                      });
                                 }));
                       } else {
                         return Center(
