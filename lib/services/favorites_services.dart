@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:natore_project/model/product.dart';
-import 'package:natore_project/services/product_services.dart';
 
 class FavoritesServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String collection = 'Favorites';
-
+  //yeni bir hesap oluştuğunda o hesabın favori dökünamı database oluşması lazım. onun için bu çağırılacak
   Future<void> addToFavorites(String userId) async {
     return await _firestore.collection(collection).doc(userId).set({
       'userId': userId,
@@ -32,11 +30,9 @@ class FavoritesServices {
         .snapshots();
   }
 
-  Future<List<Stream<QuerySnapshot<Map<String, dynamic>>>>> getProducts(
+  Future<List<QuerySnapshot<Map<String, dynamic>>>> getProducts(
       String userId) async {
-    ProductServices _productServices = ProductServices();
-
-    List<Stream<QuerySnapshot<Map<String, dynamic>>>> products = [];
+    List<QuerySnapshot<Map<String, dynamic>>> products = [];
     await _firestore
         .collection(collection)
         .doc(userId)
@@ -45,10 +41,14 @@ class FavoritesServices {
         .then((element) {
       List<dynamic> ll = element['productsIds'];
       ll.forEach((prdct) {
-        products.add(_productServices.getProductStream(prdct));
+        products.add(prdct);
       });
     });
     return products;
+  }
+
+  Future<DocumentSnapshot> getProduct(String productId) async {
+    return _firestore.collection(collection).doc(productId).get();
   }
 
   Future<bool> isFavorite(String userId, String productId) async {
@@ -61,5 +61,23 @@ class FavoritesServices {
     // });
     return stream.snapshots().first.then((value) => value.size != 0);
     // return  (await stream.snapshots().isEmpty);
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> isFav(
+      String userId, String productId) {
+    Query<Map<String, dynamic>> stream = _firestore
+        .collection(collection)
+        .where('userId', isEqualTo: userId)
+        .where('productsIds', arrayContains: productId);
+    return stream.snapshots();
+  }
+
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>> isFav2(
+      String userId, String productId) async {
+    Query<Map<String, dynamic>> stream = await _firestore
+        .collection(collection)
+        .where('userId', isEqualTo: userId)
+        .where('productsIds', arrayContains: productId);
+    return stream.snapshots();
   }
 }
