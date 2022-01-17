@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:natore_project/page/product_detail.dart';
+import 'package:natore_project/services/favorites_services.dart';
 import 'package:natore_project/services/product_services.dart';
 
 import 'seller_page.dart';
@@ -25,7 +26,10 @@ double saticiPuani = 3.8;
 String eMail = "";
 String image_pr = "";
 
-class ProductsOfSellerPage extends StatelessWidget {
+FavoritesServices favoritesServices = FavoritesServices();
+final user = FirebaseAuth.instance.currentUser!;
+
+class ProductsOfSellerPage extends StatefulWidget {
   ProductsOfSellerPage(String name, String Email) {
     print("name :" + name + "---");
     MarketName = name;
@@ -40,6 +44,12 @@ class ProductsOfSellerPage extends StatelessWidget {
     MarketName = name;
     eMail = e_mail;
   }
+
+  @override
+  State<ProductsOfSellerPage> createState() => _ProductsOfSellerPageState();
+}
+
+class _ProductsOfSellerPageState extends State<ProductsOfSellerPage> {
   @override
   Widget build(BuildContext context) {
     return MyHomePage(title: 'SATICI BILGILERI');
@@ -302,20 +312,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     BlueBox(
-                                      list[index * 2].get('image'),
-                                      list[index * 2].get('name'),
-                                      list[index * 2].get('price'),
-                                      list[index * 2].get('id'),
-                                      list[index * 2].get('mail'),
-                                    ),
+                                        list[index * 2].get('image'),
+                                        list[index * 2].get('name'),
+                                        list[index * 2].get('price'),
+                                        list[index * 2].get('id'),
+                                        list[index * 2].get('mail'),
+                                        true),
                                     if (index * 2 + 1 < list.length)
                                       BlueBox(
-                                        list[index * 2 + 1].get('image'),
-                                        list[index * 2 + 1].get('name'),
-                                        list[index * 2 + 1].get('price'),
-                                        list[index * 2 + 1].get('id'),
-                                        list[index * 2 + 1].get('mail'),
-                                      ),
+                                          list[index * 2 + 1].get('image'),
+                                          list[index * 2 + 1].get('name'),
+                                          list[index * 2 + 1].get('price'),
+                                          list[index * 2 + 1].get('id'),
+                                          list[index * 2 + 1].get('mail'),
+                                          false),
                                   ],
                                 ),
                               );
@@ -336,21 +346,24 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 //güncellendi
 /*___________________________________________________________*/
 /*_____________________ BLUEBOX CLASS ______________________*/
 
-class BlueBox extends StatelessWidget {
+class BlueBox extends StatefulWidget {
   /*burdaki url daha sonra direkt Image'e dönecek*/
 
-  BlueBox(
-      String _url, String productName, double price, String id, String mail) {
+  BlueBox(String _url, String productName, double price, String id, String mail,
+      bool isFavorite) {
     //unnamed constructor
+
     this._url = _url;
     this.productName = productName;
     this.price = price;
     this.productID = id;
     this.mail = mail;
+    this.isFavorite = isFavorite;
   }
   //ikinci constructor
   //bu daha sonra databaseden image döndüren fonksiyonu yazdığımızda kullanılacak olan constructor.
@@ -364,19 +377,31 @@ class BlueBox extends StatelessWidget {
 
     //this.productID = mail;
   }
-
-  String id = 'ID';
+  bool s = false;
   String mail = 'MAIL';
-  IconData bosGalp = const IconData(0xe25c, fontFamily: 'MaterialIcons');
-  IconData doluGalp = const IconData(0xe25b, fontFamily: 'MaterialIcons');
-  IconData galp = const IconData(0xe25c, fontFamily: 'MaterialIcons');
   String _url = 'BOŞ.ABi';
   String productName = 'BOŞ.ABi';
   double price = 0.0;
-  double rate = 0.0;
   String productID = "";
   Image img = Image.network("burası geçici");
-  //final String message = '';
+  bool isFavorite = false;
+  @override
+  State<BlueBox> createState() => _BlueBoxState();
+}
+
+class _BlueBoxState extends State<BlueBox> {
+  Color favoriteColor = Colors.teal.shade400;
+  Color notfavoriteColor = Colors.teal.shade400;
+  String id = 'ID';
+
+  IconData bosGalp = const IconData(0xe25c, fontFamily: 'MaterialIcons');
+
+  IconData doluGalp = const IconData(0xe25b, fontFamily: 'MaterialIcons');
+
+  IconData galp = const IconData(0xe25c, fontFamily: 'MaterialIcons');
+
+  double rate = 0.0;
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -400,7 +425,7 @@ class BlueBox extends StatelessWidget {
                             height: width / 2.5, //1.9
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: NetworkImage(_url),
+                                image: NetworkImage(widget._url),
                                 //AssetImage(//bu resim databaseden alıncak
                                 //     "assets/milk128.png"),
                                 fit: BoxFit.cover,
@@ -422,7 +447,7 @@ class BlueBox extends StatelessWidget {
                                 child: FittedBox(
                                   fit: BoxFit.cover,
                                   child: Text(
-                                    productName,
+                                    widget.productName,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
@@ -437,7 +462,7 @@ class BlueBox extends StatelessWidget {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      price.toString() + ' ₺',
+                                      widget.price.toString() + ' ₺',
                                       style: const TextStyle(
                                         fontSize: 18,
                                       ),
@@ -454,15 +479,7 @@ class BlueBox extends StatelessWidget {
                                           ),
                                         ),
                                         //rate
-                                        UrunPuaniGoster(productID),
-                                        /*Padding(
-                      padding: EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        rate.toString(),
-                        style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                    ),*/
+                                        UrunPuaniGoster(widget.productID),
                                       ],
                                     ),
                                   ],
@@ -473,22 +490,22 @@ class BlueBox extends StatelessWidget {
                         ],
                       ),
                       onTap: () {
-                        print(productName +
+                        print(widget.productName +
                             " bu: " +
-                            _url +
+                            widget._url +
                             "  " +
-                            mail +
+                            widget.mail +
                             " IDDDD" +
-                            productID);
+                            widget.productID);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductDetail(
-                                  productName,
-                                  _url,
-                                  price,
-                                  productID,
-                                  mail)), //burası arama butonu
+                                  widget.productName,
+                                  widget._url,
+                                  widget.price,
+                                  widget.productID,
+                                  widget.mail)), //burası arama butonu
                         );
                       }),
                 ),
@@ -496,19 +513,53 @@ class BlueBox extends StatelessWidget {
                   top: 0.0,
                   right: 0.0,
                   child: IconButton(
-                    icon: Icon(doluGalp, size: 34, color: Colors.teal.shade100),
-                    onPressed: () {
+                    icon: Icon(doluGalp,
+                        size: 34,
+                        color: widget.isFavorite
+                            ? notfavoriteColor
+                            : favoriteColor),
+                    onPressed: () async {
                       //burdan databaseİ dolduracağım inşaAllah
 
-                      final snackBar = SnackBar(
-                        duration: Duration(seconds: 1),
-                        backgroundColor: Colors.redAccent.withOpacity(0.95),
-                        content: const Text(
-                          'Ürün favorilere eklendi!',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      setState(() async {
+                        //isFavorite = !isFavorite;
+                        widget.isFavorite = await favoritesServices.isFavorite(
+                            user.email.toString(), widget.productID);
+                        print("-------------------------------");
+                        print("userid:" + user.email.toString());
+                        print("id:" + widget.productID);
+                        print(favoritesServices.isFavorite(
+                            user.email.toString(), widget.productID));
+                        print(widget.isFavorite);
+                        print("-------------------------------");
+                        if (widget.isFavorite) {
+                          print("111");
+                          favoritesServices.removeFromFavorites(
+                              user.email.toString(), widget.productID);
+                        } else {
+                          print("222");
+                          favoritesServices.appendToFavorites(
+                              user.email.toString(), widget.productID);
+                        }
+                        widget.isFavorite = !widget.isFavorite;
+
+                        final snackBar = SnackBar(
+                          duration: Duration(seconds: 1),
+                          backgroundColor: Colors.teal.withOpacity(0.95),
+                          content: widget.isFavorite
+                              ? const Text(
+                                  'Ürün favorilere eklendi!',
+                                  style: TextStyle(fontSize: 16),
+                                )
+                              : const Text(
+                                  'Ürün favorilerden çıkarıldı!',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      });
+
+                      //burda isFavorite'e göre database update edilecek. Bedirin fonksiyonları kullanılacak
                     },
                   ),
                 ),
