@@ -31,9 +31,12 @@ class SellerPage extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser!;
   final _firestore = FirebaseFirestore.instance;
   String marketName = MarketName; // products_of_seller dan alındı
+  String _userId = eMail;
+
   SellerPage.withMarketName(String _name) {
     marketName = _name;
   }
+
   Future<DocumentSnapshot> getDocumentSeller(String sellerMail) async {
     print("1111112" + sellerMail);
     return _firestore.collection('Users').doc(sellerMail).get();
@@ -523,12 +526,12 @@ class SellerPage extends StatelessWidget {
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 BlueBox(
-                                                  list[0].get('image'),
-                                                  list[0].get('name'),
-                                                  list[0].get('price'),
-                                                  list[0].get('id'),
-                                                  list[0].get('mail'),
-                                                ),
+                                                    list[0].get('image'),
+                                                    list[0].get('name'),
+                                                    list[0].get('price'),
+                                                    list[0].get('id'),
+                                                    list[0].get('mail'),
+                                                    false),
                                               ],
                                             ),
                                           ),
@@ -543,12 +546,12 @@ class SellerPage extends StatelessWidget {
                                                             .spaceEvenly,
                                                     children: [
                                                       BlueBox(
-                                                        list[1].get('image'),
-                                                        list[1].get('name'),
-                                                        list[1].get('price'),
-                                                        list[1].get('id'),
-                                                        list[1].get('mail'),
-                                                      ),
+                                                          list[1].get('image'),
+                                                          list[1].get('name'),
+                                                          list[1].get('price'),
+                                                          list[1].get('id'),
+                                                          list[1].get('mail'),
+                                                          false),
                                                     ],
                                                   ),
                                                 ),
