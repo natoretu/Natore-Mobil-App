@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:natore_project/main.dart';
@@ -8,6 +6,7 @@ import 'package:natore_project/provider/google_sign_in.dart';
 import 'package:natore_project/services/favorites_services.dart';
 import 'package:natore_project/services/order_services.dart';
 import 'package:provider/provider.dart';
+
 import 'Product/product_add.dart';
 import 'Product/product_list.dart';
 import 'favorites_list.dart';
@@ -155,7 +154,7 @@ class LoggedInWidget extends StatelessWidget {
                 onPressed: () {
                   FavoritesServices _favoriteServices = FavoritesServices();
                   var a =
-                      _favoriteServices.addToFavorites("hsnsvn71@gmail.com");
+                      _favoriteServices.addToFavorites("hsnsvn72@gmail.com");
                   print(a);
                 },
                 child: const Text('add Favorite'),
@@ -168,20 +167,32 @@ class LoggedInWidget extends StatelessWidget {
                 onPressed: () {
                   FavoritesServices _favoriteServices = FavoritesServices();
                   var a = _favoriteServices.appendToFavorites(
-                      "hsnsvn71@gmail.com",
-                      "hsnsvn71@gmail.com-doğal tereyağı");
+                      "hsnsvn72@gmail.com", "hsnsvn71@gmail.com-doğal yoğurt");
                   print(a);
                 },
                 child: const Text('append Favorite'),
               ),
               const SizedBox(height: 1),
               TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  FavoritesServices _favoriteServices = FavoritesServices();
+                  var a = _favoriteServices.removeFromFavorites(
+                      "hsnsvn72@gmail.com", "hsnsvn71@gmail.com-doğal yoğurt");
+                  print(a);
+                },
+                child: const Text('remove Favorite'),
+              ),
+              const SizedBox(height: 1),
+              TextButton(
                 onPressed: () async {
                   FavoritesServices _favoriteServices = FavoritesServices();
-                  var a = await _favoriteServices.isFavorite(
+                  bool a = await _favoriteServices.isFavorite(
                       "hsnsvn71@gmail.com",
                       "hsnsvn71@gmail.com-doğal tereyağı");
-                  print("-----${a}");
+                  print("--tru mu false mu---${a}");
                 },
                 child: const Text('is Favorite'),
               ),
@@ -191,8 +202,8 @@ class LoggedInWidget extends StatelessWidget {
                 ),
                 onPressed: () async {
                   FavoritesServices _favoriteServices = FavoritesServices();
-                  List<Stream<QuerySnapshot<Map<String, dynamic>>>> a =
-                      await _favoriteServices.getProducts("hsnsvn71@gmail.com");
+                  // List<Stream<QuerySnapshot<Map<String, dynamic>>>> a =
+                  //     await _favoriteServices.getProducts("hsnsvn71@gmail.com");
                 },
                 child: const Text('get Favorites'),
               ),
