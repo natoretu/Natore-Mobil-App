@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:natore_project/services/order_services.dart';
+import 'package:natore_project/services/favorites_services.dart';
 import 'package:natore_project/services/product_services.dart';
+
+import '../../Anasayfa.dart';
 
 /*
 * NOT:
@@ -13,17 +15,17 @@ import 'package:natore_project/services/product_services.dart';
 *     CONSTRUCTORUNU ID ALACAK ŞEKİLDE DEĞİŞTİRECEĞİM (Inputun SADECE İSMİNİ)
 *     ŞUANDA DATABASE'DE ÖRNEK ORDER YOK!!
 * */
+
 String MarketName = ""; //MARKETİD
-String eMail = "";
+String eMail_eski = "";
+String userId = email;
 
 class MyOrders extends StatelessWidget {
-  MyOrders(String name) {
-    MarketName = name;
-  }
+  MyOrders() {}
   //bu gereksiz olabilir
   MyOrders.withEmailAndName(String name, String e_mail) {
     MarketName = name;
-    eMail = e_mail;
+    eMail_eski = e_mail;
   }
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ProductServices _productServices = ProductServices();
 
   /* AŞŞAĞIDAKİ YUKARIDAKİNİN YERİNE GEÇECEK */
-  OrderServices _orderServices = OrderServices();
+  FavoritesServices favorites_services = FavoritesServices();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -80,43 +82,30 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(
                 height: 10,
               ),
-              StreamBuilder(
-                  stream: _productServices
-                      .getProductsOfSellerStreamMarket(MarketName),
-                  builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                    if (asyncSnapshot.hasError) {
-                      return const Center(
-                        child: Text("Bir hata olustu"),
-                      );
-                    } else {
-                      if (asyncSnapshot.hasData) {
-                        List<DocumentSnapshot> list = asyncSnapshot.data.docs;
+              FutureBuilder(
+                  future: favorites_services.getProducts("hsnsvn71@gmail.com"),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                        return Text("");
+                      case ConnectionState.active:
+                      case ConnectionState.waiting:
+                        return Text("watrıng or actıve");
+                      case ConnectionState.done:
+                        List<DocumentSnapshot> list = snapshot.data;
 
-                        return Flexible(
-                          child: ListView.builder(
-                            itemCount: list.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: OrderCardCreater(
-                                  list[index].get('name'),
-                                  list[index].get('market'),
-                                  /*"Sütçü dede",*/
-                                  /*Dükkanın adını almam lazım*/
-                                  list[index].get('price'),
-                                  list[index].get('image'),
-                                ),
-                              );
-                            },
-                          ),
+                        return ListView.builder(
+                          itemCount: list.length,
+                          itemBuilder: (context, index) {
+                            return Text(
+                                '${_productServices.getPr(list[index].toString())}');
+                          },
                         );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
+
+                      default:
+                        return Text("default");
                     }
-                  })
+                  }),
             ],
           ),
         ),
