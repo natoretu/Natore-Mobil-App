@@ -29,7 +29,6 @@ Future<DocumentSnapshot> getDocumentRates(String productId) async {
 }
 
 Future<DocumentSnapshot> getDocumentProduct(String productId) async {
-  print("111111" + productId);
   return FirebaseFirestore.instance.collection('Products').doc(productId).get();
 }
 
@@ -354,7 +353,6 @@ class _ProductDetailState extends State<ProductDetail> {
                                                     } else {
                                                       print("It is not Exist");
                                                     }*/
-                                                    print("WWWWWWWWW");
                                                     print(yildizsayisi);
                                                     yildizsayisi = 0;
                                                   });
