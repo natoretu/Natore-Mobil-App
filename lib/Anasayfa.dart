@@ -13,7 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:natore_project/Search_Bar.dart';
 import 'package:natore_project/UserEntrance.dart';
 import 'package:natore_project/magazam.dart';
-import 'package:natore_project/page/Order/my_orders.dart';
+import 'package:natore_project/page/favorites_list.dart';
 import 'package:natore_project/page/show_in_category.dart';
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/products_of_seller_page.dart';
@@ -45,7 +45,7 @@ final Map<String, Color> SsColorList = {
   "SANDY_BROWN": Color(0xffF4A261),
   "BURNT_SIENNA": Color(0xffE76F51),
 };
-
+String currentUserId_forFavoriteList = "";
 int saticilength = 0;
 List saticilar = List.of([]);
 List saticilar1 = List.of([]);
@@ -106,7 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> tabs = [
     MainPage(),
     Sohbet(),
-    MyOrders("Sütçü Dede"), //MyStatefulWidget(),
+    //MyOrders(), //MyStatefulWidget(),  //burası favori
+    FavoriteListPage(),
     UserProfile(),
     checksaticioralici == true ? Magazam() : SizedBox.shrink()
   ];
@@ -281,7 +282,7 @@ class _MainPageState extends State<MainPage> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          /* actions: [
+          actions: [
             TextButton(
               child: Text(
                 'Logout',
@@ -292,7 +293,7 @@ class _MainPageState extends State<MainPage> {
                 provider.logout();
               },
             )
-          ],*/
+          ],
           backgroundColor: Color(0xff07cc99), // Color(0xff06D6A0),
           centerTitle: true,
           elevation: 1,
@@ -2005,6 +2006,8 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
                             //scale: 0.82, -> aradaki bosluk
                             itemBuilder: (BuildContext context, int index) {
                               var sohbet = MarketInfo[index];
+                              currentUserId_forFavoriteList =
+                                  sohbet.get("Email");
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 20.0),
                                 child: ClipRRect(
