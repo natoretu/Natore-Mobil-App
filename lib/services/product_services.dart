@@ -77,6 +77,15 @@ class ProductServices {
     return ref.snapshots();
   }
 
+  Future<Stream<QuerySnapshot<Map<String, dynamic>>>>
+      getProductsOfSellerStreamMarket2(String market) async {
+    Query<Map<String, dynamic>> ref = await _firestore
+        .collection(collection)
+        .where('market', isEqualTo: market);
+
+    return ref.snapshots();
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getProductsOfSellerStreamCategory(
       String category) {
     Query<Map<String, dynamic>> ref = _firestore
