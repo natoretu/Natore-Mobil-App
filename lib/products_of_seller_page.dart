@@ -84,6 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
     2.9,
   ];
 
+  Stream<QuerySnapshot<Map<String, dynamic>>>? _listStream = null;
+
   Color? RateColor(double rate) {
     return rate > 4
         ? Colors.greenAccent[400]
@@ -109,6 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     CollectionReference updateRef = _firestore.collection('Users');
     var babaRef = updateRef.doc(eMail);
+
+    refreshList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff06D6A0),
@@ -152,37 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: 10,
                     ),
                     //puan kısmı
-                    /* Container(
-                      height: 25,
-                      width: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        color: Colors.amber,
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 1.0,
-                              offset: Offset(5.0, 5.0))
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const Icon(
-                            Icons.star_rate,
-                            size: 17,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            saticiPuani.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),*/
+
                     /*** Rate and market name ***/
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -224,28 +198,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                     saticiPuaniGoster((eMail[0] == " ")
                                         ? eMail.substring(1, eMail.length)
                                         : eMail),
-                                    /*Padding(
-                      padding: EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        rate.toString(),
-                        style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                    ),*/
                                   ],
                                 ),
-                                /*(Icons.star_outlined,
-                                    color: Colors.white, size: 20),
-                                //saticiPuaniGoster(eMail),
-                                Text(
-                                  saticiPuaniGosterString(eMail),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500),
-                                ),
-
-                                 */
                               ],
                             ),
                           ),
@@ -292,43 +246,64 @@ class _MyHomePageState extends State<MyHomePage> {
                               " name:" +
                               list[i].get('name'));
                         }
+
                         return Flexible(
                           child: ListView.builder(
                             //itemCount: list.length,
                             itemCount: list.length % 2 == 0
                                 ? list.length ~/ 2
                                 : list.length ~/ 2 + 1,
+
                             itemBuilder: (context, index) {
-                              print(list[index].get('id') +
-                                  " name:" +
-                                  list[index].get('name') +
-                                  "WWWW-" +
-                                  eMail +
-                                  "-");
-                              return Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    BlueBox(
-                                        list[index * 2].get('image'),
-                                        list[index * 2].get('name'),
-                                        list[index * 2].get('price'),
-                                        list[index * 2].get('id'),
-                                        list[index * 2].get('mail'),
-                                        true),
-                                    if (index * 2 + 1 < list.length)
-                                      BlueBox(
-                                          list[index * 2 + 1].get('image'),
-                                          list[index * 2 + 1].get('name'),
-                                          list[index * 2 + 1].get('price'),
-                                          list[index * 2 + 1].get('id'),
-                                          list[index * 2 + 1].get('mail'),
-                                          false),
-                                  ],
-                                ),
-                              );
+                              return FutureBuilder(
+                                  future: favoritesServices.isFavorite(
+                                      user.email.toString(),
+                                      list[index * 2].get('id')),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot asyncSnapshot) {
+                                    print("asyncSnapshot.data: " +
+                                        asyncSnapshot.data.toString());
+                                    switch (asyncSnapshot.connectionState) {
+                                      case ConnectionState.none:
+                                        return Text("");
+                                      case ConnectionState.active:
+                                      case ConnectionState.waiting:
+                                        return Text("watrıng or actıve");
+                                      case ConnectionState.done:
+                                        return Padding(
+                                          padding: const EdgeInsets.all(0.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              BlueBox(
+                                                  list[index * 2].get('image'),
+                                                  list[index * 2].get('name'),
+                                                  list[index * 2].get('price'),
+                                                  list[index * 2].get('id'),
+                                                  list[index * 2].get('mail'),
+                                                  asyncSnapshot.data),
+                                              if (index * 2 + 1 < list.length)
+                                                BlueBox(
+                                                    list[index * 2 + 1]
+                                                        .get('image'),
+                                                    list[index * 2 + 1]
+                                                        .get('name'),
+                                                    list[index * 2 + 1]
+                                                        .get('price'),
+                                                    list[index * 2 + 1]
+                                                        .get('id'),
+                                                    list[index * 2 + 1]
+                                                        .get('mail'),
+                                                    asyncSnapshot.data),
+                                            ],
+                                          ),
+                                        );
+
+                                      default:
+                                        return Text("default");
+                                    }
+                                  });
                             },
                           ),
                         );
@@ -344,6 +319,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  static void refreshList() {
+    // setState(() {
+    //   _listStream =
+    //       _productServices.getProductsOfSellerStreamMarket(MarketName);
+    // });
   }
 }
 
@@ -390,8 +372,8 @@ class BlueBox extends StatefulWidget {
 }
 
 class _BlueBoxState extends State<BlueBox> {
-  Color favoriteColor = Colors.teal.shade400;
-  Color notfavoriteColor = Colors.teal.shade400;
+  Color favoriteColor = Colors.teal.shade700;
+  Color notfavoriteColor = Colors.teal.shade100;
   String id = 'ID';
 
   IconData bosGalp = const IconData(0xe25c, fontFamily: 'MaterialIcons');
@@ -516,48 +498,48 @@ class _BlueBoxState extends State<BlueBox> {
                     icon: Icon(doluGalp,
                         size: 34,
                         color: widget.isFavorite
-                            ? notfavoriteColor
-                            : favoriteColor),
+                            ? favoriteColor
+                            : notfavoriteColor),
                     onPressed: () async {
                       //burdan databaseİ dolduracağım inşaAllah
 
-                      setState(() async {
-                        //isFavorite = !isFavorite;
-                        widget.isFavorite = await favoritesServices.isFavorite(
+                      // setState(() async {
+                      //isFavorite = !isFavorite;
+                      widget.isFavorite = await favoritesServices.isFavorite(
+                          user.email.toString(), widget.productID);
+                      print("-------------------------------");
+                      print("userid:" + user.email.toString());
+                      print("id:" + widget.productID);
+                      print(favoritesServices.isFavorite(
+                          user.email.toString(), widget.productID));
+                      print(widget.isFavorite);
+                      print("-------------------------------");
+                      if (widget.isFavorite) {
+                        print("111");
+                        favoritesServices.removeFromFavorites(
                             user.email.toString(), widget.productID);
-                        print("-------------------------------");
-                        print("userid:" + user.email.toString());
-                        print("id:" + widget.productID);
-                        print(favoritesServices.isFavorite(
-                            user.email.toString(), widget.productID));
-                        print(widget.isFavorite);
-                        print("-------------------------------");
-                        if (widget.isFavorite) {
-                          print("111");
-                          favoritesServices.removeFromFavorites(
-                              user.email.toString(), widget.productID);
-                        } else {
-                          print("222");
-                          favoritesServices.appendToFavorites(
-                              user.email.toString(), widget.productID);
-                        }
-                        widget.isFavorite = !widget.isFavorite;
-
-                        final snackBar = SnackBar(
-                          duration: Duration(seconds: 1),
-                          backgroundColor: Colors.teal.withOpacity(0.95),
-                          content: widget.isFavorite
-                              ? const Text(
-                                  'Ürün favorilere eklendi!',
-                                  style: TextStyle(fontSize: 16),
-                                )
-                              : const Text(
-                                  'Ürün favorilerden çıkarıldı!',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      });
+                      } else {
+                        print("222");
+                        favoritesServices.appendToFavorites(
+                            user.email.toString(), widget.productID);
+                      }
+                      widget.isFavorite = !widget.isFavorite;
+                      //_MyHomePageState.refreshList();
+                      final snackBar = SnackBar(
+                        duration: Duration(seconds: 1),
+                        backgroundColor: Colors.teal.withOpacity(0.95),
+                        content: widget.isFavorite
+                            ? const Text(
+                                'Ürün favorilere eklendi!',
+                                style: TextStyle(fontSize: 16),
+                              )
+                            : const Text(
+                                'Ürün favorilerden çıkarıldı!',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      // });
 
                       //burda isFavorite'e göre database update edilecek. Bedirin fonksiyonları kullanılacak
                     },
