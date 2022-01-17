@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:natore_project/Anasayfa.dart';
-import 'package:natore_project/page/show_in_category.dart';
+//import 'package:natore_project/page/show_in_category.dart';
+import 'package:natore_project/products_of_seller_page.dart';
 import 'package:natore_project/services/favorites_services.dart';
 import 'package:natore_project/services/product_services.dart';
 
 String currentUser = currentUserId_forFavoriteList;
 ProductServices _productServices = ProductServices();
+FavoritesServices favoritesServices = FavoritesServices();
 final user = FirebaseAuth.instance.currentUser!;
 
 class FavoriteListPage extends StatefulWidget {
@@ -43,17 +45,12 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
                       );
                     } else {
                       if (asyncSnapshot.hasData) {
-                        print(
-                            "-----------Current USer:" + user.email.toString());
-                        var l = _favoriteServices.isFavorite(
-                            user.email.toString(),
-                            "hsnsvn71@gmail.com-doğal tereyağı");
-                        print(l);
                         List<DocumentSnapshot> list = asyncSnapshot.data.docs;
                         List<dynamic> plist =
                             list.elementAt(0).get('productsIds');
-                        //print(plist);
-
+                        print(plist);
+                        print(plist.length);
+                        print(list);
                         return Flexible(
                             child: ListView.builder(
                                 itemCount: plist.length,
@@ -63,13 +60,24 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
                                           .getPr(plist.elementAt(index)),
                                       builder: (BuildContext context,
                                           AsyncSnapshot asyncSnapshot) {
-                                        return BlueBox(
-                                          asyncSnapshot.data.get('image'),
-                                          asyncSnapshot.data.get('name'),
-                                          asyncSnapshot.data.get('price'),
-                                          asyncSnapshot.data.get('id'),
-                                          asyncSnapshot.data.get('mail'),
-                                        );
+                                        switch (asyncSnapshot.connectionState) {
+                                          case ConnectionState.none:
+                                            return Text("");
+                                          case ConnectionState.active:
+                                          case ConnectionState.waiting:
+                                            return Text("watrıng or actıve");
+                                          case ConnectionState.done:
+                                            return BlueBox(
+                                                asyncSnapshot.data.get('image'),
+                                                asyncSnapshot.data.get('name'),
+                                                asyncSnapshot.data.get('price'),
+                                                asyncSnapshot.data.get('id'),
+                                                asyncSnapshot.data.get('mail'),
+                                                true);
+
+                                          default:
+                                            return Text("default");
+                                        }
                                       });
                                 }));
                       } else {
