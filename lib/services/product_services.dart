@@ -113,6 +113,12 @@ class ProductServices {
     return ref.snapshots();
   }
 
+  Future<DocumentSnapshot> getPr(String id) async {
+    DocumentSnapshot snapshot =
+        await _firestore.collection(collection).doc(id).get();
+    return snapshot;
+  }
+
   Future<int> getRate(String id) async {
     DocumentSnapshot snapshot =
         await _firestore.collection(collection).doc(id).get();
