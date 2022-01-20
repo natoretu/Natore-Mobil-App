@@ -453,58 +453,66 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
               ),
               //!! arayüz mesajın yazıldıgı textFormField
 
-              Padding(
-                padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      // keyboardType: TextInputType.multiline,
-                      // maxLines: null,
-                      // textInputAction: TextInputAction.newline,
-                      cursorColor: Colors.cyan,
-                      textCapitalization: TextCapitalization.sentences,
-                      controller: myController,
-                      //style: simpleTextStyle(),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.teal,
-                          ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        fillColor: Colors.white.withOpacity(0.97),
-                        filled: true, // dont forget this line
-                        hintText: "Mesaj ",
-                        hintStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                        suffix: IconButton(
-                          icon: Icon(
-                            Icons.send,
-                            size: 25,
-                            color: Color(0xff264653),
-                          ),
-                          onPressed: () {
-                            String message = myController.text;
-                            if (message.isNotEmpty) {
-                              sendMessage(message);
-                            }
-                            myController.clear();
-                            _scrollController.animateTo(
-                              _scrollController.position.maxScrollExtent,
-                              curve: Curves.easeOut,
-                              duration: const Duration(milliseconds: 300),
-                            );
-                          },
+              Container(
+                alignment: Alignment.bottomCenter,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Color(0xffeceff1)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          textAlign: TextAlign.start,
+                          controller: myController,
+                          //style: simpleTextStyle(),
+                          decoration: const InputDecoration(
+                              hintText: "Mesaj ",
+                              hintStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                              ),
+                              border: InputBorder.none),
                         ),
                       ),
-                    ),
-                  ],
+                      GestureDetector(
+                        onTap: () {
+                          String message = myController.text;
+                          if (message.isNotEmpty) {
+                            sendMessage(message);
+                          }
+                          myController.clear();
+                          _scrollController.animateTo(
+                            _scrollController.position.maxScrollExtent,
+                            curve: Curves.easeOut,
+                            duration: const Duration(milliseconds: 300),
+                          );
+                        },
+                        child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0x36FFFFFF),
+                                      Color(0x0FFFFFFF)
+                                    ],
+                                    begin: FractionalOffset.topLeft,
+                                    end: FractionalOffset.bottomRight),
+                                borderRadius: BorderRadius.circular(40)),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 12),
+                            child: const Icon(
+                              Icons.send,
+                              size: 25,
+                              color: Color(0xff264653),
+                            )),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ],
