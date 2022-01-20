@@ -1142,6 +1142,23 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
     var babaRef = updateRef.doc(user.email!);
 
     if (checksaticioralici == false) {
+
+
+     return FutureBuilder<DocumentSnapshot>(
+        future: updateRef.doc(user.email!).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) return Text('Something went wrong.');
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+                child: CircularProgressIndicator.adaptive(
+              backgroundColor: Color(0xff06D6A0),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+            ));
+          }
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+
       return Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
@@ -1165,13 +1182,9 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StreamBuilder<Object>(
-                        stream: babaRef.snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot asyncSnapshot) {
-                          return TextFormField(
+                        TextFormField(
                             controller: _name
-                              ..text = '${asyncSnapshot.data.data()['Name']}',
+                              ..text = '${data['Name']}',
                             cursorColor: Colors.cyan,
                             inputFormatters: [
                               new LengthLimitingTextInputFormatter(42),
@@ -1185,16 +1198,11 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                               ),
                             ),
                             textCapitalization: TextCapitalization.sentences,
-                          );
-                        }),
-                    StreamBuilder<Object>(
-                        stream: babaRef.snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot asyncSnapshot) {
-                          return TextFormField(
+                          ),
+                        TextFormField(
                             controller: _surname
                               ..text =
-                                  '${asyncSnapshot.data.data()['Surname']}',
+                                  '${data['Surname']}',
                             cursorColor: Colors.cyan,
                             inputFormatters: [
                               new LengthLimitingTextInputFormatter(42),
@@ -1208,16 +1216,11 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                               ),
                             ),
                             textCapitalization: TextCapitalization.sentences,
-                          );
-                        }),
+                          ),
                     const SizedBox(
                       height: 10,
                     ),
-                    StreamBuilder<Object>(
-                        stream: babaRef.snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot asyncSnapshot) {
-                          return OutlinedButton(
+                        OutlinedButton(
                             onPressed: () async {
                               Navigator.push(
                                 context,
@@ -1246,14 +1249,13 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                   ),
                                 ),
                                 Text(
-                                  '${asyncSnapshot.data.data()['Adress']}',
+                                  '${data['Adress']}',
                                   style: TextStyle(
                                       fontSize: 16, color: Color(0xff2A9D8F)),
                                 ),
                               ],
                             ),
-                          );
-                        }),
+                          ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -1375,7 +1377,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                   });
                                   Navigator.pop(context);
                                 },
-                                child: StreamBuilder<DocumentSnapshot>(
+                                child: StreamBuilder<DocumentSnapshot>(///////////////////////////////
                                   stream: babaRef.snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot asyncSnapshot) {
@@ -1422,7 +1424,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                   });
                                   Navigator.pop(context);
                                 },
-                                child: StreamBuilder<DocumentSnapshot>(
+                                child: StreamBuilder<DocumentSnapshot>(////////////////////////////////7
                                   stream: babaRef.snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot asyncSnapshot) {
@@ -1448,7 +1450,22 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
               ),
             ),
           ));
+           });
     } else {
+      return FutureBuilder<DocumentSnapshot>(
+        future: updateRef.doc(user.email!).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) return Text('Something went wrong.');
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+                child: CircularProgressIndicator.adaptive(
+              backgroundColor: Color(0xff06D6A0),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+            ));
+          }
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
       return Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
@@ -1474,13 +1491,9 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      StreamBuilder<Object>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return TextFormField(
+                          TextFormField(
                               controller: _Saticiname
-                                ..text = '${asyncSnapshot.data.data()['Name']}',
+                                ..text = '${data['Name']}',
                               cursorColor: Colors.cyan,
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(42),
@@ -1494,16 +1507,11 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                 ),
                               ),
                               textCapitalization: TextCapitalization.sentences,
-                            );
-                          }),
-                      StreamBuilder<Object>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return TextFormField(
+                            ),
+                        TextFormField(
                               controller: _Saticisurname
                                 ..text =
-                                    '${asyncSnapshot.data.data()['Surname']}',
+                                    '${data['Surname']}',
                               cursorColor: Colors.cyan,
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(42),
@@ -1517,16 +1525,11 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                 ),
                               ),
                               textCapitalization: TextCapitalization.sentences,
-                            );
-                          }),
-                      StreamBuilder<Object>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return TextFormField(
+                            ),
+                          TextFormField(
                               controller: _MarketName
                                 ..text =
-                                    '${asyncSnapshot.data.data()['MarketName']}',
+                                    '${data['MarketName']}',
                               cursorColor: Colors.cyan,
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(42),
@@ -1540,16 +1543,11 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                 ),
                               ),
                               textCapitalization: TextCapitalization.sentences,
-                            );
-                          }),
-                      StreamBuilder<Object>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return TextFormField(
+                            ),
+                        TextFormField(
                               controller: _TimeCont
                                 ..text =
-                                    '${asyncSnapshot.data.data()['TimeCont']}',
+                                    '${data['TimeCont']}',
                               cursorColor: Colors.cyan,
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(42),
@@ -1563,16 +1561,11 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                 ),
                               ),
                               textCapitalization: TextCapitalization.sentences,
-                            );
-                          }),
-                      StreamBuilder<Object>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return TextFormField(
+                            ),
+                        TextFormField(
                               controller: _TelNo
                                 ..text =
-                                    '${asyncSnapshot.data.data()['TelNo']}',
+                                    '${data['TelNo']}',
                               cursorColor: Colors.cyan,
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(42),
@@ -1587,8 +1580,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                 ),
                               ),
                               textCapitalization: TextCapitalization.sentences,
-                            );
-                          }),
+                            ),
                       SizedBox(
                         height: 10,
                       ),
@@ -1625,11 +1617,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                           ),
                         ],
                       ),
-                      StreamBuilder<Object>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return OutlinedButton(
+                       OutlinedButton(
                               onPressed: () async {
                                 Navigator.push(
                                   context,
@@ -1658,14 +1646,13 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                     ),
                                   ),
                                   Text(
-                                    '${asyncSnapshot.data.data()['Adress']}',
+                                    '${data['Adress']}',
                                     style: TextStyle(
                                         fontSize: 16, color: Color(0xff2A9D8F)),
                                   ),
                                 ],
                               ),
-                            );
-                          }),
+                            ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -1752,7 +1739,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                 });
                                 Navigator.pop(context);
                               },
-                              child: StreamBuilder<DocumentSnapshot>(
+                              child: StreamBuilder<DocumentSnapshot>(//////////////////////////
                                 stream: babaRef.snapshots(),
                                 builder: (BuildContext context,
                                     AsyncSnapshot asyncSnapshot) {
@@ -1799,7 +1786,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                     });
                                     Navigator.pop(context);
                                   },
-                                  child: StreamBuilder<DocumentSnapshot>(
+                                  child: StreamBuilder<DocumentSnapshot>(///////////////////////////7
                                     stream: babaRef.snapshots(),
                                     builder: (BuildContext context,
                                         AsyncSnapshot asyncSnapshot) {
@@ -1826,6 +1813,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
               ),
             ),
           ));
+          });
     }
   }
 }

@@ -1252,7 +1252,10 @@ class _UserProfileState extends State<UserProfile> {
               valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
             ));
           }
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
 
+          
           return Scaffold(
             body: SafeArea(
               child: CustomScrollView(
@@ -1302,31 +1305,23 @@ class _UserProfileState extends State<UserProfile> {
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     tileColor: Colors.white,
-                                    leading: StreamBuilder<DocumentSnapshot>(
-                                      stream: babaRef.snapshots(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot asyncSnapshot) {
-                                        return CircleAvatar(
+                                    leading: 
+                                        CircleAvatar(
                                           radius: 25,
                                           backgroundColor: Colors.white,
                                           backgroundImage: NetworkImage(
-                                              '${asyncSnapshot.data.data()['Image']}'),
-                                        );
-                                      },
-                                    ),
-                                    title: StreamBuilder<DocumentSnapshot>(
-                                      stream: babaRef.snapshots(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot asyncSnapshot) {
-                                        return Text(
-                                          '${asyncSnapshot.data.data()['Name']} ${asyncSnapshot.data.data()['Surname']}',
+                                              '${ data['Image']}'),
+                                        ),
+                                      
+                                    title:
+                                        Text(
+                                          '${ data['Name']} ${ data['Surname']}',
                                           style: GoogleFonts.lato(
                                               color: Colors.black,
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600),
-                                        );
-                                      },
-                                    ),
+                                        ),
+                                      
                                     subtitle: Padding(
                                       padding: const EdgeInsets.only(left: 0.0),
                                       child: /*TODO*/ Text(
