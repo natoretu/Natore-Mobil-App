@@ -32,10 +32,6 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
         child: Container(
           child: Column(
             children: [
-              ElevatedButton(
-                onPressed: () {},
-                child: null,
-              ),
               StreamBuilder(
                   stream: _favoriteServices.getFavorites(user.email.toString()),
                   builder: (BuildContext context, AsyncSnapshot asyncSnapshot) {

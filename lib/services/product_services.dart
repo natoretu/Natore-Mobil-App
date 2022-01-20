@@ -21,7 +21,6 @@ class ProductServices {
       int quantity) async {
     var ref = _firestore.collection(collection);
     mediaUrl = await _storageServices.uploadMedia(pickedFile);
-    // print(mediaUrl);
 
     String id = mail + "-" + name;
     var documentRef = await ref.doc(id).set({

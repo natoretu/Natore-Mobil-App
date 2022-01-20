@@ -110,6 +110,7 @@ class AddProductPageState extends State<AddProductPage> {
                             color: Color(0xff2A9D8F),
                           ),
                           onChanged: (String? newValue) {
+                            print(newValue);
                             setState(() {
                               dropdownValue = newValue!;
                             });
@@ -302,7 +303,7 @@ class AddProductPageState extends State<AddProductPage> {
                                         _properties.text,
                                         image,
                                         _ownermail,
-                                        _category.text,
+                                        dropdownValue,
                                         _market,
                                         int.parse(_quantity.text),
                                       )
