@@ -54,6 +54,7 @@ class SellerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     //CollectionReference updateRef = _firestore.collection('Users');
     //var babaRef = updateRef.doc(eMail);
+    updateRef = _firestore.collection('Users');
     print("email:" + eMail.toString());
     print("MarketName--" + MarketName + "--");
     return Scaffold(
@@ -102,11 +103,50 @@ class SellerPage extends StatelessWidget {
                         Container(
                           width: 110,
                           height: 130,
-                          child: ClipRRect(
+                          child: FutureBuilder<DocumentSnapshot>(
+                            future: updateRef
+                                .doc((eMail[0] == " ")
+                                    ? eMail.substring(1, eMail.length)
+                                    : eMail)
+                                .get(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text("Something went wrong");
+                              }
+
+                              if (snapshot.hasData && !snapshot.data!.exists) {
+                                return Text("Document does not exist");
+                              }
+
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                Map<String, dynamic> data = snapshot.data!
+                                    .data() as Map<String, dynamic>;
+                                return Container(
+                                  //width: 120,
+                                  //height: 120,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                      //bura ahmetten alınacak
+                                      image: NetworkImage(data['Image']),
+                                      // static
+                                      //'https://d1hzl1rkxaqvcd.cloudfront.net/contest_entries/1321793/_600px/33f9689616d2c31873e72e65ce2019d1.jpg'),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              return Text("loading");
+                            },
+                          ), /*ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: Image.network(
                                 'https://d1hzl1rkxaqvcd.cloudfront.net/contest_entries/1321793/_600px/33f9689616d2c31873e72e65ce2019d1.jpg'),
-                          ),
+                          ),*/
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
@@ -167,6 +207,44 @@ class SellerPage extends StatelessWidget {
                                   return CircularProgressIndicator();
                                 },
                               ),
+                              Material(
+                                color: Color.fromRGBO(0, 255, 0, 1),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Wrap(
+                                    spacing: 4,
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.fromLTRB(4, 0, 1, 0),
+                                            child: Icon(
+                                              Icons.star,
+                                              color: Color(0xff52B69A),
+                                              size: 18,
+                                            ),
+                                          ),
+                                          //rate
+                                          // e mail basında bosluk oldugundan boyle bır yola gıdıldı, email basındakı bosluk bazısında olur bazısında olmaz dıye kontrol eklendı
+                                          SaticiPuaniDondur((eMail[0] == " ")
+                                              ? eMail.substring(1, eMail.length)
+                                              : eMail),
+
+                                          /*saticiPuaniGoster((eMail[0] == " ")
+                                        ? eMail.substring(1, eMail.length)
+                                        : eMail),*/
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -535,7 +613,7 @@ class SellerPage extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                          (list.length == 0)
+                                          (list.length == 1)
                                               ? SizedBox(height: 1)
                                               : Padding(
                                                   padding:
