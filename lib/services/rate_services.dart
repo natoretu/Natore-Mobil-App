@@ -17,7 +17,8 @@ Future<void> saveRate(String productId, int rate) async {
   var documentSnapshot = await products.doc(productId).get();
 
   if (documentSnapshot.exists) {
-    oldRate = documentSnapshot.get('rate');
+    var oldRateTemp = documentSnapshot.get('rate');
+    oldRate = (oldRateTemp is int) ? oldRateTemp.toDouble() : oldRateTemp;
     ratedTimesTaken = documentSnapshot.get('ratedTimes');
     //print('Document dataqqqqqqqqqqq: ${documentSnapshot.data()}');
   } else {
