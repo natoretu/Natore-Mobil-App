@@ -538,11 +538,42 @@ class _BlueBoxState extends State<BlueBox> {
                   top: 0.0,
                   right: 0.0,
                   child: IconButton(
-                    icon: Icon(doluGalp,
+                    icon: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('Favorites')
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError)
+                            return Text('Bir seyler ters gitti!');
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) return Text('');
+                          final data = snapshot.requireData;
+                          var currentMessages = (data.docs.where((element) =>
+                              (element.get('userId') ==
+                                  user.email.toString())));
+                          var favourities =
+                              currentMessages.first.get('productsIds');
+                          if (currentMessages.isNotEmpty) {
+                            var favouritiesList = List.from(favourities);
+                            bool favoriMi =
+                                favouritiesList.contains(widget.productID);
+                            return Icon(doluGalp,
+                                size: 34,
+                                color: favoriMi
+                                    ? favoriteColor
+                                    : notfavoriteColor);
+                          }
+                          //!arayüz
+                          return const Text(
+                              ''); // daha once konusulmus kımse yoksa bu basiliyor
+                        })
+                    /*Icon(doluGalp,
                         size: 34,
                         color: widget.isFavorite
                             ? favoriteColor
-                            : notfavoriteColor),
+                            : notfavoriteColor)*/
+                    ,
                     onPressed: () async {
                       //burdan databaseİ dolduracağım inşaAllah
 
