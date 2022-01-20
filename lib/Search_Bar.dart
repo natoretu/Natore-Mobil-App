@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:natore_project/page/show_in_category.dart';
+import 'package:natore_project/products_of_seller_page.dart';
 
 class SearchAppBar extends StatefulWidget {
   const SearchAppBar({
@@ -259,20 +259,20 @@ class _SearchAppBarState extends State<SearchAppBar> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     BlueBox(
-                                      list[index * 2].get('image'),
-                                      list[index * 2].get('name'),
-                                      list[index * 2].get('price'),
-                                      list[index * 2].get('id'),
-                                      list[index * 2].get('mail'),
-                                    ),
+                                        list[index * 2].get('image'),
+                                        list[index * 2].get('name'),
+                                        list[index * 2].get('price'),
+                                        list[index * 2].get('id'),
+                                        list[index * 2].get('mail'),
+                                        false),
                                     if (index * 2 + 1 < list.length)
                                       BlueBox(
-                                        list[index * 2 + 1].get('image'),
-                                        list[index * 2 + 1].get('name'),
-                                        list[index * 2 + 1].get('price'),
-                                        list[index * 2 + 1].get('id'),
-                                        list[index * 2 + 1].get('mail'),
-                                      ),
+                                          list[index * 2 + 1].get('image'),
+                                          list[index * 2 + 1].get('name'),
+                                          list[index * 2 + 1].get('price'),
+                                          list[index * 2 + 1].get('id'),
+                                          list[index * 2 + 1].get('mail'),
+                                          false),
                                   ],
                                 ),
                               );
