@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:natore_project/Anasayfa.dart';
 import 'package:natore_project/page/home_page.dart';
 import 'package:natore_project/page/locpicker.dart';
+import 'package:natore_project/services/favorites_services.dart';
 
 import 'main.dart';
 
@@ -829,6 +830,8 @@ class _NewWidget1State extends State<NewWidget1> {
                             'TimeCont': widget.TimeController.text,
                             'SaticiTanitimImage': ""
                           };
+                          FavoritesServices _favoriteServices =FavoritesServices();
+                          _favoriteServices.addToFavorites(user.email!);
                           await UsersRef.doc(user.email!).set(UsersData);
                           Navigator.push(
                             context,
