@@ -1690,9 +1690,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                               await updateRef
                                   .doc(user.email!)
                                   .update({'TelNo': _TelNo.text});
-                              await updateRef
-                                  .doc(user.email!)
-                                  .update({'Adress': _Adress.text});
+                              
 
                               String a = await uploadMedia(imagefile);
                               await updateRef

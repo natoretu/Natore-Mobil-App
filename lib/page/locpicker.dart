@@ -265,7 +265,7 @@ class _CountiesSelectorState extends State<CountiesSelector> {
                              
                         }
                         Ugurunkoddandonenadress =
-                            cityName + counties[check]; //TODO
+                            counties[check]+cityName ; //DEĞİŞTİİ
                         int count = 0; // silmee
                         Navigator.of(context).popUntil((_) => count++ >= 2);
                       }

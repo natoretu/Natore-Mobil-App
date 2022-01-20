@@ -396,13 +396,22 @@ class _MainPageState extends State<MainPage> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600),
                             ),
-                            StreamBuilder<Object>(
+                            StreamBuilder<Object>(//DEİŞTİ
                                 stream: null,
                                 builder: (context, snapshot) {
                                   return StreamBuilder<DocumentSnapshot>(
+                                    
                                     stream: babaRef.snapshots(),
                                     builder: (BuildContext context,
                                         AsyncSnapshot asyncSnapshot) {
+                                           if (asyncSnapshot.hasError) return Text('Something went wrong.');
+                                            if (asyncSnapshot.connectionState == ConnectionState.waiting)
+                                             return Center(
+                                                  child: CircularProgressIndicator.adaptive(
+                                                backgroundColor: Color(0xff06D6A0),
+                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+                                              ));
+                                      else{        
                                       String a =
                                           asyncSnapshot.data.data()['Adress'];
                                       String b = a.split("	").first;
@@ -413,7 +422,7 @@ class _MainPageState extends State<MainPage> {
                                             fontSize: 15,
                                             fontWeight: FontWeight.w600),
                                       );
-                                    },
+                                    }},
                                   );
                                 }),
                           ],
@@ -1240,22 +1249,7 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     CollectionReference updateRef = _firestore.collection('Users');
     var babaRef = updateRef.doc(user.email!);
-    return FutureBuilder<DocumentSnapshot>(
-        future: updateRef.doc(user.email!).get(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) return Text('Something went wrong.');
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-                child: CircularProgressIndicator.adaptive(
-              backgroundColor: Color(0xff06D6A0),
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
-            ));
-          }
-          Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
-
-          
+    
           return Scaffold(
             body: SafeArea(
               child: CustomScrollView(
@@ -1305,23 +1299,47 @@ class _UserProfileState extends State<UserProfile> {
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     tileColor: Colors.white,
-                                    leading: 
-                                        CircleAvatar(
+
+
+                                    leading: StreamBuilder<DocumentSnapshot>(//DEĞİŞTİ
+                                      stream: babaRef.snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot asyncSnapshot) {
+                                            if (asyncSnapshot.hasError) return Text('Something went wrong.');
+                                            if (asyncSnapshot.connectionState == ConnectionState.waiting)
+                                             return Center(
+                                                  child: CircularProgressIndicator.adaptive(
+                                                backgroundColor: Color(0xff06D6A0),
+                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+                                              ));
+                                        else { return CircleAvatar(
                                           radius: 25,
                                           backgroundColor: Colors.white,
                                           backgroundImage: NetworkImage(
-                                              '${ data['Image']}'),
-                                        ),
-                                      
-                                    title:
-                                        Text(
-                                          '${ data['Name']} ${ data['Surname']}',
+                                              '${asyncSnapshot.data!.data()['Image']}'),
+                                        );
+                                      }},
+                                    ),
+                                    title: StreamBuilder<DocumentSnapshot>(//DEĞİŞTİ
+                                      stream: babaRef.snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot asyncSnapshot) {
+                                           if (asyncSnapshot.hasError) return Text('Something went wrong.');
+                                            if (asyncSnapshot.connectionState == ConnectionState.waiting)
+                                             return Center(
+                                                  child: CircularProgressIndicator.adaptive(
+                                                backgroundColor: Color(0xff06D6A0),
+                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+                                              ));  
+                                        else{ return Text(
+                                          '${asyncSnapshot.data.data()['Name']} ${asyncSnapshot.data.data()['Surname']}',
                                           style: GoogleFonts.lato(
                                               color: Colors.black,
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600),
-                                        ),
-                                      
+                                        );
+                                      }},
+                                    ),
                                     subtitle: Padding(
                                       padding: const EdgeInsets.only(left: 0.0),
                                       child: /*TODO*/ Text(
@@ -1495,7 +1513,7 @@ class _UserProfileState extends State<UserProfile> {
               ),
             ),
           );
-        });
+        
   }
 }
 
