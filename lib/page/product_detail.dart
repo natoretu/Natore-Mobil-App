@@ -205,7 +205,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                                 size: 18,
                                               ),
                                             ),
-                                            saticiPuaniGoster(prEmail),
+                                            saticiPuaniGosterSiyah(prEmail),
                                           ],
                                         ),
                                       ),
@@ -560,6 +560,45 @@ Padding UrunPuaniGoster(String productId) {
 }
 
 Padding saticiPuaniGoster(String userId) {
+  double rate = 0;
+  print(userId + "ASD");
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 4),
+    child: Container(
+        child: FutureBuilder(
+      future: getDocumentUser(userId),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          //var a = getDocumentRates(prId);
+          print("has no data");
+          rate = snapshot.data!.get('rate');
+          return RichText(
+            text: TextSpan(
+              text: rate.toStringAsFixed(1).toString(),
+              style: TextStyle(fontSize: 14, color: Colors.white),
+              /*children: [
+                WidgetSpan(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: Icon(Icons.star),
+                  ),
+                ),
+              ],*/
+            ),
+          );
+          //print("It is not Exist");
+
+          //return Text(snapshot.data["name"].toString());
+        } else if (snapshot.connectionState == ConnectionState.none) {
+          return Text("No data");
+        }
+        return CircularProgressIndicator();
+      },
+    )),
+  );
+}
+
+Padding saticiPuaniGosterSiyah(String userId) {
   double rate = 0;
   print(userId + "ASD");
   return Padding(
