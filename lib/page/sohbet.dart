@@ -15,12 +15,14 @@ void mesajGondermeEkraniniAc(String mail, BuildContext context) {
   mesajlasilanKisi = mail;
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
+    MaterialPageRoute(builder: (context) => MesajGondermeEkrani(mail)),
   );
 }
 
 Future<void> ImageProcess(
     List<dynamic> userMessagesList, List<dynamic> userNameList) async {
+  imageList.clear();
+  userNameList.clear();
   for (int i = 0; i < userMessagesList.length;) {
     String mail = userMessagesList[i].get(
         ((userMessagesList[i].get('Receiver') != user!.email.toString())
@@ -33,7 +35,7 @@ Future<void> ImageProcess(
         .then((value) {
       value.docs.forEach((element) {
         String imageString = element.get('Image');
-        userNameList.add(element.get('Name'));
+        userNameList.add(element.get('Name') + " " + element.get('Surname'));
         imageList.add(imageString);
       });
     }).whenComplete(() => i++);
@@ -243,7 +245,8 @@ class _SohbetState extends State<Sohbet> {
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MesajGondermeEkrani()),
+            MaterialPageRoute(
+                builder: (context) => MesajGondermeEkrani(userNameList[index])),
           );
         },
       ),
@@ -258,13 +261,6 @@ String mailiCikar(String message, String? email, String konusulanKisi) {
     return message.substring(0, message.length - email.length);
   }
   return message.substring(0, message.length - konusulanKisi.length);
-}
-
-class MesajGondermeEkrani extends StatefulWidget {
-  const MesajGondermeEkrani({Key? key}) : super(key: key);
-
-  @override
-  _MesajGondermeEkrani createState() => _MesajGondermeEkrani();
 }
 
 class MessageTile extends StatelessWidget {
@@ -343,16 +339,24 @@ class MessageTile extends StatelessWidget {
   }
 }
 
+class MesajGondermeEkrani extends StatefulWidget {
+  String name;
+  MesajGondermeEkrani(this.name);
+  @override
+  _MesajGondermeEkrani createState() => _MesajGondermeEkrani(name);
+}
+
 // Define a corresponding State class.
 // This class holds the data related to the Form.
 class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
+  String name;
   final Stream<QuerySnapshot> messages =
       FirebaseFirestore.instance.collection('mesajlar').snapshots();
 
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final myController = TextEditingController();
-
+  _MesajGondermeEkrani(this.name);
   /*void afterfirst(BuildContext context) {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
@@ -387,7 +391,7 @@ class _MesajGondermeEkrani extends State<MesajGondermeEkrani> {
         //!!arayüz
         backgroundColor: Colors.white70, //Color(0xffcfd8dc),
         appBar: AppBar(
-          title: Text('$mesajlasilanKisi'),
+          title: Text(name),
           backgroundColor: Color(0xff2A9D8F), //Color(0xff37474f),
         ),
         //!!arayüz
