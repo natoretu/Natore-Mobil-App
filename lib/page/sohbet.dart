@@ -205,6 +205,7 @@ class _SohbetState extends State<Sohbet> {
           ),
           tileColor: Colors.white,
           leading: CircleAvatar(
+            backgroundColor: Colors.white,
             radius: 24,
             backgroundImage: NetworkImage(imageList[index]),
           ),

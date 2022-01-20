@@ -72,7 +72,7 @@ class AddProductPageState extends State<AddProductPage> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) return Text('Something went wrong.');
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Text('Loading');
+            return Text('');
 
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
@@ -110,7 +110,6 @@ class AddProductPageState extends State<AddProductPage> {
                             color: Color(0xff2A9D8F),
                           ),
                           onChanged: (String? newValue) {
-                            print(newValue);
                             setState(() {
                               dropdownValue = newValue!;
                             });
@@ -296,27 +295,41 @@ class AddProductPageState extends State<AddProductPage> {
                                       backgroundColor: Color(0xff2A9D8F),
                                     ),
                                     onPressed: () {
-                                      _productServices
-                                          .addProduct(
-                                        _name.text,
-                                        double.parse(_price.text),
-                                        _properties.text,
-                                        image,
-                                        _ownermail,
-                                        dropdownValue,
-                                        _market,
-                                        int.parse(_quantity.text),
-                                      )
-                                          .then((value) {
-                                        Fluttertoast.showToast(
-                                          msg: "Product eklendi!",
-                                          timeInSecForIosWeb: 2,
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          backgroundColor: Colors.grey[600],
-                                          textColor: Colors.white,
-                                          fontSize: 14,
-                                        );
+                                      print(dropdownValue);
+                                      setState(() {
+                                        final snackBar = SnackBar(
+                                            duration: Duration(seconds: 1),
+                                            backgroundColor:
+                                                Colors.teal.withOpacity(0.95),
+                                            content: Text(
+                                              'Ürün eklendi!',
+                                              style: TextStyle(fontSize: 16),
+                                            ));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                        print(dropdownValue);
+                                        _productServices
+                                            .addProduct(
+                                          _name.text,
+                                          double.parse(_price.text),
+                                          _properties.text,
+                                          image,
+                                          _ownermail,
+                                          dropdownValue,
+                                          _market,
+                                          int.parse(_quantity.text),
+                                        )
+                                            .then((value) {
+                                          Fluttertoast.showToast(
+                                            msg: "Product eklendi!",
+                                            timeInSecForIosWeb: 2,
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: Colors.grey[600],
+                                            textColor: Colors.white,
+                                            fontSize: 14,
+                                          );
+                                        });
                                       });
                                     },
                                     child: const Text(

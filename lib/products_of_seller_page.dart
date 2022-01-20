@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff06D6A0),
-        toolbarHeight: 90,
+        toolbarHeight: 95,
         actions: [
           Expanded(
             child: Container(
@@ -130,8 +130,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Container(
                       //buraya image gelecek
-                      height: 80,
-                      width: 90,
+                      height: 70,
+                      width: 80,
                       decoration: const BoxDecoration(
                         color: Colors.white70,
                         borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -173,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             );
                           }
 
-                          return Text("loading");
+                          return Text("");
                         },
                       ),
                       /*Container(
@@ -229,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       padding: EdgeInsets.fromLTRB(4, 0, 1, 0),
                                       child: Icon(
                                         Icons.star,
-                                        color: Color(0xff52B69A),
+                                        color: Colors.white,
                                         size: 18,
                                       ),
                                     ),
@@ -308,7 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         return Text("");
                                       case ConnectionState.active:
                                       case ConnectionState.waiting:
-                                        return Text("watrıng or actıve");
+                                        return Text("");
                                       case ConnectionState.done:
                                         return Padding(
                                           padding: const EdgeInsets.all(0.0),
@@ -348,9 +348,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         );
                       } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return Center(
+                            child: CircularProgressIndicator.adaptive(
+                          backgroundColor: Color(0xff06D6A0),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.cyan),
+                        ));
                       }
                     }
                   })
@@ -567,7 +570,9 @@ class _BlueBoxState extends State<BlueBox> {
                       //_MyHomePageState.refreshList();
                       final snackBar = SnackBar(
                         duration: Duration(seconds: 1),
-                        backgroundColor: Colors.teal.withOpacity(0.95),
+                        backgroundColor: widget.isFavorite
+                            ? Colors.teal.withOpacity(0.95)
+                            : Colors.redAccent.withOpacity(0.9),
                         content: widget.isFavorite
                             ? const Text(
                                 'Ürün favorilere eklendi!',
@@ -612,10 +617,14 @@ FutureBuilder SaticiPuaniDondur(String email) {
       if (snapshot.connectionState == ConnectionState.done) {
         Map<String, dynamic> data =
             snapshot.data!.data() as Map<String, dynamic>;
-        return Text(data['rate'].toStringAsFixed(1));
+        return Text(
+          data['rate'].toStringAsFixed(1),
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+        );
       }
 
-      return Text("loading");
+      return Text("");
     },
   );
 }

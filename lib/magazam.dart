@@ -272,7 +272,19 @@ class _MagazamState extends State<Magazam> {
                                     primary: Colors.white,
                                     backgroundColor: Color(0xff2A9D8F),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    final snackBar = SnackBar(
+                                      duration: Duration(seconds: 1),
+                                      backgroundColor:
+                                          Colors.teal.withOpacity(0.95),
+                                      content: Text(
+                                        'Tanıtımınız eklendi!',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  },
                                   child: const Text(
                                     'Tanıtım Ekle',
                                     style: TextStyle(

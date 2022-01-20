@@ -100,9 +100,10 @@ class SellerPage extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Row(
                       children: [
+                        SizedBox(height: 5),
                         Container(
-                          width: 110,
-                          height: 130,
+                          width: 90,
+                          height: 100,
                           child: FutureBuilder<DocumentSnapshot>(
                             future: updateRef
                                 .doc((eMail[0] == " ")
@@ -140,7 +141,7 @@ class SellerPage extends StatelessWidget {
                                 );
                               }
 
-                              return Text("loading");
+                              return Text("");
                             },
                           ), /*ClipRRect(
                             borderRadius: BorderRadius.circular(4),
@@ -204,11 +205,16 @@ class SellerPage extends StatelessWidget {
                                       ConnectionState.none) {
                                     return Text("No data");
                                   }
-                                  return CircularProgressIndicator();
+                                  return Center(
+                                      child: CircularProgressIndicator.adaptive(
+                                    backgroundColor: Color(0xff06D6A0),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.cyan),
+                                  ));
                                 },
                               ),
                               Material(
-                                color: Color.fromRGBO(0, 255, 0, 1),
+                                color: Colors.greenAccent[400],
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
@@ -226,7 +232,7 @@ class SellerPage extends StatelessWidget {
                                                 EdgeInsets.fromLTRB(4, 0, 1, 0),
                                             child: Icon(
                                               Icons.star,
-                                              color: Color(0xff52B69A),
+                                              color: Colors.white,
                                               size: 18,
                                             ),
                                           ),
@@ -250,6 +256,9 @@ class SellerPage extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Divider(
                     thickness: 1.5,
@@ -275,74 +284,7 @@ class SellerPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  //ürün 1
-                  /*
-                  StreamBuilder(
-                      stream: _productServices.getProductsOfSellerStreamMarket(
-                          "hsnsvn71@gmail.com"),
-                      builder:
-                          (BuildContext context, AsyncSnapshot asyncSnapshot) {
-                        if (asyncSnapshot.hasError) {
-                          return const Center(
-                            child: Text("Bir hata olustu"),
-                          );
-                        } else {
-                          if (asyncSnapshot.hasData) {
-                            List<DocumentSnapshot> list =
-                                asyncSnapshot.data.docs;
-                            for (int i = 0; i < list.length; i++) {
-                              print(list[i].get('id') +
-                                  " name:" +
-                                  list[i].get('name'));
-                            }
-                            return Flexible(
-                              child: ListView.builder(
-                                //itemCount: list.length,
-                                itemCount: list.length % 2 == 0
-                                    ? list.length ~/ 2
-                                    : list.length ~/ 2 + 1,
-                                itemBuilder: (context, index) {
-                                  print(list[index].get('id') +
-                                      " name:" +
-                                      list[index].get('name') +
-                                      "WWWW-" +
-                                      eMail +
-                                      "-");
-                                  return Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        BlueBox(
-                                          list[index * 2].get('image'),
-                                          list[index * 2].get('name'),
-                                          list[index * 2].get('price'),
-                                          list[index * 2].get('id'),
-                                          list[index * 2].get('mail'),
-                                        ),
-                                        if (index * 2 + 1 < list.length)
-                                          BlueBox(
-                                            list[index * 2 + 1].get('image'),
-                                            list[index * 2 + 1].get('name'),
-                                            list[index * 2 + 1].get('price'),
-                                            list[index * 2 + 1].get('id'),
-                                            list[index * 2 + 1].get('mail'),
-                                          ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        }
-                      }),
-                */
+
                   Column(
                     children: [
                       const SizedBox(
@@ -368,233 +310,13 @@ class SellerPage extends StatelessWidget {
                                       " name:" +
                                       list[i].get('name'));
                                 }
-                                // bu yorumdaki column da urunlere tıklanamıyor
-                                /*
-                                return Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          8, 16, 8, 8),
-                                      child: (list.isNotEmpty)
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  child: Image.network(
-                                                    list[0].get('image'),
-                                                    fit: BoxFit.fill,
-                                                    height: 130,
-                                                    width: 110,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10.0),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            list[0].get(
-                                                                'name'), //productName,
-                                                            maxLines: 1,
 
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 16),
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Text(
-                                                                list[0]
-                                                                        .get(
-                                                                            'price')
-                                                                        .toStringAsFixed(
-                                                                            2)
-                                                                        .toString() +
-                                                                    ' ₺', // price.toString() +
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 16,
-                                                                ),
-                                                              ),
-                                                              Row(
-                                                                children: [
-                                                                  const Padding(
-                                                                    padding: EdgeInsets
-                                                                        .fromLTRB(
-                                                                            4,
-                                                                            0,
-                                                                            1,
-                                                                            0),
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .star,
-                                                                      color: Color(
-                                                                          0xff52B69A),
-                                                                      size: 18,
-                                                                    ),
-                                                                  ),
-
-                                                                  Text(list[0]
-                                                                      .get(
-                                                                          'rate')
-                                                                      .toStringAsFixed(
-                                                                          1)
-                                                                      .toString()),
-                                                                  // Paunı gösterirken direkt bunu çağır. product_of_seller_page'de kullanıldı bakabilirsin
-                                                                  /*Padding(
-                    padding: EdgeInsets.only(top: 2.0),
-                    child: Text(
-                      rate.toString(),
-                      style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                  ),*/
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : Text("Hiç ürün yok"),
-                                    ),
-                                    (list.length > 1)
-                                        ? Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                8, 16, 8, 8),
-                                            child: (list.isNotEmpty)
-                                                ? Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                        child: Image.network(
-                                                          list[1].get('image'),
-                                                          fit: BoxFit.fill,
-                                                          height: 130,
-                                                          width: 110,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 10.0),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
-                                                          children: [
-                                                            Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  list[1].get(
-                                                                      'name'), //productName,
-                                                                  maxLines: 1,
-
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          16),
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      list[1]
-                                                                              .get('price')
-                                                                              .toStringAsFixed(2)
-                                                                              .toString() +
-                                                                          ' ₺', // price.toString() +
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        fontSize:
-                                                                            16,
-                                                                      ),
-                                                                    ),
-                                                                    Row(
-                                                                      children: [
-                                                                        const Padding(
-                                                                          padding: EdgeInsets.fromLTRB(
-                                                                              4,
-                                                                              0,
-                                                                              1,
-                                                                              0),
-                                                                          child:
-                                                                              Icon(
-                                                                            Icons.star,
-                                                                            color:
-                                                                                Color(0xff52B69A),
-                                                                            size:
-                                                                                18,
-                                                                          ),
-                                                                        ),
-
-                                                                        Text(list[1]
-                                                                            .get('rate')
-                                                                            .toStringAsFixed(1)
-                                                                            .toString()),
-                                                                        // Paunı gösterirken direkt bunu çağır. product_of_seller_page'de kullanıldı bakabilirsin
-                                                                        /*Padding(
-                    padding: EdgeInsets.only(top: 2.0),
-                    child: Text(
-                      rate.toString(),
-                      style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                  ),*/
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Text("Hiç ürün yok"),
-                                          )
-                                        : SizedBox(
-                                            height: 1,
-                                            width: 1,
-                                          ),
-                                  ],
-                                );
-                                */
                                 // burda row şeklinde ve urunlere tıklanabiliniyor
                                 return (list.length == 0)
-                                    ? Text("Hiç ürün yok")
+                                    ? Text(
+                                        "Hiç ürün yok",
+                                        style: TextStyle(fontSize: 16),
+                                      )
                                     : Row(
                                         children: [
                                           Padding(
@@ -636,9 +358,12 @@ class SellerPage extends StatelessWidget {
                                         ],
                                       );
                               } else {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
+                                return Center(
+                                    child: CircularProgressIndicator.adaptive(
+                                  backgroundColor: Color(0xff06D6A0),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.cyan),
+                                ));
                               }
                             }
                           })

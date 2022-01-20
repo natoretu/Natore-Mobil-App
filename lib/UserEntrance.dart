@@ -33,57 +33,61 @@ class googleLoginPage2 extends StatefulWidget {
 class _googleLoginPage2State extends State<googleLoginPage2> {
   bool check = false;
 
- @override
+  @override
   Widget build(BuildContext context) => Scaffold(
-    body: StreamBuilder(
-    stream: FirebaseAuth.instance.authStateChanges(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
-      } else if (snapshot.hasData) {
-       user = FirebaseAuth.instance.currentUser!;
-       return FutureBuilder<DocumentSnapshot>(
-                              future:FirebaseFirestore.instance
-          .collection('Users')
-          .doc(user!.email)
-          .get(),
-            builder:(BuildContext context,
-              AsyncSnapshot<DocumentSnapshot> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Text('Loading....');
-                default:
-                  if (snapshot.hasError)
-                    return Text('Error: ${snapshot.error}');
-                  else {
+          body: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+                child: CircularProgressIndicator.adaptive(
+              backgroundColor: Color(0xff06D6A0),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+            ));
+          } else if (snapshot.hasData) {
+            user = FirebaseAuth.instance.currentUser!;
+            return FutureBuilder<DocumentSnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(user!.email)
+                    .get(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Text('Loading....');
+                    default:
+                      if (snapshot.hasError)
+                        return Text('Error: ${snapshot.error}');
+                      else {
                         if (snapshot.data!.exists) {
-                        check = false;
-                      } else {
-                        check = true;
+                          check = false;
+                        } else {
+                          check = true;
+                        }
                       }
-                    }
-            if (check) {
-              return MainPage2();
-            } else {
-              check21 = true;
-              Map<String, dynamic> data =
+                      if (check) {
+                        return MainPage2();
+                      } else {
+                        check21 = true;
+                        Map<String, dynamic> data =
                             snapshot.data!.data() as Map<String, dynamic>;
 
                         checksaticioralici = data['saticiMi'];
-            
-              return MyApp1();
-            }
-         }
-                              });// giris yapılmış
-        } else if (snapshot.hasError) {
+
+                        return MyApp1();
+                      }
+                  }
+                }); // giris yapılmış
+          } else if (snapshot.hasError) {
             return Center(child: Text('Something went wrong!'));
-        } else {
-          return MainPage1();
-        } //MainPage1();
-          },
-        )
-        //body: MainPage(),
-        );
+          } else {
+            return MainPage1();
+          } //MainPage1();
+        },
+      )
+          //body: MainPage(),
+          );
 }
 
 enum SingingCharacter { Alici, Satici }
@@ -832,10 +836,11 @@ class _NewWidget1State extends State<NewWidget1> {
                             'MarketName': widget.MarketNameController.text,
                             'TimeCont': widget.TimeController.text,
                             'SaticiTanitimImage': "",
-                            'ratedTimes' : 0,
-                            'rate' : 0.01,
+                            'ratedTimes': 0,
+                            'rate': 0.01,
                           };
-                          FavoritesServices _favoriteServices =FavoritesServices();
+                          FavoritesServices _favoriteServices =
+                              FavoritesServices();
                           _favoriteServices.addToFavorites(user.email!);
                           await UsersRef.doc(user.email!).set(UsersData);
                           Navigator.push(
@@ -1620,61 +1625,47 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                           ),
                         ],
                       ),
-                      OutlinedButton(
-                        onPressed: () async {
-                          /*await updateRef
-                            .doc(user.email!)
-                            .update({'Adress': _adress.text});*/
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          side: BorderSide(width: 1, color: Colors.cyan),
-                          primary: Colors.white,
-                          //onPrimary: Colors.cyan,
-                        ),
-                        child: StreamBuilder<Object>(
-                        stream: babaRef.snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot asyncSnapshot) {
-                          return OutlinedButton(
-                            onPressed: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LocationPicker()),
-                              );
-                            },
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              side: BorderSide(
-                                  width: 1, color: Color(0xff2A9D8F)),
-                              primary: Colors.white,
-                              //onPrimary: Colors.cyan,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 8.0),
-                                  child: Icon(
-                                    Icons.edit_location_outlined,
-                                    color: Color(0xff2A9D8F),
-                                    size: 20,
+                      StreamBuilder<Object>(
+                          stream: babaRef.snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot asyncSnapshot) {
+                            return OutlinedButton(
+                              onPressed: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LocationPicker()),
+                                );
+                              },
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                side: BorderSide(
+                                    width: 1, color: Color(0xff2A9D8F)),
+                                primary: Colors.white,
+                                //onPrimary: Colors.cyan,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 8.0),
+                                    child: Icon(
+                                      Icons.edit_location_outlined,
+                                      color: Color(0xff2A9D8F),
+                                      size: 20,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  '${asyncSnapshot.data.data()['Adress']}',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Color(0xff2A9D8F)),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ),
+                                  Text(
+                                    '${asyncSnapshot.data.data()['Adress']}',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Color(0xff2A9D8F)),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                       const SizedBox(
                         height: 10,
                       ),

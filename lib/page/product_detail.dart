@@ -131,7 +131,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 16.0),
                                         child: Container(
-                                          width: screen_width / 2.5,
+                                          width: screen_width / 3,
                                           height: screen_width / 2.5,
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
@@ -140,7 +140,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                             borderRadius:
                                                 const BorderRadius.all(
                                                     Radius.circular(8.0)),
-                                            color: Colors.redAccent,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ),
@@ -390,7 +390,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                     ConnectionState.none) {
                                   return Text("No data");
                                 }
-                                return CircularProgressIndicator();
+                                return Text('');
                               },
                             )),
                           ),
@@ -399,119 +399,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             child: Yorumlar(),
                           ),
                         ],
-                      )
-                      /*: Column(
-                            children: [
-                              /*** Product Image ***/
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Material(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  elevation: 1,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.only(top: 16.0),
-                                            child: Image(
-                                              image: AssetImage(
-                                                  "assets/milk128.png"),
-                                              //fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                          Column(
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    EdgeInsets.only(top: 24.0),
-                                                child: Text(
-                                                  prName,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    bottom: 8.0),
-                                                child: Text(
-                                                  prPrice.toString(),
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              /*** Contact With Seller ***/
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          elevation: 2,
-                                          primary: Colors.white,
-                                          onPrimary: Colors
-                                              .teal, // basinca olusan renk
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          )),
-                                      onPressed: () {
-                                        mesajGondermeEkraniniAc(
-                                            prEmail, context);
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: const [
-                                            Icon(
-                                              Icons.phone,
-                                              color: Color(0xff52B69A),
-                                              size: 28,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 8.0),
-                                              child: Text(
-                                                'Satıcıyla İletişime Geç',
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        "Zen Antique Soft",
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Yorumlar(),
-                              ),
-                            ],
-                          ),*/
-                      );
+                      ));
                 },
                 childCount: 1, /*** !!!!! ***/
               ),
@@ -553,7 +441,7 @@ Padding UrunPuaniGoster(String productId) {
         } else if (snapshot.connectionState == ConnectionState.none) {
           return Text("No data");
         }
-        return CircularProgressIndicator();
+        return Text('');
       },
     )),
   );
@@ -563,7 +451,7 @@ Padding saticiPuaniGoster(String userId) {
   double rate = 0;
   print(userId + "ASD");
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: 4),
+    padding: EdgeInsets.symmetric(vertical: 0),
     child: Container(
         child: FutureBuilder(
       future: getDocumentUser(userId),
@@ -575,7 +463,10 @@ Padding saticiPuaniGoster(String userId) {
           return RichText(
             text: TextSpan(
               text: rate.toStringAsFixed(1).toString(),
-              style: TextStyle(fontSize: 14, color: Colors.white),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
               /*children: [
                 WidgetSpan(
                   child: Padding(
@@ -592,7 +483,7 @@ Padding saticiPuaniGoster(String userId) {
         } else if (snapshot.connectionState == ConnectionState.none) {
           return Text("No data");
         }
-        return CircularProgressIndicator();
+        return Text('');
       },
     )),
   );
@@ -614,7 +505,7 @@ Padding saticiPuaniGosterSiyah(String userId) {
           return RichText(
             text: TextSpan(
               text: rate.toStringAsFixed(1).toString(),
-              style: TextStyle(fontSize: 14, color: Colors.black),
+              style: TextStyle(fontSize: 16, color: Colors.black),
               /*children: [
                 WidgetSpan(
                   child: Padding(
@@ -631,7 +522,7 @@ Padding saticiPuaniGosterSiyah(String userId) {
         } else if (snapshot.connectionState == ConnectionState.none) {
           return Text("No data");
         }
-        return CircularProgressIndicator();
+        return Text('');
       },
     )),
   );
@@ -655,7 +546,7 @@ String UrunPuaniDondur(String productId) {
       } else if (snapshot.connectionState == ConnectionState.none) {
         //return -1.0;
       }
-      return CircularProgressIndicator();
+      return Text('');
     },
   );
   return rate;
@@ -723,7 +614,7 @@ class _Yorumlar extends State<Yorumlar> {
                   if (snapshot.hasError)
                     return const Text('Something went wrong.');
                   if (snapshot.connectionState == ConnectionState.waiting)
-                    return const Text('Loading');
+                    return const Text('');
                   final data = snapshot.requireData;
                   var currentMessages = (data.docs.where((element) => (true)));
 

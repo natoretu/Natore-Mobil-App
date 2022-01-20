@@ -135,15 +135,11 @@ class _MyHomePageState extends State<MyHomePage> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) return Text('Something went wrong.');
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Text(
-              'Loading',
-              style: TextStyle(
-                color: Colors.black,
-                decoration: TextDecoration.underline,
-                decorationColor: Colors.red,
-                decorationStyle: TextDecorationStyle.wavy,
-              ),
-            );
+            return Center(
+                child: CircularProgressIndicator.adaptive(
+              backgroundColor: Color(0xff06D6A0),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+            ));
 
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
@@ -295,7 +291,7 @@ class _MainPageState extends State<MainPage> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          actions: [
+          /*actions: [
             TextButton(
               child: Text(
                 'Logout',
@@ -306,7 +302,7 @@ class _MainPageState extends State<MainPage> {
                 provider.logout();
               },
             )
-          ],
+          ],*/
           backgroundColor: Color(0xff07cc99), // Color(0xff06D6A0),
           centerTitle: true,
           elevation: 1,
@@ -1249,16 +1245,14 @@ class _UserProfileState extends State<UserProfile> {
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) return Text('Something went wrong.');
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Text(
-              'Loading',
-              style: TextStyle(
-                color: Colors.black,
-                decoration: TextDecoration.underline,
-                decorationColor: Colors.red,
-                decorationStyle: TextDecorationStyle.wavy,
-              ),
-            );
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+                child: CircularProgressIndicator.adaptive(
+              backgroundColor: Color(0xff06D6A0),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+            ));
+          }
+
           return Scaffold(
             body: SafeArea(
               child: CustomScrollView(
@@ -1989,7 +1983,11 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Text('Loading....');
+              return Center(
+                  child: CircularProgressIndicator.adaptive(
+                backgroundColor: Color(0xff06D6A0),
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+              ));
             default:
               if (snapshot.hasError)
                 return Text('Error: ${snapshot.error}');
@@ -2027,8 +2025,9 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
                               alignment: Alignment.bottomCenter,
                               margin: EdgeInsets.only(top: 15),
                               builder: DotSwiperPaginationBuilder(
-                                color: Colors.blueGrey,
-                                activeColor: Color(0xffef233c),
+                                color: Colors.blueGrey.shade300,
+                                activeColor: Colors.pinkAccent,
+                                size: 8,
                                 space: 5,
                               ),
                             ),
@@ -2262,7 +2261,11 @@ class _StoreState extends State<Store> {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) return Text('Something went wrong.');
           if (snapshot.connectionState == ConnectionState.waiting)
-            return Text('Loading');
+            return Center(
+                child: CircularProgressIndicator.adaptive(
+              backgroundColor: Color(0xff06D6A0),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+            ));
 
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
@@ -2275,7 +2278,11 @@ class _StoreState extends State<Store> {
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Text('Loading....');
+                    return Center(
+                        child: CircularProgressIndicator.adaptive(
+                      backgroundColor: Color(0xff06D6A0),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.cyan),
+                    ));
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
@@ -2528,6 +2535,8 @@ class _StoreState extends State<Store> {
                                                   color: Colors.white,
                                                   elevation: 2,
                                                   child: Container(
+                                                    height: 70,
+                                                    width: 80,
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -2537,13 +2546,22 @@ class _StoreState extends State<Store> {
                                                               .cyan.shade800,
                                                           width: 2),
                                                     ),
-                                                    child: CircleAvatar(
-                                                      radius: 24,
-                                                      backgroundImage:
-                                                          NetworkImage(sohbet
-                                                              .get('Image')),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(6),
+                                                        child: Image.network(
+                                                          sohbet.get('Image'),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
                                                     ),
-                                                    /*(index ==
+                                                  ),
+                                                  /*(index ==
                                                             0) //  static
                                                         ? Image.asset(
                                                             "assets/homepageImages/sutcu_dede_f.png",
@@ -2558,7 +2576,6 @@ class _StoreState extends State<Store> {
                                                             "assets/homepageImages/yogurt.png",
                                                             fit: BoxFit.fill,
                                                           ),*/
-                                                  ),
                                                 ),
                                               ],
                                             ),

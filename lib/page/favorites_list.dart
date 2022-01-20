@@ -61,7 +61,7 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
                                             return Text("");
                                           case ConnectionState.active:
                                           case ConnectionState.waiting:
-                                            return Text("watrıng or actıve");
+                                            return Text('');
                                           case ConnectionState.done:
                                             return BlueBox(
                                                 asyncSnapshot.data.get('image'),
@@ -77,9 +77,7 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
                                       });
                                 }));
                       } else {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return Text('');
                       }
                     }
                   })
