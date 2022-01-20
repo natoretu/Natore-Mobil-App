@@ -136,7 +136,47 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.white70,
                         borderRadius: BorderRadius.all(Radius.circular(8.0)),
                       ),
-                      child: Container(
+                      child: FutureBuilder<DocumentSnapshot>(
+                        future: updateRef
+                            .doc((eMail[0] == " ")
+                                ? eMail.substring(1, eMail.length)
+                                : eMail)
+                            .get(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text("Something went wrong");
+                          }
+
+                          if (snapshot.hasData && !snapshot.data!.exists) {
+                            return Text("Document does not exist");
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            Map<String, dynamic> data =
+                                snapshot.data!.data() as Map<String, dynamic>;
+                            return Container(
+                              //width: 120,
+                              //height: 120,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  //bura ahmetten alınacak
+                                  image: NetworkImage(data['Image']),
+                                  // static
+                                  //'https://d1hzl1rkxaqvcd.cloudfront.net/contest_entries/1321793/_600px/33f9689616d2c31873e72e65ce2019d1.jpg'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          }
+
+                          return Text("loading");
+                        },
+                      ),
+                      /*Container(
                         //width: 120,
                         //height: 120,
                         decoration: BoxDecoration(
@@ -150,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                      ),
+                      ),*/
                     ),
                     const SizedBox(
                       width: 10,
@@ -552,4 +592,30 @@ class _BlueBoxState extends State<BlueBox> {
       ),
     );
   }
+}
+
+FutureBuilder SaticiPuaniDondur(String email) {
+  return FutureBuilder<DocumentSnapshot>(
+    future: FirebaseFirestore.instance
+        .collection('Users')
+        .doc((eMail[0] == " ") ? eMail.substring(1, eMail.length) : eMail)
+        .get(),
+    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      if (snapshot.hasError) {
+        return Text("Something went wrong");
+      }
+
+      if (snapshot.hasData && !snapshot.data!.exists) {
+        return Text("Document does not exist");
+      }
+
+      if (snapshot.connectionState == ConnectionState.done) {
+        Map<String, dynamic> data =
+            snapshot.data!.data() as Map<String, dynamic>;
+        return Text(data['rate'].toStringAsFixed(1));
+      }
+
+      return Text("loading");
+    },
+  );
 }
