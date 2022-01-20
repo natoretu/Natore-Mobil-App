@@ -14,6 +14,7 @@ import 'package:natore_project/Search_Bar.dart';
 import 'package:natore_project/UserEntrance.dart';
 import 'package:natore_project/magazam.dart';
 import 'package:natore_project/page/favorites_list.dart';
+import 'package:natore_project/page/product_detail.dart';
 import 'package:natore_project/page/show_in_category.dart';
 import 'package:natore_project/page/sohbet.dart';
 import 'package:natore_project/products_of_seller_page.dart';
@@ -523,8 +524,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                   ),
-
-                    Store(seller_num: _seller_num),
+                  Store(seller_num: _seller_num),
                 ],
               );
             },
@@ -2499,7 +2499,10 @@ class _StoreState extends State<Store> {
                                                     Icon(Icons.star_outlined,
                                                         color: Colors.white,
                                                         size: 20),
+                                                    saticiPuaniGoster(sohbet.get(
+                                                        'Email')), /*
                                                     Text(
+                                                      //  static-
                                                       RateList[index]
                                                           .toString(),
                                                       style: TextStyle(
@@ -2507,7 +2510,7 @@ class _StoreState extends State<Store> {
                                                           fontSize: 18,
                                                           fontWeight:
                                                               FontWeight.w500),
-                                                    ),
+                                                    ),*/
                                                   ],
                                                 ),
                                               ),
@@ -2534,7 +2537,14 @@ class _StoreState extends State<Store> {
                                                               .cyan.shade800,
                                                           width: 2),
                                                     ),
-                                                    child: (index == 0)
+                                                    child: CircleAvatar(
+                                                      radius: 24,
+                                                      backgroundImage:
+                                                          NetworkImage(sohbet
+                                                              .get('Image')),
+                                                    ),
+                                                    /*(index ==
+                                                            0) //  static
                                                         ? Image.asset(
                                                             "assets/homepageImages/sutcu_dede_f.png",
 
@@ -2547,7 +2557,7 @@ class _StoreState extends State<Store> {
                                                         : Image.asset(
                                                             "assets/homepageImages/yogurt.png",
                                                             fit: BoxFit.fill,
-                                                          ),
+                                                          ),*/
                                                   ),
                                                 ),
                                               ],
