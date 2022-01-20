@@ -112,7 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
     CollectionReference updateRef = _firestore.collection('Users');
     var babaRef = updateRef.doc(eMail);
 
-    refreshList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff06D6A0),
@@ -363,13 +362,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
-  static void refreshList() {
-    // setState(() {
-    //   _listStream =
-    //       _productServices.getProductsOfSellerStreamMarket(MarketName);
-    // });
-  }
 }
 
 //güncellendi
@@ -466,16 +458,15 @@ class _BlueBoxState extends State<BlueBox> {
                           /*ÜRÜN ADI - FİYATI - PUANI*/
                           Column(
                             children: [
-                              /*ürünün adı*/
                               SizedBox(
                                 width: width / 3,
                                 child: FittedBox(
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.none,
                                   child: Text(
                                     widget.productName,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                        fontSize: 16),
                                   ),
                                 ),
                               ),
