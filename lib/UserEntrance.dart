@@ -66,7 +66,10 @@ class _googleLoginPage2State extends State<googleLoginPage2> {
               return MainPage2();
             } else {
               check21 = true;
-              
+              Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+
+                        checksaticioralici = data['saticiMi'];
             
               return MyApp1();
             }
