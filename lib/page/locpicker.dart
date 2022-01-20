@@ -261,7 +261,7 @@ class _CountiesSelectorState extends State<CountiesSelector> {
                         if (check21 == true) {
                           updateRef //TODO
                               .doc(user.email!)
-                              .update({'Adress':counties[check]+" "+cityName});
+                              .update({'Adress':counties[check]+cityName});
                              
                         }
                         Ugurunkoddandonenadress =

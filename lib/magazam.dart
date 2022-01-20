@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -20,6 +22,31 @@ class _MagazamState extends State<Magazam> {
   final ImagePicker _imagePicker = ImagePicker();
   dynamic _pickImage;
   var image;
+
+  final user = FirebaseAuth.instance.currentUser!;
+  final _firestore = FirebaseFirestore.instance;
+  late File imagefile;
+  final picker = ImagePicker();
+  chooseImage(ImageSource source) async {
+    final PickedFile = await picker.getImage(source: source,imageQuality: 25);
+    imagefile = File(PickedFile!.path);
+  }
+
+  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  Future<String> uploadMedia(File file) async {
+    var uploadTask = _firebaseStorage
+        .ref()
+        .child(
+            "${DateTime.now().millisecondsSinceEpoch}.${file.path.split(".").last}")
+        .putFile(file);
+
+    uploadTask.snapshotEvents.listen((event) {});
+    var storageRef = await uploadTask;
+    return await storageRef.ref.getDownloadURL();
+  }
+
+
+
   Widget imagePlace(context) {
     double height = MediaQuery.of(context).size.height;
     if (image != null) {
@@ -59,6 +86,9 @@ class _MagazamState extends State<Magazam> {
   ProductServices _productServices = ProductServices();
   @override
   Widget build(BuildContext context) {
+
+    CollectionReference updateRef = _firestore.collection('Users');
+    var babaRef = updateRef.doc(user.email!);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -224,9 +254,13 @@ class _MagazamState extends State<Magazam> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: () => _onImageButtonPressed(
-                                      ImageSource.gallery,
-                                      context: context),
+                                  onTap: ()async{
+                                      await chooseImage(ImageSource.gallery);
+                                     String a = await uploadMedia(imagefile);
+                                      await updateRef
+                                          .doc(user.email!)
+                                          .update({'SaticiTanitimImage': a});
+                                  },
                                   child: const Icon(
                                     Icons.image,
                                     size: 28,
@@ -250,12 +284,7 @@ class _MagazamState extends State<Magazam> {
                               ],
                             ),
                           ),
-                          Divider(),
-                          Text("Aktif Tanıtımlarım: ",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff2A9D8F))),
+                          
                         ],
                       ),
                     ],

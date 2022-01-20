@@ -127,16 +127,25 @@ class _MyHomePageState extends State<MyHomePage> {
     final _firestore = FirebaseFirestore.instance;
 
     CollectionReference updateRef = _firestore.collection('Users');
-    var babaRef = updateRef.doc(user.email!);
-    FirebaseFirestore.instance
-        .collection('Users')
-        .where('Email', isEqualTo: user.email!)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        checksaticioralici = element.get('saticiMi');
-      });
-    });
+    
+     return FutureBuilder<DocumentSnapshot>(
+                      future:  updateRef.doc(user.email!).get(),
+                      builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError)
+                          return Text('Something went wrong.');
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Text('Loading',style: TextStyle(
+          color: Colors.black,
+          decoration: TextDecoration.underline,
+          
+          decorationColor: Colors.red,
+          decorationStyle: TextDecorationStyle.wavy,
+        ),);
+                          
+
+                          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                          
+                          checksaticioralici = data['saticiMi'];
     return Scaffold(
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: checksaticioralici == true
@@ -209,6 +218,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SafeArea(
         child: tabs[_selectedIndex],
       ),
+    );
+    }
     );
   }
 }
@@ -396,7 +407,7 @@ class _MainPageState extends State<MainPage> {
                                         AsyncSnapshot asyncSnapshot) {
                                       String a =
                                           asyncSnapshot.data.data()['Adress'];
-                                      String b = a.split(" ").first;
+                                      String b = a.split("	").first;
                                       return Text(
                                         b,
                                         style: GoogleFonts.lato(
@@ -1232,15 +1243,19 @@ class _UserProfileState extends State<UserProfile> {
   Widget build(BuildContext context) {
     CollectionReference updateRef = _firestore.collection('Users');
     var babaRef = updateRef.doc(user.email!);
-    FirebaseFirestore.instance
-        .collection('Users')
-        .where('Email', isEqualTo: user.email!)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        checksaticioralici = element.get('saticiMi');
-      });
-    });
+    return FutureBuilder<DocumentSnapshot>(
+                      future:  updateRef.doc(user.email!).get(),
+                      builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError)
+                          return Text('Something went wrong.');
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Text('Loading',style: TextStyle(
+          color: Colors.black,
+          decoration: TextDecoration.underline,
+          
+          decorationColor: Colors.red,
+          decorationStyle: TextDecorationStyle.wavy,
+        ),);
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -1480,6 +1495,8 @@ class _UserProfileState extends State<UserProfile> {
           ],
         ),
       ),
+    );
+    }
     );
   }
 }
@@ -1985,7 +2002,15 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
                           child: Swiper(
                             //physics: NeverScrollableScrollPhysics(),
                             //layout: SwiperLayout.TINDER,
-                            onTap: (int index) {},
+                            onTap: (int index) {
+                               var sohbet1 = MarketInfo[index];
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductsOfSellerPage(sohbet1.get('MarketName'),sohbet1.get('Email'))),
+                                );
+                            },
                             itemCount: MarketInfo.length,
                             indicatorLayout: PageIndicatorLayout.SCALE,
                             pagination: SwiperPagination(

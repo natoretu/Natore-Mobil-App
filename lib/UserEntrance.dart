@@ -32,42 +32,54 @@ class googleLoginPage2 extends StatefulWidget {
 class _googleLoginPage2State extends State<googleLoginPage2> {
   bool check = false;
 
-  @override
+ @override
   Widget build(BuildContext context) => Scaffold(
-          body: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            user = FirebaseAuth.instance.currentUser!;
-            FirebaseFirestore.instance
-                .collection('Users')
-                .doc(user!.email)
-                .get()
-                .then((DocumentSnapshot documentSnapshot) {
-              if (documentSnapshot.exists) {
-                check = false;
-              } else {
-                check = true;
-              }
-            });
+    body: StreamBuilder(
+    stream: FirebaseAuth.instance.authStateChanges(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasData) {
+       user = FirebaseAuth.instance.currentUser!;
+       return FutureBuilder<DocumentSnapshot>(
+                              future:FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user!.email)
+          .get(),
+            builder:(BuildContext context,
+              AsyncSnapshot<DocumentSnapshot> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Text('Loading....');
+                default:
+                  if (snapshot.hasError)
+                    return Text('Error: ${snapshot.error}');
+                  else {
+                        if (snapshot.data!.exists) {
+                        check = false;
+                      } else {
+                        check = true;
+                      }
+                    }
             if (check) {
               return MainPage2();
             } else {
               check21 = true;
-
+              
+            
               return MyApp1();
             }
-            // giris yapılmış
-          } else if (snapshot.hasError) {
+         }
+                              });// giris yapılmış
+        } else if (snapshot.hasError) {
             return Center(child: Text('Something went wrong!'));
-          } else
-            return MainPage1(); //MainPage1();
-        },
-      )
-          //body: MainPage(),
-          );
+        } else {
+          return MainPage1();
+        } //MainPage1();
+          },
+        )
+        //body: MainPage(),
+        );
 }
 
 enum SingingCharacter { Alici, Satici }
@@ -1613,11 +1625,27 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                           primary: Colors.white,
                           //onPrimary: Colors.cyan,
                         ),
-                        child: StreamBuilder<DocumentSnapshot>(
-                          stream: babaRef.snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot asyncSnapshot) {
-                            return Row(
+                        child: StreamBuilder<Object>(
+                        stream: babaRef.snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot asyncSnapshot) {
+                          return OutlinedButton(
+                            onPressed: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LocationPicker()),
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              side: BorderSide(
+                                  width: 1, color: Color(0xff2A9D8F)),
+                              primary: Colors.white,
+                              //onPrimary: Colors.cyan,
+                            ),
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -1625,19 +1653,19 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
                                   padding: EdgeInsets.only(right: 8.0),
                                   child: Icon(
                                     Icons.edit_location_outlined,
-                                    color: Colors.cyan,
+                                    color: Color(0xff2A9D8F),
                                     size: 20,
                                   ),
                                 ),
                                 Text(
                                   '${asyncSnapshot.data.data()['Adress']}',
                                   style: TextStyle(
-                                      fontSize: 18, color: Colors.cyan),
+                                      fontSize: 16, color: Color(0xff2A9D8F)),
                                 ),
                               ],
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        }),
                       ),
                       const SizedBox(
                         height: 10,
