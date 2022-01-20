@@ -828,7 +828,9 @@ class _NewWidget1State extends State<NewWidget1> {
                             'saticiMi': true,
                             'MarketName': widget.MarketNameController.text,
                             'TimeCont': widget.TimeController.text,
-                            'SaticiTanitimImage': ""
+                            'SaticiTanitimImage': "",
+                            'ratedTimes' : 0,
+                            'rate' : 0.01,
                           };
                           FavoritesServices _favoriteServices =FavoritesServices();
                           _favoriteServices.addToFavorites(user.email!);

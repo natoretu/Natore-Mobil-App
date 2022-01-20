@@ -127,100 +127,101 @@ class _MyHomePageState extends State<MyHomePage> {
     final _firestore = FirebaseFirestore.instance;
 
     CollectionReference updateRef = _firestore.collection('Users');
-    
-     return FutureBuilder<DocumentSnapshot>(
-                      future:  updateRef.doc(user.email!).get(),
-                      builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if (snapshot.hasError)
-                          return Text('Something went wrong.');
-                        if (snapshot.connectionState == ConnectionState.waiting)
-                          return Text('Loading',style: TextStyle(
-          color: Colors.black,
-          decoration: TextDecoration.underline,
-          
-          decorationColor: Colors.red,
-          decorationStyle: TextDecorationStyle.wavy,
-        ),);
-                          
 
-                          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-                          
-                          checksaticioralici = data['saticiMi'];
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      bottomNavigationBar: checksaticioralici == true
-          ? BottomNavigationBar(
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_sharp),
-                  label: 'Ev',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat),
-                  label: 'Mesajlar',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
-                  label: 'Favoriler',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_sharp),
-                  label: 'Profilim',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.store),
-                  label: 'Mağazam',
-                ),
-              ],
-              backgroundColor: Colors.white,
-              iconSize: 22,
-              type: BottomNavigationBarType.fixed,
-              unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
-              selectedItemColor: Color(0xff34A0A4), //Color(0xff00ADB5),
-              currentIndex: _selectedIndex,
-              onTap: _onItemTapped,
-              unselectedFontSize: 14,
-              selectedFontSize: 14,
-              //showUnselectedLabels: false,
-              //showSelectedLabels: false,
-            )
-          : BottomNavigationBar(
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_sharp),
-                  label: 'Ev',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat),
-                  label: 'Mesajlar',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
-                  label: 'Favoriler',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_sharp),
-                  label: 'Profilim',
-                ),
-              ],
-              backgroundColor: Colors.white,
-              iconSize: 22,
-              type: BottomNavigationBarType.fixed,
-              unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
-              selectedItemColor: Color(0xff34A0A4), //Color(0xff00ADB5),
-              currentIndex: _selectedIndex,
-              onTap: _onItemTapped,
-              unselectedFontSize: 14,
-              selectedFontSize: 14,
-              //showUnselectedLabels: false,
-              //showSelectedLabels: false,
+    return FutureBuilder<DocumentSnapshot>(
+        future: updateRef.doc(user.email!).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) return Text('Something went wrong.');
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Text(
+              'Loading',
+              style: TextStyle(
+                color: Colors.black,
+                decoration: TextDecoration.underline,
+                decorationColor: Colors.red,
+                decorationStyle: TextDecorationStyle.wavy,
+              ),
+            );
+
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+
+          checksaticioralici = data['saticiMi'];
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            bottomNavigationBar: checksaticioralici == true
+                ? BottomNavigationBar(
+                    items: <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home_sharp),
+                        label: 'Ev',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.chat),
+                        label: 'Mesajlar',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.favorite),
+                        label: 'Favoriler',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.person_sharp),
+                        label: 'Profilim',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.store),
+                        label: 'Mağazam',
+                      ),
+                    ],
+                    backgroundColor: Colors.white,
+                    iconSize: 22,
+                    type: BottomNavigationBarType.fixed,
+                    unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
+                    selectedItemColor: Color(0xff34A0A4), //Color(0xff00ADB5),
+                    currentIndex: _selectedIndex,
+                    onTap: _onItemTapped,
+                    unselectedFontSize: 14,
+                    selectedFontSize: 14,
+                    //showUnselectedLabels: false,
+                    //showSelectedLabels: false,
+                  )
+                : BottomNavigationBar(
+                    items: <BottomNavigationBarItem>[
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home_sharp),
+                        label: 'Ev',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.chat),
+                        label: 'Mesajlar',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.favorite),
+                        label: 'Favoriler',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.person_sharp),
+                        label: 'Profilim',
+                      ),
+                    ],
+                    backgroundColor: Colors.white,
+                    iconSize: 22,
+                    type: BottomNavigationBarType.fixed,
+                    unselectedItemColor: Colors.blueGrey.withOpacity(0.7),
+                    selectedItemColor: Color(0xff34A0A4), //Color(0xff00ADB5),
+                    currentIndex: _selectedIndex,
+                    onTap: _onItemTapped,
+                    unselectedFontSize: 14,
+                    selectedFontSize: 14,
+                    //showUnselectedLabels: false,
+                    //showSelectedLabels: false,
+                  ),
+            body: SafeArea(
+              child: tabs[_selectedIndex],
             ),
-      body: SafeArea(
-        child: tabs[_selectedIndex],
-      ),
-    );
-    }
-    );
+          );
+        });
   }
 }
 
@@ -522,7 +523,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                   ),
-                  if (checksaticioralici == false)
+
                     Store(seller_num: _seller_num),
                 ],
               );
@@ -1244,260 +1245,268 @@ class _UserProfileState extends State<UserProfile> {
     CollectionReference updateRef = _firestore.collection('Users');
     var babaRef = updateRef.doc(user.email!);
     return FutureBuilder<DocumentSnapshot>(
-                      future:  updateRef.doc(user.email!).get(),
-                      builder: (BuildContext context,AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if (snapshot.hasError)
-                          return Text('Something went wrong.');
-                        if (snapshot.connectionState == ConnectionState.waiting)
-                          return Text('Loading',style: TextStyle(
-          color: Colors.black,
-          decoration: TextDecoration.underline,
-          
-          decorationColor: Colors.red,
-          decorationStyle: TextDecorationStyle.wavy,
-        ),);
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            /***----------***/
-            /*** Profilim ***/
-            SliverAppBar(
-              backgroundColor: Color(0xff06D6A0),
-              centerTitle: true,
-              elevation: 1,
-              floating: true,
-              //pinned: false,
-              snap: true,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Text(
-                    "Profilim",
-                    style: TextStyle(
-                        fontFamily: 'Zen Antique Soft',
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        letterSpacing: 0.5,
-                        fontSize: 22),
-                  ),
-                ),
+        future: updateRef.doc(user.email!).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) return Text('Something went wrong.');
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Text(
+              'Loading',
+              style: TextStyle(
+                color: Colors.black,
+                decoration: TextDecoration.underline,
+                decorationColor: Colors.red,
+                decorationStyle: TextDecorationStyle.wavy,
               ),
-            ),
-            /***----------***/
-            /*** Bilgiler ***/
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Material(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
-                            elevation: 2,
-                            child: ListTile(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              tileColor: Colors.white,
-                              leading: StreamBuilder<DocumentSnapshot>(
-                                stream: babaRef.snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot asyncSnapshot) {
-                                  return CircleAvatar(
-                                    radius: 25,
-                                    backgroundColor: Colors.white,
-                                    backgroundImage: NetworkImage(
-                                        '${asyncSnapshot.data.data()['Image']}'),
-                                  );
-                                },
-                              ),
-                              title: StreamBuilder<DocumentSnapshot>(
-                                stream: babaRef.snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot asyncSnapshot) {
-                                  return Text(
-                                    '${asyncSnapshot.data.data()['Name']} ${asyncSnapshot.data.data()['Surname']}',
-                                    style: GoogleFonts.lato(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
-                                  );
-                                },
-                              ),
-                              subtitle: Padding(
-                                padding: const EdgeInsets.only(left: 0.0),
-                                child: /*TODO*/ Text(
-                                  user.email!,
-                                  style: GoogleFonts.lato(
-                                      color: Colors.cyan.shade600,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                              trailing: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.white,
-                                    onPrimary:
-                                        Colors.teal, // basinca olusan renk
-                                    elevation: 2,
-                                    //shadowColor: Colors.teal,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FavoriteWidget()),
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Colors.pinkAccent,
-                                  size: 28,
-                                ),
-                              ),
-                            ),
-                          ),
+            );
+          return Scaffold(
+            body: SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  /***----------***/
+                  /*** Profilim ***/
+                  SliverAppBar(
+                    backgroundColor: Color(0xff06D6A0),
+                    centerTitle: true,
+                    elevation: 1,
+                    floating: true,
+                    //pinned: false,
+                    snap: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      centerTitle: true,
+                      title: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Text(
+                          "Profilim",
+                          style: TextStyle(
+                              fontFamily: 'Zen Antique Soft',
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
+                              fontSize: 22),
                         ),
-                        /*** Siparişlerim vs. ***/
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Material(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            elevation: 2,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: 4,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: PaddingList[index],
-                                  child: Material(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    elevation: 3,
-                                    child: ListTile(
-                                      onTap: () {
-                                        switch (index) {
-                                          case 0:
-                                            Navigator.pushNamed(
-                                              context,
-                                              MyAdress.routeName,
-                                            );
-                                            break;
-
-                                          case 1:
-                                            _launchURLApp(rateApp_link);
-                                            break;
-                                          case 2:
-                                            Navigator.pushNamed(
-                                              context,
-                                              AboutheApp.routeName,
-                                            );
-                                            break;
-                                          case 3:
-                                            Share.share(rateApp_link);
-                                            break;
-                                        }
-                                      },
-                                      hoverColor: Colors.greenAccent[700],
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      tileColor: Colors.white,
-                                      leading: Icon(
-                                        IconList[index],
-                                        color:
-                                            Color(0xff52B69A), // cyan.shade600
-                                        size: 26,
-                                      ),
-                                      title: Text(
-                                        TextList[index],
-                                        style: TextStyle(
-                                          fontFamily: "Zen Antique Soft",
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        /*** Çıkış  ***/
-                        Padding(
-                          padding: const EdgeInsets.only(top: 6.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                    ),
+                  ),
+                  /***----------***/
+                  /*** Bilgiler ***/
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
                             children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    elevation: 2,
-                                    primary: Colors.white,
-                                    onPrimary: Colors.red.shade800,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Material(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  elevation: 2,
+                                  child: ListTile(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
-                                    )),
-                                onPressed: () {
-                                  final provider =
-                                      Provider.of<GoogleSignInProvider>(context,
-                                          listen: false);
-                                  provider.logout();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.logout,
-                                        color: Colors
-                                            .pinkAccent, //Color(0xff52B69A),
+                                    ),
+                                    tileColor: Colors.white,
+                                    leading: StreamBuilder<DocumentSnapshot>(
+                                      stream: babaRef.snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot asyncSnapshot) {
+                                        return CircleAvatar(
+                                          radius: 25,
+                                          backgroundColor: Colors.white,
+                                          backgroundImage: NetworkImage(
+                                              '${asyncSnapshot.data.data()['Image']}'),
+                                        );
+                                      },
+                                    ),
+                                    title: StreamBuilder<DocumentSnapshot>(
+                                      stream: babaRef.snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot asyncSnapshot) {
+                                        return Text(
+                                          '${asyncSnapshot.data.data()['Name']} ${asyncSnapshot.data.data()['Surname']}',
+                                          style: GoogleFonts.lato(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        );
+                                      },
+                                    ),
+                                    subtitle: Padding(
+                                      padding: const EdgeInsets.only(left: 0.0),
+                                      child: /*TODO*/ Text(
+                                        user.email!,
+                                        style: GoogleFonts.lato(
+                                            color: Colors.cyan.shade600,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    trailing: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.white,
+                                          onPrimary: Colors
+                                              .teal, // basinca olusan renk
+                                          elevation: 2,
+                                          //shadowColor: Colors.teal,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8))),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FavoriteWidget()),
+                                        );
+                                      },
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.pinkAccent,
                                         size: 28,
                                       ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
-                                        child: Text(
-                                          'Çıkış Yap',
-                                          style: TextStyle(
-                                            fontFamily: "Zen Antique Soft",
-                                            color: Colors.black,
-                                            fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              /*** Siparişlerim vs. ***/
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Material(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  elevation: 2,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: 4,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: PaddingList[index],
+                                        child: Material(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          ),
+                                          elevation: 3,
+                                          child: ListTile(
+                                            onTap: () {
+                                              switch (index) {
+                                                case 0:
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    MyAdress.routeName,
+                                                  );
+                                                  break;
+
+                                                case 1:
+                                                  _launchURLApp(rateApp_link);
+                                                  break;
+                                                case 2:
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    AboutheApp.routeName,
+                                                  );
+                                                  break;
+                                                case 3:
+                                                  Share.share(rateApp_link);
+                                                  break;
+                                              }
+                                            },
+                                            hoverColor: Colors.greenAccent[700],
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            tileColor: Colors.white,
+                                            leading: Icon(
+                                              IconList[index],
+                                              color: Color(
+                                                  0xff52B69A), // cyan.shade600
+                                              size: 26,
+                                            ),
+                                            title: Text(
+                                              TextList[index],
+                                              style: TextStyle(
+                                                fontFamily: "Zen Antique Soft",
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      );
+                                    },
                                   ),
+                                ),
+                              ),
+                              /*** Çıkış  ***/
+                              Padding(
+                                padding: const EdgeInsets.only(top: 6.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 2,
+                                          primary: Colors.white,
+                                          onPrimary: Colors.red.shade800,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          )),
+                                      onPressed: () {
+                                        final provider =
+                                            Provider.of<GoogleSignInProvider>(
+                                                context,
+                                                listen: false);
+                                        provider.logout();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.logout,
+                                              color: Colors
+                                                  .pinkAccent, //Color(0xff52B69A),
+                                              size: 28,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0),
+                                              child: Text(
+                                                'Çıkış Yap',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      "Zen Antique Soft",
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        );
+                      },
+                      childCount: 1, /*** !!!!! ***/
                     ),
-                  );
-                },
-                childCount: 1, /*** !!!!! ***/
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-    }
-    );
+          );
+        });
   }
 }
 
@@ -2003,13 +2012,14 @@ class _CampaignSwiperState extends State<CampaignSwiper> {
                             //physics: NeverScrollableScrollPhysics(),
                             //layout: SwiperLayout.TINDER,
                             onTap: (int index) {
-                               var sohbet1 = MarketInfo[index];
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductsOfSellerPage(sohbet1.get('MarketName'),sohbet1.get('Email'))),
-                                );
+                              var sohbet1 = MarketInfo[index];
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductsOfSellerPage(
+                                        sohbet1.get('MarketName'),
+                                        sohbet1.get('Email'))),
+                              );
                             },
                             itemCount: MarketInfo.length,
                             indicatorLayout: PageIndicatorLayout.SCALE,

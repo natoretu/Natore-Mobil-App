@@ -5,6 +5,7 @@ class Product {
   String name;
   double price;
   double rate;
+  double ratedTimes;
   String category;
   String market;
   int quantity;
@@ -19,6 +20,7 @@ class Product {
     required this.name,
     required this.price,
     required this.rate,
+    required this.ratedTimes,
     required this.category,
     required this.market,
     required this.quantity,
@@ -40,6 +42,7 @@ class Product {
       name: snapShot["name"].toString(),
       price: snapShot["price"],
       rate: snapShot["rate"],
+      ratedTimes: snapShot["ratedTimes"],
       category: snapShot["category"],
       market: snapShot["market"],
       quantity: snapShot["quantity"],
@@ -76,6 +79,7 @@ class Product {
         name: data["name"],
         price: data["price"],
         rate: data["rate"],
+        ratedTimes: data["ratedTimes"],
         category: data["category"],
         market: data["market"],
         quantity: data["quantity"],

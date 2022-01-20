@@ -28,7 +28,7 @@ class ProductServices {
       'id': id,
       'name': name,
       'price': price,
-      'rate': 0,
+      'rate': 0.01,
       'category': category,
       'market': market,
       'quantity': quantity,
@@ -37,6 +37,7 @@ class ProductServices {
       'mail': mail,
       'comments': <dynamic>[],
       'responses': <dynamic>[],
+      'ratedTimes': 0,
     });
 
     return Product(
@@ -52,6 +53,7 @@ class ProductServices {
       mail: mail,
       commments: <dynamic>[],
       responses: <dynamic>[],
+      ratedTimes: 0,
     );
   }
 
