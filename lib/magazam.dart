@@ -28,7 +28,7 @@ class _MagazamState extends State<Magazam> {
   late File imagefile;
   final picker = ImagePicker();
   chooseImage(ImageSource source) async {
-    final PickedFile = await picker.getImage(source: source,imageQuality: 25);
+    final PickedFile = await picker.getImage(source: source, imageQuality: 25);
     imagefile = File(PickedFile!.path);
   }
 
@@ -44,8 +44,6 @@ class _MagazamState extends State<Magazam> {
     var storageRef = await uploadTask;
     return await storageRef.ref.getDownloadURL();
   }
-
-
 
   Widget imagePlace(context) {
     double height = MediaQuery.of(context).size.height;
@@ -86,7 +84,6 @@ class _MagazamState extends State<Magazam> {
   ProductServices _productServices = ProductServices();
   @override
   Widget build(BuildContext context) {
-
     CollectionReference updateRef = _firestore.collection('Users');
     var babaRef = updateRef.doc(user.email!);
     return DefaultTabController(
@@ -126,8 +123,10 @@ class _MagazamState extends State<Magazam> {
                         height: 15,
                       ),
                       StreamBuilder(
-                          stream: _productServices
-                              .getProductsOfSellerStreamMarket("Sütçü Dede"),
+                          stream:
+                              _productServices.getProductsOfSellerStreamMail(
+                                  FirebaseAuth.instance.currentUser!.email
+                                      .toString()),
                           builder: (BuildContext context,
                               AsyncSnapshot asyncSnapshot) {
                             if (asyncSnapshot.hasError) {
@@ -254,12 +253,12 @@ class _MagazamState extends State<Magazam> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: ()async{
-                                      await chooseImage(ImageSource.gallery);
-                                     String a = await uploadMedia(imagefile);
-                                      await updateRef
-                                          .doc(user.email!)
-                                          .update({'SaticiTanitimImage': a});
+                                  onTap: () async {
+                                    await chooseImage(ImageSource.gallery);
+                                    String a = await uploadMedia(imagefile);
+                                    await updateRef
+                                        .doc(user.email!)
+                                        .update({'SaticiTanitimImage': a});
                                   },
                                   child: const Icon(
                                     Icons.image,
@@ -284,7 +283,6 @@ class _MagazamState extends State<Magazam> {
                               ],
                             ),
                           ),
-                          
                         ],
                       ),
                     ],
